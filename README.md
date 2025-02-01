@@ -1,22 +1,22 @@
-# domian-whois
+# domain-whois
 
 <p align="center">
-  <img src="docs/images/logo.png" alt="domian-whois Logo" width="200"/>
+  <img src="docs/images/logo.png" alt="domain-whois Logo" width="200"/>
 </p>
 
 <p align="center">
-  <a href="https://github.com/AsisYu/domian-whois/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/AsisYu/domian-whois" alt="license"/>
+  <a href="https://github.com/AsisYu/domain-whois/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/AsisYu/domain-whois" alt="license"/>
   </a>
-  <a href="https://github.com/AsisYu/domian-whois/issues">
-    <img src="https://img.shields.io/github/issues/AsisYu/domian-whois" alt="issues"/>
+  <a href="https://github.com/AsisYu/domain-whois/issues">
+    <img src="https://img.shields.io/github/issues/AsisYu/domain-whois" alt="issues"/>
   </a>
-  <a href="https://github.com/AsisYu/domian-whois/stargazers">
-    <img src="https://img.shields.io/github/stars/AsisYu/domian-whois" alt="stars"/>
+  <a href="https://github.com/AsisYu/domain-whois/stargazers">
+    <img src="https://img.shields.io/github/stars/AsisYu/domain-whois" alt="stars"/>
   </a>
 </p>
 
-domian-whois 是一个现代化的域名 WHOIS 信息查询系统，提供快速、可靠、安全的域名注册信息查询服务。
+domain-whois 是一个现代化的域名 WHOIS 信息查询系统，提供快速、可靠、安全的域名注册信息查询服务。
 
 ## ✨ 功能特点
 
@@ -79,8 +79,8 @@ domian-whois 是一个现代化的域名 WHOIS 信息查询系统，提供快速
 
 1. 克隆项目
 ```bash
-git clone https://github.com/AsisYu/domian-whois.git
-cd domian-whois
+git clone https://github.com/AsisYu/domain-whois.git
+cd domain-whois
 ```
 
 2. 安装前端依赖
@@ -175,5 +175,5 @@ AsisYu - [@AsisYu](https://github.com/AsisYu) - 2773943729@qq.com
 
 ## 📊 状态
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/AsisYu/domian-whois/security.yml)
-![GitHub last commit](https://img.shields.io/github/last-commit/AsisYu/domian-whois)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/AsisYu/domain-whois/security.yml)
+![GitHub last commit](https://img.shields.io/github/last-commit/AsisYu/domain-whois)
