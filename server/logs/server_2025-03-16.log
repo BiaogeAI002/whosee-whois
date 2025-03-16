@@ -90,3 +90,12 @@
 2025/03/16 12:39:43 logging.go:29: [API] 2025/03/16 - 12:39:43 | 200 |      1.0878ms |       127.0.0.1 | POST    /api/auth/token
 2025/03/16 12:39:43 whois_manager.go:94: 命中缓存: gxcmeacm.cn
 2025/03/16 12:39:43 logging.go:29: [API] 2025/03/16 - 12:39:43 | 200 |      1.0786ms |       127.0.0.1 | POST    /api/query
+2025/03/16 12:47:57 logging.go:29: [API] 2025/03/16 - 12:47:57 | 200 |      1.2865ms |       127.0.0.1 | POST    /api/auth/token
+2025/03/16 12:47:57 whois_manager.go:94: 命中缓存: gxcmeacm.cn
+2025/03/16 12:47:57 logging.go:29: [API] 2025/03/16 - 12:47:57 | 200 |      1.1234ms |       127.0.0.1 | POST    /api/query
+2025/03/16 12:48:15 logging.go:29: [API] 2025/03/16 - 12:48:15 | 200 |      1.0937ms |       127.0.0.1 | POST    /api/auth/token
+2025/03/16 12:48:15 whois_manager.go:94: 命中缓存: gxcmeacm.cn
+2025/03/16 12:48:15 logging.go:29: [API] 2025/03/16 - 12:48:15 | 200 |       1.408ms |       127.0.0.1 | POST    /api/query
+2025/03/16 12:51:00 logging.go:29: [API] 2025/03/16 - 12:51:00 | 200 |      1.6424ms |       127.0.0.1 | POST    /api/auth/token
+2025/03/16 12:51:00 whois_manager.go:94: 命中缓存: gxcmeacm.cn
+2025/03/16 12:51:00 logging.go:29: [API] 2025/03/16 - 12:51:00 | 200 |      1.9037ms |       127.0.0.1 | POST    /api/query
