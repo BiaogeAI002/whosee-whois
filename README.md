@@ -8,14 +8,14 @@
   <a href="https://whosee.me">
     <img src="https://img.shields.io/badge/Demo-whosee.me-blue?style=flat-square" alt="Live Demo"/>
   </a>
-  <a href="https://github.com/AsisYu/domain-whois/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/AsisYu/domain-whois?style=flat-square" alt="license"/>
+  <a href="https://github.com/AsisYu/whosee-whois/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/AsisYu/whosee-whois?style=flat-square" alt="license"/>
   </a>
-  <a href="https://github.com/AsisYu/domain-whois/issues">
-    <img src="https://img.shields.io/github/issues/AsisYu/domain-whois?style=flat-square" alt="issues"/>
+  <a href="https://github.com/AsisYu/whosee-whois/issues">
+    <img src="https://img.shields.io/github/issues/AsisYu/whosee-whois?style=flat-square" alt="issues"/>
   </a>
-  <a href="https://github.com/AsisYu/domain-whois/stargazers">
-    <img src="https://img.shields.io/github/stars/AsisYu/domain-whois?style=flat-square" alt="stars"/>
+  <a href="https://github.com/AsisYu/whosee-whois/stargazers">
+    <img src="https://img.shields.io/github/stars/AsisYu/whosee-whois?style=flat-square" alt="stars"/>
   </a>
 </p>
 
@@ -33,17 +33,54 @@
 
 ## ✨ 功能特点
 
-- 🌐 支持全球域名查询
-- 🚀 多数据源整合 (WhoisXML API、WhoisFreaks)
-- ⚡️ Redis 智能缓存
-- 🎨 简洁优雅的用户界面
-- 📱 完美支持移动端
+- 🌐 全球域名查询支持
+  - 支持所有顶级域名（TLD）查询
+  - 多语言域名（IDN）支持
+  - 实时域名可用性检测
+
+- 🚀 多重数据源整合
+  - WhoisXML API 官方数据源
+  - WhoisFreaks 专业数据源
+  - 智能数据源切换和故障转移
+
+- ⚡️ 高性能缓存系统
+  - Redis 智能缓存策略
+  - 基于域名到期时间的动态缓存
+  - 自动缓存清理和更新机制
+
+- 🎨 现代化用户界面
+  - 简洁优雅的设计风格
+  - 深色模式支持
+  - 实时查询反馈
+  - 查询历史记录
+
+- 📱 全平台适配
+  - 响应式布局设计
+  - 移动端优化体验
+  - 触摸屏友好操作
+  - 跨浏览器兼容
+
 - 🔒 企业级安全防护
-  - JWT 身份认证
-  - 智能速率限制
-  - IP 风控系统
-  - 安全响应头
-  - CORS 防护
+  - JWT 身份认证系统
+  - IP 智能风控
+  - 自适应速率限制
+  - 请求加密传输
+  - 防 DDoS 攻击
+  - 完整的 CORS 策略
+  - 安全响应头配置
+
+- 📊 专业数据展示
+  - 域名注册详情
+  - 所有者信息展示
+  - 服务器状态监控
+  - 域名健康分析
+  - 到期提醒功能
+
+- 🔄 高可用性保障
+  - 服务自动恢复
+  - 负载均衡支持
+  - 故障转移机制
+  - 实时监控告警
 
 ## 🎯 在线体验
 
@@ -68,7 +105,7 @@
 ## 📁 项目结构
 
 ```
-domain-whois/
+whosee-whois/
 ├── 📂 server/           # Go 后端服务
 │   ├── handlers/        # API 处理器
 │   ├── middleware/      # 中间件组件
@@ -93,7 +130,7 @@ domain-whois/
 
 ```bash
 # 克隆项目
-git clone https://github.com/AsisYu/domain-whois.git
+git clone https://github.com/AsisYu/whosee-whois.git
 
 # 安装依赖
 make install
@@ -146,7 +183,7 @@ AsisYu ([GitHub](https://github.com/AsisYu) | [Email](mailto:2773943729@qq.com))
 感谢所有为本项目做出贡献的开发者！
 
 <p align="center">
-  <img src="https://contrib.rocks/image?repo=AsisYu/domain-whois" />
+  <img src="https://contrib.rocks/image?repo=AsisYu/whosee-whois" />
 </p>
 
 ---
