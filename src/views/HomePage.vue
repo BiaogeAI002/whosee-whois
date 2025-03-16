@@ -13,9 +13,9 @@
             <div class="peace-logo" aria-label="W Logo">W</div>
             <div class="logo-glow"></div>
           </div>
-          <h1 class="brand-name">W is Whois Lookup</h1>
-          <p class="brand-description">专业的域名信息查询工具</p>
-          <div class="brand-tagline">快速、准确、专业的域名信息查询服务</div>
+          <h1 class="brand-name">Whosee</h1>
+          <p class="brand-description">简洁优雅的域名信息查询工具</p>
+          <div class="brand-tagline">优雅而简约的 Whois 查询体验</div>
         </div>
       </header>
       
@@ -46,14 +46,11 @@
           @search="handleSearch" 
           @searchComplete="scrollToResult"
         />
-        <div class="search-info">
-          <span class="version-info">→ 1.1.1</span>
-        </div>
       </section>
       
       <footer class="footer-section">
         <div class="footer-left">
-          <p class="copyright">© 2025 whosee.me - All Rights Reserved</p>
+          <p class="copyright">© 2024 whosee.me - Made with ❤️ by AsisYu</p>
           <div class="footer-links">
             <a 
               href="https://github.com/AsisYu/whosee-whois" 
@@ -62,7 +59,7 @@
               class="footer-link"
             >
               <i class="fab fa-github"></i>
-              <span>开源项目</span>
+              <span>GitHub</span>
             </a>
           </div>
         </div>
@@ -173,23 +170,31 @@ onUnmounted(() => {
 
 // SEO 配置
 useHead({
-  title: 'W is Whois Lookup - whosee.me',
+  title: 'Whosee - 简约优雅的 Whois 查询工具 | whosee.me',
   meta: [
     {
       name: 'description',
-      content: 'W is Whois Lookup 提供全球域名Whois信息查询服务，快速查询域名注册信息、到期时间、持有人等关键信息。支持批量查询，让您的域名管理更轻松。'
+      content: 'Whosee 为您提供优雅简约的 Whois 查询体验，轻松获取域名状态、注册信息。简单、优雅、高效。'
     },
     {
       name: 'keywords',
-      content: '域名查询,whois查询,域名信息,域名工具,域名查,域名注册信息,域名到期查询'
+      content: 'whosee,whois查询,域名查询,域名工具,whosee.me,域名信息,域名状态'
     },
     {
       property: 'og:title',
-      content: 'W is Whois Lookup - whosee.me'
+      content: 'Whosee - 简约优雅的 Whois 查询工具 | whosee.me'
+    },
+    {
+      name: 'application-name',
+      content: 'Whosee'
+    },
+    {
+      name: 'apple-mobile-web-app-title',
+      content: 'Whosee'
     },
     {
       property: 'og:description',
-      content: '快速查询域名注册信息、到期时间、持有人等关键信息。支持全球域名查询，让您的域名管理更轻松。'
+      content: '优雅而简约的 Whois 查询体验，让域名信息触手可及。'
     },
     {
       property: 'og:type',
@@ -389,7 +394,7 @@ useHead({
   background-clip: text;
   color: transparent;
   text-align: center;
-  letter-spacing: -1px;
+  letter-spacing: 1px;
 }
 
 @keyframes logoFloat {
@@ -487,11 +492,9 @@ useHead({
   right: 0;
   width: 100%;
   background: rgba(23, 32, 47, 0.98);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   z-index: 100;
-  height: 60px; /* 固定footer高度 */
+  height: 60px;
 }
 
 .footer-left {
@@ -565,7 +568,7 @@ useHead({
   }
   
   .brand-name {
-    font-size: 2.8rem;
+    font-size: 3rem;
   }
   
   .brand-description {
@@ -605,7 +608,7 @@ useHead({
   
   .footer-section {
     padding: 0.8rem 1.5rem;
-    background: rgba(23, 32, 47, 0.98);
+    background: rgb(23, 32, 47);
     height: 50px;
   }
   
@@ -643,7 +646,7 @@ useHead({
   }
   
   .brand-name {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
   }
   
   .brand-description {
@@ -682,6 +685,7 @@ useHead({
     padding: 0.8rem 1rem;
     gap: 0.5rem;
     height: 45px;
+    background: rgb(23, 32, 47);
   }
   
   .copyright {
