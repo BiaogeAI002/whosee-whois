@@ -1,553 +1,487 @@
 <template>
-  <div class="search-container" 
-      :class="{ 
-        'is-expanded': isExpanded,
-        'initial-load': isInitialLoad,
-        'is-transitioning': isTransitioning
-      }"
-      @mouseenter="handleMouseEnter"
-      @mouseleave="handleMouseLeave"
-      @transitionend="handleTransitionEnd">
-    <div class="search-box" 
-        @click="handleClick"
-    >
-      <i class="fas fa-search search-icon"></i>
+  <div class="search-container">
+    <div class="search-box">
+      <div class="search-icon-wrapper">
+        <i class="fas fa-search search-icon"></i>
+      </div>
       <input
         ref="inputRef"
         v-model="query"
         type="text"
-        :placeholder="placeholder"
+        placeholder="请输入要查询的域名..."
         @keyup.enter="handleSearch"
-        @focus="handleFocus"
-        @blur="handleBlur"
+        class="search-input"
       />
       <div v-if="query" class="clear-icon" @click.stop="clearInput">
         <i class="fas fa-times"></i>
       </div>
-      <button 
-        class="search-button"
-        :disabled="!query.trim()"
-        @click.stop="handleSearch"
-      >
-        查询
-      </button>
+      <div class="search-button-container">
+        <button 
+          class="search-button"
+          :disabled="!query.trim()"
+          @click.stop="handleSearch"
+        >
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="search-history" v-if="searchHistory.length > 0">
+      <span class="history-label">历史记录：</span>
+      <div class="history-list">
+        <button 
+          v-for="(domain, index) in searchHistory" 
+          :key="index"
+          @click="fillExample(domain)"
+          class="history-button"
+        >
+          {{ domain }}
+        </button>
+        <button 
+          v-if="searchHistory.length > 0"
+          @click="clearHistory"
+          class="clear-history-button"
+        >
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 
 const query = ref('')
-const isExpanded = ref(false)
-const isInitialLoad = ref(true)
 const inputRef = ref(null)
-const placeholder = ref('请输入要查询的域名...')
-const expandTimeout = ref(null)
-const collapseTimeout = ref(null)
-const isTransitioning = ref(false)
+const searchHistory = ref([])
 const emit = defineEmits(['search', 'searchComplete', 'expand'])
 
-// 页面加载动画
+// 从本地存储加载历史记录
 onMounted(() => {
-  setTimeout(() => {
-    isInitialLoad.value = false
-  }, 1000)
+  try {
+    const savedHistory = localStorage.getItem('searchHistory')
+    if (savedHistory) {
+      searchHistory.value = JSON.parse(savedHistory)
+    }
+  } catch (error) {
+    console.error('加载历史记录失败:', error)
+  }
 })
 
-// 鼠标悬停处理
-const handleMouseEnter = () => {
-  if (!query.value) {
-    // 清除收起的定时器
-    if (collapseTimeout.value) {
-      clearTimeout(collapseTimeout.value)
-      collapseTimeout.value = null
-    }
-    expandSearch()
+// 保存历史记录到本地存储
+const saveHistory = () => {
+  try {
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory.value))
+  } catch (error) {
+    console.error('保存历史记录失败:', error)
   }
 }
 
-// 鼠标离开处理
-const handleMouseLeave = () => {
-  if (!query.value && !inputRef.value?.matches(':focus')) {
-    if (isTransitioning.value) return
-    handleCollapse()
-  }
-}
-
-// 处理点击事件
-const handleClick = (e) => {
-  if (isTransitioning.value) return
-  if (!isExpanded.value) {
-    expandSearch()
-  } else if (!e.target.closest('input, button, .clear-icon')) {
-    // 如果点击的不是输入框、按钮或清除图标，则收起搜索框
-    handleCollapse()
-  }
-}
-
-// 收起搜索框
-const handleCollapse = () => {
-  if (isTransitioning.value || query.value) return
-  isTransitioning.value = true
-  isExpanded.value = false
-  emit('expand', false)
-  setTimeout(() => {
-    isTransitioning.value = false
-  }, 500)
-}
-
-const expandSearch = () => {
-  if (isTransitioning.value) return
-  isTransitioning.value = true
-  
-  // 清除现有的定时器
-  if (collapseTimeout.value) {
-    clearTimeout(collapseTimeout.value)
-    collapseTimeout.value = null
+// 添加到历史记录
+const addToHistory = (domain) => {
+  // 如果已存在，先移除旧记录
+  const index = searchHistory.value.indexOf(domain)
+  if (index !== -1) {
+    searchHistory.value.splice(index, 1)
   }
   
-  // 设置展开的定时器
-  expandTimeout.value = setTimeout(() => {
-    isExpanded.value = true
-    emit('expand', true)
-    expandTimeout.value = null
-    // 聚焦输入框
-    setTimeout(() => {
-      inputRef.value?.focus()
-      isTransitioning.value = false
-    }, 300)  // 增加延迟确保动画完成
-  }, 50)
+  // 添加到最前面
+  searchHistory.value.unshift(domain)
+  
+  // 限制历史记录数量为10个
+  if (searchHistory.value.length > 10) {
+    searchHistory.value = searchHistory.value.slice(0, 10)
+  }
+  
+  saveHistory()
 }
 
+// 清除历史记录
+const clearHistory = () => {
+  searchHistory.value = []
+  saveHistory()
+  ElMessage.success('历史记录已清空')
+}
+
+// 清除输入
 const clearInput = () => {
   query.value = ''
   inputRef.value?.focus()
 }
 
-const handleFocus = () => {
-  placeholder.value = '例如：example.com'
-}
-
-const handleBlur = () => {
-  if (!query.value) {
-    placeholder.value = '请输入要查询的域名...'
-  }
-}
-
+// 处理域名验证
 const processAndValidateDomain = (input) => {
-  if (!input || typeof input !== 'string') {
-    return { isValid: false, domain: '' }
+  if (!input || !input.trim()) {
+    ElMessage.warning('请输入要查询的域名')
+    return null
   }
-
-  let domain = input.toLowerCase()
-  domain = domain.replace(/[<>'"&]/g, '')
-  domain = domain.replace(/^(https?:\/\/)?(www\.)?/i, '')
-  domain = domain.split('/')[0].split('?')[0]
   
-  const parts = domain.split('.')
-  if (parts.length > 2) {
-    domain = parts.slice(-2).join('.')
-    ElMessage.info(`已自动转换为主域名: ${domain}`)
+  // 简单验证域名格式
+  const domain = input.trim().toLowerCase()
+  const domainRegex = /^([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/
+  
+  if (!domainRegex.test(domain)) {
+    ElMessage.warning('请输入有效的域名格式')
+    return null
   }
-
-  const domainRegex = /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z]{2,})+$/
-  const isValid = domainRegex.test(domain) && domain.length <= 253
   
-  return { isValid, domain }
+  return domain
 }
 
+// 处理搜索
 const handleSearch = () => {
-  const input = query.value.trim()
-  if (!input) {
-    ElMessage.warning('请输入域名')
-    return
-  }
-
-  const { isValid, domain } = processAndValidateDomain(input)
+  const domain = processAndValidateDomain(query.value)
+  if (!domain) return
   
-  if (!isValid) {
-    ElMessage.error('请输入正确的域名格式，如：example.com')
-    return
-  }
-
-  query.value = domain
+  // 添加到历史记录
+  addToHistory(domain)
+  
   emit('search', domain)
+  
+  // 模拟搜索完成
   setTimeout(() => {
-    emit('searchComplete')
-  }, 100)
+    emit('searchComplete', {
+      domain,
+      results: {}
+    })
+  }, 1000)
 }
 
-// 监听过渡结束
-const handleTransitionEnd = () => {
-  if (!isExpanded.value) {
-    isTransitioning.value = false
-  }
+// 填充示例
+const fillExample = (example) => {
+  query.value = example
+  inputRef.value?.focus()
 }
-
-// 组件卸载时清理定时器
-onUnmounted(() => {
-  if (expandTimeout.value) clearTimeout(expandTimeout.value)
-  if (collapseTimeout.value) clearTimeout(collapseTimeout.value)
-})
 </script>
 
 <style scoped>
-/* 初始加载动画 */
-.search-container.initial-load {
-  animation: popIn 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes popIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.3) rotate(-15deg);
-    backdrop-filter: blur(0);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(1.1) rotate(5deg);
-    backdrop-filter: blur(5px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) rotate(0);
-    backdrop-filter: blur(10px);
-  }
-}
-
 .search-container {
-  width: 60px;
-  height: 60px;
+  width: 100%;
+  max-width: 700px;
   position: relative;
-  transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-  border-radius: 30px;
-  overflow: hidden;
-  transform-origin: center center;
-  margin: 0 auto;
-  will-change: width;
-  user-select: none;  /* 防止文本选择影响点击 */
-}
-
-.search-container.is-expanded {
-  width: min(600px, 90vw);
-  transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .search-box {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 30px;
   display: flex;
   align-items: center;
-  border: 1px solid rgba(255, 255, 255, 0);
-  overflow: hidden;
-  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-  cursor: pointer;
+  background: rgba(30, 41, 59, 0.98);
+  border-radius: 16px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.1);
+  height: 56px;
+  transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+  background: rgba(35, 45, 65, 0.98);
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.search-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding-left: 20px;
-  box-shadow: 0 2px 10px rgba(255, 255, 255, 0);
-  position: relative;
-  z-index: 1;
-  pointer-events: auto;
-}
-
-/* 添加背景模糊层 */
-.search-box::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  z-index: -1;
-  background: rgba(255, 255, 255, 0);
-  transition: all 0.3s ease-out;
-  animation: frostedGlass 0.3s ease-out forwards;
-}
-
-@keyframes frostedGlass {
-  0% {
-    background: rgba(255, 255, 255, 0);
-    backdrop-filter: blur(0);
-    border-color: rgba(255, 255, 255, 0);
-    box-shadow: 0 2px 10px rgba(255, 255, 255, 0);
-  }
-  100% {
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(10px);
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
-  }
-}
-
-/* 添加波纹动画效果 */
-.search-box::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 1000px;
-  height: 1000px;
-  background: radial-gradient(circle, 
-    rgba(255, 255, 255, 0.2) 0%,
-    rgba(255, 255, 255, 0.15) 20%,
-    rgba(255, 255, 255, 0.1) 40%,
-    transparent 60%
-  );
-  transform: translate(-50%, -50%) scale(0);
-  opacity: 0;
-  z-index: -1;
-  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
-              opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.search-box:hover::before {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(15px);
-}
-
-.search-box:hover::after {
-  transform: translate(-50%, -50%) scale(1);
-  opacity: 1;
-}
-
-.search-container.is-expanded .search-box::before {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(20px);
-}
-
-.search-container.is-expanded .search-box {
-  border-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
 }
 
 .search-icon {
-  color: white;
-  font-size: 1.4rem;
-  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-  opacity: 0.9;
-  position: relative;
-  z-index: 2;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
 }
 
-.search-box:hover .search-icon {
-  opacity: 1;
-  transform: scale(1.1) rotate(-10deg);
-}
-
-input {
+.search-input {
   flex: 1;
   height: 100%;
+  padding: 0 20px;
+  font-size: 1rem;
   background: transparent;
+  color: #fff;
+  letter-spacing: 0.3px;
   border: none;
   outline: none;
-  color: white;
-  font-size: 16px;
-  padding: 0 20px;
-  opacity: 0;
-  transition: all 0.3s ease;
-  pointer-events: auto !important;
+  font-weight: normal;
 }
 
-.is-expanded input {
-  opacity: 1;
-}
-
-input::placeholder {
+.search-input::placeholder {
   color: rgba(255, 255, 255, 0.6);
 }
 
 .clear-icon {
-  width: 40px;
-  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.6);
+  width: 40px;
+  height: 40px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  pointer-events: auto !important;
+  color: rgba(255, 255, 255, 0.4);
+  transition: all 0.2s ease;
 }
 
 .clear-icon:hover {
-  color: white;
-  transform: rotate(90deg);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.search-button-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .search-button {
-  height: 100%;
-  min-width: 80px;
-  width: 20%;
-  background: linear-gradient(135deg, #6dd4ff 0%, #ffa196 100%);
-  border: none;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #4299E1, #667EEA);
+  border-radius: 12px;
   color: white;
-  font-size: clamp(14px, 4vw, 16px);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 2px 4px rgba(66, 153, 225, 0.2);
+  border: none;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0;
-  transform: translateX(100%);
-  position: relative;
-  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  pointer-events: auto !important;
-}
-
-/* 更新光效果 */
-.search-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transition: 0.5s;
-}
-
-.search-button:hover::before {
-  left: 100%;
-}
-
-.is-expanded .search-button {
-  opacity: 1;
-  transform: translateX(0);
-  box-shadow: 0 4px 15px rgba(33, 136, 255, 0.3);
-  position: relative;
-  right: 0;
-  flex-shrink: 0;
-}
-
-.search-button:hover {
-  /* 更新悬浮状态的渐变色 */
-  background: linear-gradient(135deg, #6dd4ff 0%, #ffa196 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(33, 136, 255, 0.4);
-}
-
-.search-button:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 10px rgba(33, 136, 255, 0.3);
 }
 
 .search-button:disabled {
-  opacity: 0.7;
+  opacity: 0.6;
   cursor: not-allowed;
-  /* 更新禁用状态的渐变色 */
-  background: linear-gradient(135deg, #ffa196 0%, #6dd4ff 100%);
-  box-shadow: none;
   transform: none;
-}
-
-.search-button:disabled:hover {
-  transform: none;
+  background: linear-gradient(135deg, #4299E1, #667EEA);
   box-shadow: none;
 }
 
-/* 未展开时的搜索图标动画 */
-.search-container:not(.is-expanded) .search-icon {
-  animation: float-search 3s ease-in-out infinite;
+.search-button i {
+  font-size: 0.9rem;
 }
 
-@keyframes float-search {
-  0% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-  }
-  25% {
-    transform: translate(2px, -2px) rotate(5deg) scale(1.1);
-  }
-  50% {
-    transform: translate(-1px, 2px) rotate(-5deg) scale(1.05);
-  }
-  75% {
-    transform: translate(-2px, -1px) rotate(3deg) scale(1.08);
-  }
-  100% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-  }
+.search-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 6px 12px rgba(66, 153, 225, 0.4);
+  background: linear-gradient(135deg, #4299E1, #7F9CF5);
 }
 
-/* 移动端适配 */
+.search-history {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.8rem;
+  padding: 0;
+}
+
+.history-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.history-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.history-button {
+  background: rgba(23, 32, 47, 0.9);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.85);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.history-button:hover {
+  background: rgba(23, 32, 47, 0.95);
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.clear-history-button {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.4rem;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin-left: auto;
+}
+
+/* 响应式设计优化 */
 @media (max-width: 768px) {
   .search-container {
-    width: 50px;
-    height: 50px;
+    width: calc(100% - 20px);
+    margin: 0 10px;
   }
+
+  .search-box {
+    height: 46px;
+    border-radius: 23px;
+    background: rgb(30, 41, 59);
+    padding: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: none;
+  }
+  
+  .search-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    margin-right: 3px;
+    background: linear-gradient(135deg, #3B82F6, #6366F1);
+    box-shadow: none;
+  }
+  
+  .search-input {
+    font-size: 0.95rem;
+    padding: 0 15px;
+    letter-spacing: 0.2px;
+    color: #fff;
+  }
+  
+  .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .search-icon-wrapper {
+    padding-left: 15px;
+  }
+  
   .search-icon {
-    font-size: 1.2rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .clear-icon {
+    width: 32px;
+    height: 32px;
+    color: rgba(255, 255, 255, 0.5);
   }
 
-  input {
-    font-size: 14px;
-    padding: 0 10px;
+  .history-list {
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 8px;
+    padding: 4px 0;
   }
-
-  .search-button {
-    min-width: 60px;
-    width: 25%;
-    padding: 0;
-    font-size: 14px;
-    letter-spacing: 0;
+  
+  .history-list::-webkit-scrollbar {
+    display: none;
   }
-
-  /* 确保按钮在展开状态下正确显示 */
-  .search-container.is-expanded .search-button {
-    transform: translateX(0);
-    opacity: 1;
-    position: relative;
-    right: 0;
-  }
-}
-
-/* 超小屏幕适配 */
-@media (max-width: 375px) {
-  .search-button {
-    min-width: 50px;
-    width: 22%;
+  
+  .history-button {
+    flex-shrink: 0;
+    padding: 4px 10px;
     font-size: 13px;
+    border-radius: 15px;
+    background: rgba(23, 32, 47, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.85);
+    box-shadow: none;
+  }
+
+  .history-button:active {
+    background: rgba(35, 45, 65, 0.95);
+  }
+
+  .clear-history-button {
+    width: 24px;
+    height: 24px;
+    font-size: 0.75rem;
+    background: rgba(255, 59, 48, 0.2);
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
-/* 平板适配 */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .search-container.is-expanded {
-    width: 450px;
+@media (max-width: 480px) {
+  .search-box {
+    height: 42px;
+    border-radius: 21px;
+    background: rgb(30, 41, 59);
   }
+  
   .search-button {
-    min-width: 70px;
-    width: 22%;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+  }
+  
+  .search-input {
+    font-size: 0.9rem;
+    padding: 0 12px;
+    letter-spacing: 0.2px;
+  }
+  
+  .search-icon-wrapper {
+    padding-left: 12px;
+  }
+  
+  .clear-icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .history-button {
+    padding: 3px 8px;
+    font-size: 0.8rem;
+    border-radius: 12px;
+    background: rgba(23, 32, 47, 0.95);
+  }
+  
+  .search-history {
+    margin-top: 0.6rem;
+  }
+  
+  .history-label {
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .clear-history-button {
+    width: 22px;
+    height: 22px;
+    font-size: 0.7rem;
   }
 }
 
-/* 禁用过渡中的点击 */
-.search-container.is-transitioning {
-  pointer-events: none;
-  cursor: default;
-}
-
-.search-box input {
-  pointer-events: auto !important;
-}
-
-.search-button {
-  pointer-events: auto !important;
-}
-
-.clear-icon {
-  pointer-events: auto !important;
+/* 优化触摸设备的交互 */
+@media (hover: none) {
+  .search-button:active {
+    opacity: 0.9;
+    transform: none;
+    background: linear-gradient(135deg, #3B82F6, #6366F1);
+  }
+  
+  .search-box:focus-within {
+    transform: none;
+    background: rgb(30, 41, 59);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
 }
 </style>

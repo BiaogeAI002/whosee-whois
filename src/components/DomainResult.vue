@@ -341,60 +341,41 @@ onMounted(() => {
 .domain-result {
   width: 100%;
   max-width: 800px;
-  margin: 0 auto;
-  min-height: calc(100vh - 100px);
-  padding: 20px;
-  background-color: transparent;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
 
 .result-container {
-  background: rgba(28, 30, 33, 0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 
-    0 4px 24px rgba(0, 0, 0, 0.1),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  height: auto;
-  min-height: 800px;
-  color: #fff;
-  transform: translateZ(0);
-  will-change: transform;
+  border-radius: 24px;
+  background: rgb(30, 41, 59);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease-out;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  overscroll-behavior: contain;
 }
 
 .result-container.is-visible {
   opacity: 1;
-}
-
-.result-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.result-container::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.result-container::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
+  transform: translateY(0);
 }
 
 .result-header {
+  padding: 1.5rem;
+  background: rgb(23, 32, 47);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 28px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .domain-info {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex: 1;
 }
 
 .domain-name {
@@ -426,14 +407,16 @@ onMounted(() => {
 }
 
 .status-badge {
-  padding: 8px 20px;
-  border-radius: 24px;
-  font-size: 15px;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-size: 16px;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
+  width: fit-content;
+  white-space: nowrap;
+  margin-left: 16px;
+  align-self: flex-start;
 }
 
 .registered {
@@ -464,7 +447,10 @@ onMounted(() => {
 }
 
 .info-section {
-  margin-bottom: 32px;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  margin: 1rem;
 }
 
 .info-section h3 {
@@ -482,18 +468,19 @@ onMounted(() => {
 }
 
 .info-item {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 20px;
-  border-radius: 12px;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.3s ease;
 }
 
 .info-item:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-3px);
+  box-shadow: 
+    0 10px 20px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .info-label {
@@ -521,8 +508,6 @@ onMounted(() => {
   border-radius: 12px;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -538,8 +523,6 @@ onMounted(() => {
   padding: 6px 12px;
   border-radius: 16px;
   font-size: 13px;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
 }
 
 .loading-state {
@@ -551,12 +534,12 @@ onMounted(() => {
 }
 
 .loading-spinner {
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-top: 2px solid rgba(255, 255, 255, 0.9);
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid rgba(255, 255, 255, 0.9);
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  animation: spin 1s linear infinite;
+  animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   margin-bottom: 16px;
 }
 
@@ -587,23 +570,110 @@ onMounted(() => {
 
 /* 适配移动端 */
 @media (max-width: 768px) {
+  .domain-result {
+    margin: 1rem auto;
+    padding: 0 0.5rem;
+  }
+
   .result-container {
-    min-height: 600px;
-    padding: 20px;
+    border-radius: 20px;
+    background: rgb(30, 41, 59);
   }
-  
+
+  .result-header {
+    padding: 1.2rem;
+    background: rgb(23, 32, 47);
+  }
+
+  .info-section {
+    padding: 1.2rem;
+    margin: 0.8rem;
+    background: rgba(35, 45, 65, 1);
+    border-radius: 12px;
+  }
+
   .domain-name {
-    font-size: 20px;
+    font-size: 1.5rem;
   }
-  
+
+  .status-badge {
+    padding: 6px 16px;
+    font-size: 14px;
+    margin-left: 12px;
+  }
+
   .info-grid {
-    gap: 16px;
-    margin-bottom: 24px;
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
-  
+
   .info-item {
-    padding: 20px;
-    min-height: 100px;
+    background: rgb(35, 45, 65);
+  }
+
+  .ns-item {
+    background: rgb(40, 50, 70);
+  }
+
+  .status-tag {
+    background: rgb(108, 92, 231);
+  }
+}
+
+@media (max-width: 480px) {
+  .result-container {
+    border-radius: 16px;
+  }
+
+  .result-header {
+    padding: 1rem;
+  }
+
+  .info-section {
+    padding: 1rem;
+    margin: 0.6rem;
+    background: rgb(35, 45, 65);
+  }
+
+  .domain-name {
+    font-size: 1.3rem;
+  }
+
+  .query-details {
+    font-size: 0.8rem;
+  }
+
+  .status-badge {
+    padding: 4px 12px;
+    font-size: 13px;
+    margin-left: 10px;
+  }
+
+  .info-label {
+    font-size: 0.9rem;
+  }
+
+  .info-value {
+    font-size: 0.9rem;
+  }
+
+  .name-servers {
+    font-size: 0.9rem;
+  }
+
+  .status-tags {
+    gap: 0.5rem;
+  }
+
+  .status-tag {
+    font-size: 0.85rem;
+    padding: 5px 10px;
+    background: rgb(108, 92, 231);
+  }
+
+  .ns-item {
+    padding: 10px 14px;
+    background: rgb(40, 50, 70);
   }
 }
 
@@ -664,8 +734,8 @@ onMounted(() => {
 /* 适配移动端 */
 @media (max-width: 768px) {
   .status-badge {
-    padding: 6px 16px;
-    font-size: 13px;
+    padding: 8px 20px;
+    font-size: 14px;
   }
 }
 
@@ -902,13 +972,6 @@ onMounted(() => {
 @media (max-width: 768px) {
   .location-info {
     grid-column: span 1;
-  }
-}
-
-/* 优化滚动性能 */
-@media (max-width: 768px) {
-  .result-container {
-    overscroll-behavior: contain;
   }
 }
 </style> 
