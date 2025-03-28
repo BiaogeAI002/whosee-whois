@@ -138,7 +138,20 @@ whosee-whois/
 - Go ≥ 1.21
 - Redis ≥ 6.0
 
-### 一键部署
+### 部署方式
+
+#### Vercel 一键部署
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAsisYu%2Fwhosee-whois)
+
+1. 点击上方按钮，使用 GitHub 账号登录 Vercel
+2. 导入项目后，Vercel 会自动检测项目配置
+3. 在环境变量中配置必要的 API Keys：
+   - `WHOISXML_API_KEY`: WhoisXML API 密钥
+   - `WHOISFREAKS_API_KEY`: WhoisFreaks API 密钥（可选）
+4. 点击 "Deploy" 开始部署
+
+#### 本地部署
 
 ```bash
 # 克隆前端项目
