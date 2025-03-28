@@ -1,0 +1,92 @@
+2025/02/01 12:53:30 main.go:115: Redis 连接成功
+2025/02/01 12:53:30 main.go:176: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 12:55:02 auth.go:88: Auth Debug - Headers received:
+2025/02/01 12:55:02 auth.go:89:   X-Encrypted-Data: rYE3iyBd3r3f5tHRN/Pe/cwBT2+t0ZhQ2gkH+hiJXEpoxk5NCZacdgLRRbs4DcehCfnH8ZChj7zBkGmc7n7p8K5xfSLMGG9ev8Noz8wng26Q8nWQ9yO3uVHhcpGvXhtG9Cl3NpXN00I8dnI/7hsf2wykz0XLEbzkenlETwD7IKo5LgU34v509/cmKbhoe5Su9sJirVnkx9zOmsvxrEQ+KlRKclLGjICOfCXYf5ixG9jKo4WKsAmq45k/kjr67Gp22Zj2ag==
+2025/02/01 12:55:02 auth.go:90:   X-IV: B8eJGIZrcsdQ21ts
+2025/02/01 12:55:02 auth.go:91:   X-Signature: 6e63490ffc280bdfae2e5fdec2529dcd6cdc855acb2b772a268cb2769895d11e
+2025/02/01 12:55:02 auth.go:92:   X-Timestamp: 1738385702636
+2025/02/01 12:55:02 auth.go:111: Auth Debug - Decrypted data: {"data":{"domain":"qwp.icu"},"timestamp":1738385702636,"apiKey":"pk_live_51HbVZxKf9zX3v7Y8nMtSiGzYt7WzJ5vjfMjL8e9wK4Np2RmX6Q8sB","requestId":"4796632b-a45c-449c-8316-2d86f5a15eed"}
+2025/02/01 12:55:02 auth.go:123: Auth Debug - Parsed request: {Data:map[domain:qwp.icu] Timestamp:1738385702636 APIKey:pk_live_51HbVZxKf9zX3v7Y8nMtSiGzYt7WzJ5vjfMjL8e9wK4Np2RmX6Q8sB RequestID:4796632b-a45c-449c-8316-2d86f5a15eed}
+2025/02/01 12:55:02 auth.go:127: Auth Debug - Signature comparison:
+2025/02/01 12:55:02 auth.go:128:   Expected: 6e63490ffc280bdfae2e5fdec2529dcd6cdc855acb2b772a268cb2769895d11e
+2025/02/01 12:55:02 auth.go:129:   Received: 6e63490ffc280bdfae2e5fdec2529dcd6cdc855acb2b772a268cb2769895d11e
+2025/02/01 12:55:02 auth.go:139: Auth Debug - Request processing completed successfully
+2025/02/01 12:55:02 whois_manager.go:94: 命中缓存: qwp.icu
+2025/02/01 12:55:02 main.go:103: [API] 2025/02/01 - 12:55:02 | 200 | 42.4095ms | 127.0.0.1 | POST /api/query
+2025/02/01 13:06:54 main.go:115: Redis 连接成功
+2025/02/01 13:06:54 main.go:171: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 13:09:40 main.go:115: Redis 连接成功
+2025/02/01 13:09:40 main.go:171: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 13:10:03 main.go:103: [API] 2025/02/01 - 13:10:03 | 401 | 0s | ::1 | POST /api/query
+2025/02/01 13:10:24 main.go:103: [API] 2025/02/01 - 13:10:24 | 401 | 0s | ::1 | POST /api/query
+2025/02/01 13:12:30 main.go:103: [API] 2025/02/01 - 13:12:30 | 200 | 0s | ::1 | POST /api/auth/token
+2025/02/01 13:12:30 whois_manager.go:94: 命中缓存: qwp.icu
+2025/02/01 13:12:30 main.go:103: [API] 2025/02/01 - 13:12:30 | 200 | 18.4053ms | ::1 | POST /api/query
+2025/02/01 13:13:10 main.go:103: [API] 2025/02/01 - 13:13:10 | 200 | 0s | ::1 | POST /api/auth/token
+2025/02/01 13:13:10 whois_manager.go:94: 命中缓存: ys.com
+2025/02/01 13:13:10 main.go:103: [API] 2025/02/01 - 13:13:10 | 200 | 1.3446ms | ::1 | POST /api/query
+2025/02/01 13:13:55 main.go:103: [API] 2025/02/01 - 13:13:55 | 404 | 0s | ::1 | GET /api/auth/token
+2025/02/01 13:14:05 main.go:103: [API] 2025/02/01 - 13:14:05 | 404 | 0s | ::1 | GET /api/auth/token
+2025/02/01 13:24:20 main.go:77: Redis 连接成功
+2025/02/01 13:24:20 main.go:173: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 13:27:56 main.go:80: Redis 连接成功
+2025/02/01 13:27:56 main.go:176: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 13:28:09 whois_manager.go:94: 命中缓存: qwp.icu
+2025/02/01 13:31:33 main.go:64: Redis 连接成功
+2025/02/01 13:31:33 main.go:128: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 13:31:51 logging.go:29: [API] 2025/02/01 - 13:31:51 | 200 |            0s |             ::1 | POST    /api/auth/token
+2025/02/01 13:31:51 whois_manager.go:94: 命中缓存: qwp.icu
+2025/02/01 13:31:51 logging.go:29: [API] 2025/02/01 - 13:31:51 | 200 |      1.2723ms |             ::1 | POST    /api/query
+2025/02/01 13:33:06 logging.go:29: [API] 2025/02/01 - 13:33:06 | 200 |            0s |             ::1 | POST    /api/auth/token
+2025/02/01 13:33:06 whoisfreaks.go:87: 使用 WhoisFreaks API 查询域名: bingo.cn
+2025/02/01 13:33:08 logging.go:29: [API] 2025/02/01 - 13:33:08 | 200 |    1.9368801s |             ::1 | POST    /api/query
+2025/02/01 13:33:28 logging.go:29: [API] 2025/02/01 - 13:33:28 | 200 |            0s |             ::1 | POST    /api/auth/token
+2025/02/01 13:33:28 whoisfreaks.go:87: 使用 WhoisFreaks API 查询域名: meme.cn
+2025/02/01 13:33:30 logging.go:29: [API] 2025/02/01 - 13:33:30 | 200 |    1.1021681s |             ::1 | POST    /api/query
+2025/02/01 13:36:00 main.go:64: Redis 连接成功
+2025/02/01 13:36:00 main.go:129: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 13:36:13 logging.go:29: [API] 2025/02/01 - 13:36:13 | 200 |       596.8µs |             ::1 | POST    /api/auth/token
+2025/02/01 13:36:13 whois_manager.go:94: 命中缓存: ys.com
+2025/02/01 13:36:13 logging.go:29: [API] 2025/02/01 - 13:36:13 | 200 |       545.1µs |             ::1 | POST    /api/query
+2025/02/01 13:36:25 logging.go:29: [API] 2025/02/01 - 13:36:25 | 200 |            0s |             ::1 | POST    /api/auth/token
+2025/02/01 13:36:25 whoisfreaks.go:87: 使用 WhoisFreaks API 查询域名: niubi.cn
+2025/02/01 13:36:27 logging.go:29: [API] 2025/02/01 - 13:36:27 | 200 |    1.6299169s |             ::1 | POST    /api/query
+2025/02/01 13:41:06 main.go:64: Redis 连接成功
+2025/02/01 13:41:06 main.go:130: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 13:44:24 main.go:64: Redis 连接成功
+2025/02/01 13:44:24 main.go:130: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 13:49:40 main.go:64: Redis 连接成功
+2025/02/01 13:49:40 main.go:129: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 13:49:52 logging.go:29: [API] 2025/02/01 - 13:49:52 | 200 |       928.1µs |             ::1 | POST    /api/auth/token
+2025/02/01 13:49:52 whois_manager.go:94: 命中缓存: qwp.icu
+2025/02/01 13:49:52 logging.go:29: [API] 2025/02/01 - 13:49:52 | 200 |      1.1546ms |             ::1 | POST    /api/query
+2025/02/01 13:57:28 main.go:64: Redis 连接成功
+2025/02/01 13:57:28 main.go:129: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 13:57:39 logging.go:29: [API] 2025/02/01 - 13:57:39 | 200 |       579.5µs |             ::1 | POST    /api/auth/token
+2025/02/01 13:57:39 whois_manager.go:94: 命中缓存: qwp.icu
+2025/02/01 13:57:39 logging.go:29: [API] 2025/02/01 - 13:57:39 | 200 |      1.7233ms |             ::1 | POST    /api/query
+2025/02/01 14:02:38 main.go:64: Redis 连接成功
+2025/02/01 14:02:38 main.go:129: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 14:04:32 logging.go:29: [API] 2025/02/01 - 14:04:32 | 200 |       667.7µs |             ::1 | POST    /api/auth/token
+2025/02/01 14:04:32 whois_manager.go:94: 命中缓存: qwp.icu
+2025/02/01 14:04:32 logging.go:29: [API] 2025/02/01 - 14:04:32 | 200 |      1.6673ms |             ::1 | POST    /api/query
+2025/02/01 14:09:45 main.go:64: Redis 连接成功
+2025/02/01 14:09:45 main.go:129: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 14:09:58 logging.go:29: [API] 2025/02/01 - 14:09:58 | 200 |      1.6802ms |             ::1 | POST    /api/auth/token
+2025/02/01 14:09:58 whois_manager.go:94: 命中缓存: qwp.icu
+2025/02/01 14:09:58 logging.go:29: [API] 2025/02/01 - 14:09:58 | 200 |      1.6671ms |             ::1 | POST    /api/query
+2025/02/01 14:10:09 logging.go:29: [API] 2025/02/01 - 14:10:09 | 200 |      1.2123ms |             ::1 | POST    /api/auth/token
+2025/02/01 14:10:09 whoisfreaks.go:87: 使用 WhoisFreaks API 查询域名: cloudfk.com
+2025/02/01 14:10:12 logging.go:29: [API] 2025/02/01 - 14:10:12 | 200 |    2.7891951s |             ::1 | POST    /api/query
+2025/02/01 14:40:25 main.go:64: Redis 连接成功
+2025/02/01 14:40:25 main.go:129: 服务器启动于端口 3000 | 模式: debug
+2025/02/01 14:41:34 logging.go:29: [API] 2025/02/01 - 14:41:34 | 404 |      5.1713ms |             ::1 | GET     /
+2025/02/01 14:41:43 logging.go:29: [API] 2025/02/01 - 14:41:43 | 200 |       1.308ms |             ::1 | POST    /api/auth/token
+2025/02/01 14:41:43 whois_manager.go:94: 命中缓存: qwp.icu
+2025/02/01 14:41:43 logging.go:29: [API] 2025/02/01 - 14:41:43 | 200 |      2.6242ms |             ::1 | POST    /api/query
+2025/02/01 14:42:15 logging.go:29: [API] 2025/02/01 - 14:42:15 | 200 |      1.3577ms |             ::1 | POST    /api/auth/token
+2025/02/01 14:42:15 whois_manager.go:94: 命中缓存: ys.com
+2025/02/01 14:42:15 logging.go:29: [API] 2025/02/01 - 14:42:15 | 200 |      2.0819ms |             ::1 | POST    /api/query
+2025/02/01 14:42:27 logging.go:29: [API] 2025/02/01 - 14:42:27 | 200 |      1.9675ms |             ::1 | POST    /api/auth/token
+2025/02/01 14:42:27 whois_manager.go:94: 命中缓存: ys.com
+2025/02/01 14:42:27 logging.go:29: [API] 2025/02/01 - 14:42:27 | 200 |      2.6045ms |             ::1 | POST    /api/query
