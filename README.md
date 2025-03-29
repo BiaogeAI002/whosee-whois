@@ -138,7 +138,7 @@ whosee-whois/
 - Go ≥ 1.21
 - Redis ≥ 6.0
 
-### 部署方式
+### 前端部署方式
 
 #### Vercel 一键部署
 
@@ -151,7 +151,10 @@ whosee-whois/
    - `WHOISFREAKS_API_KEY`: WhoisFreaks API 密钥（可选）
 4. 点击 "Deploy" 开始部署
 
-#### 本地部署
+### 后端
+仓库：[https://github.com/AsisYu/whosee-server](https://github.com/AsisYu/whosee-server)
+
+### 本地部署
 
 ```bash
 # 克隆前端项目
