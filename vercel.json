@@ -24,6 +24,5 @@
       ]
     }
   ],
-  "crons": [],
-  "runtime": "nodejs20.x"
+  "crons": []
 }
