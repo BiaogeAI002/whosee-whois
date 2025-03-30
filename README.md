@@ -102,9 +102,10 @@
 
 ### 前端
 <p align="center">
-  <img src="https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue.js"/>
-  <img src="https://img.shields.io/badge/Element_Plus-Latest-409EFF?style=for-the-badge&logo=element&logoColor=white" alt="Element Plus"/>
+  <img src="https://img.shields.io/badge/Svelte-4.x-FF3E00?style=for-the-badge&logo=svelte&logoColor=white" alt="Svelte"/>
+  <img src="https://img.shields.io/badge/SvelteKit-2.x-FF3E00?style=for-the-badge&logo=svelte&logoColor=white" alt="SvelteKit"/>
   <img src="https://img.shields.io/badge/TypeScript-Latest-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"/>
+  <img src="https://img.shields.io/badge/Tailwind_CSS-Latest-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS"/>
 </p>
 
 ### 后端
@@ -118,24 +119,24 @@
 
 ```
 whosee-whois/
-├── 📂 server/           # Go 后端服务
-│   ├── handlers/        # API 处理器
-│   ├── middleware/      # 中间件组件
-│   ├── providers/      # WHOIS 服务提供者
-│   └── services/       # 核心业务逻辑
-├── 📂 web/             # Vue 前端项目
-│   ├── src/           # 源代码
-│   ├── public/        # 静态资源
-│   └── components/    # Vue 组件
-└── 📂 docs/            # 项目文档
+├── 📂 src/             # 前端源代码
+│   ├── lib/           # 核心库文件
+│   │   ├── api/      # API 接口
+│   │   ├── components/# Svelte 组件
+│   │   ├── stores/   # 状态管理
+│   │   └── utils/    # 工具函数
+│   └── routes/       # 页面路由
+├── 📂 static/         # 静态资源
+│   └── screenshots/  # 截图资源
+└── 📂 docs/           # 项目文档
 ```
 
 ## 🚀 快速开始
 
 ### 环境要求
 
-- Node.js ≥ 14
-- Go ≥ 1.21
+- Node.js ≥ 16
+- Bun ≥ 1.0 (推荐)
 - Redis ≥ 6.0
 
 ### 前端部署方式
@@ -146,9 +147,9 @@ whosee-whois/
 
 1. 点击上方按钮，使用 GitHub 账号登录 Vercel
 2. 导入项目后，Vercel 会自动检测项目配置
-3. 在环境变量中配置必要的 API Keys：
-   - `WHOISXML_API_KEY`: WhoisXML API 密钥
-   - `WHOISFREAKS_API_KEY`: WhoisFreaks API 密钥（可选）
+3. 在环境变量中配置必要的 API秘钥和地址：
+   - `API_TOKEN`:  API 通信密钥
+   - `API_ENDPOINT`: 通信地址
 4. 点击 "Deploy" 开始部署
 
 ### 后端
@@ -156,19 +157,38 @@ whosee-whois/
 
 ### 本地部署
 
+1. 克隆项目
 ```bash
 # 克隆前端项目
 git clone https://github.com/AsisYu/whosee-whois.git
+cd whosee-whois
 
 # 克隆后端项目
 git clone https://github.com/AsisYu/whosee-server.git
-
-# 安装依赖
-make install
-
-# 启动服务
-make run
 ```
+
+2. 配置环境变量
+```bash
+# 复制环境变量模板
+cp .env.example .env
+
+# 编辑 .env 文件，设置必要的环境变量
+# API_TOKEN: API通信密钥
+# API_ENDPOINT: API服务地址
+```
+
+3. 安装依赖并启动
+```bash
+# 使用 npm
+npm install
+npm run dev
+
+# 或使用 bun（推荐）
+bun install
+bun run dev
+```
+
+启动成功后，访问 http://localhost:5173 即可看到项目运行界面。
 
 更多部署细节请参考 [部署文档](docs/deployment.md)
 
