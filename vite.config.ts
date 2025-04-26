@@ -13,4 +13,19 @@ export default defineConfig({
 			],
 		},
 	},
+	server: {
+		allowedHosts: ['whosee.me'],
+		proxy: {
+			'/api': {
+				target: `http://localhost:${process.env.VITE_API_PORT || 3900}`,
+				changeOrigin: true,
+				secure: false
+			},
+			'/static': {
+				target: `http://localhost:${process.env.VITE_API_PORT || 3900}`,
+				changeOrigin: true,
+				secure: false
+			}
+		}
+	},
 });

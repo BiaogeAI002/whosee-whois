@@ -52,7 +52,21 @@ export const GET: RequestHandler = async ({ params }) => {
 
     const whoisData = await response.json();
     console.log(`WHOIS查询: 完成查询域名 ${domain}`);
-    return json(whoisData);
+    
+    // 获取缓存状态并传递给前端
+    const cacheStatus = response.headers.get('X-Cache');
+    const headers = new Headers();
+    if (cacheStatus) {
+      headers.set('X-Cache', cacheStatus);
+      console.log(`WHOIS查询: 缓存状态 X-Cache=${cacheStatus}`);
+    }
+    
+    // 将缓存状态添加到响应数据中，确保前端能够接收到
+    if (cacheStatus === 'HIT') {
+      whoisData.isCached = true;
+    }
+    
+    return json(whoisData, { headers });
   } catch (error) {
     console.error('WHOIS查询处理错误:', error);
     return json({ error: '服务器内部错误' }, { status: 500 });

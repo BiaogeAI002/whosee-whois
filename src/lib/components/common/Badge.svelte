@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let type: 'available' | 'registered' | 'new-registered' | 'unknown' = 'unknown';
+  export let type: 'available' | 'registered' | 'new-registered' | 'unknown' | 'info' = 'unknown';
   export let text: string;
   
   // 状态到样式的映射
@@ -8,6 +8,7 @@
     'registered': 'bg-gradient-to-r from-blue-400 to-blue-500',
     'new-registered': 'bg-gradient-to-r from-purple-400 to-purple-500 pulse-info',
     'unknown': 'bg-gradient-to-r from-gray-400 to-gray-500',
+    'info': 'bg-gradient-to-r from-indigo-400 to-indigo-500'
   };
 </script>
 

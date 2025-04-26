@@ -8,3 +8,6 @@ export type { WhoisResult } from './whois';
 
 export * from './screenshot';
 export type { ScreenshotResult } from './screenshot';
+
+export * from './health';
+export type { HealthResult } from './health';

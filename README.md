@@ -1,242 +1,186 @@
-# Domain WHOIS Lookup
+# 🌐 Whosee.me - 优雅的域名查询工具
 
-<p align="center">
-  <img src="docs/images/logo.png" alt="Domain WHOIS Logo" width="200"/>
-</p>
-
-<p align="center">
-  <a href="https://whosee.me">
-    <img src="https://img.shields.io/badge/Demo-whosee.me-blue?style=flat-square" alt="Live Demo"/>
-  </a>
-  <a href="https://github.com/AsisYu/whosee-whois/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/AsisYu/whosee-whois?style=flat-square" alt="license"/>
-  </a>
-  <a href="https://github.com/AsisYu/whosee-whois/issues">
-    <img src="https://img.shields.io/github/issues/AsisYu/whosee-whois?style=flat-square" alt="issues"/>
-  </a>
-  <a href="https://github.com/AsisYu/whosee-whois/stargazers">
-    <img src="https://img.shields.io/github/stars/AsisYu/whosee-whois?style=flat-square" alt="stars"/>
-  </a>
-</p>
-
-<p align="center">
-  <b>🔍 快速、可靠、安全的域名 WHOIS 信息查询系统</b>
-</p>
-
-<p align="center">
-  <a href="https://whosee.me">在线体验</a> •
-  <a href="#✨-功能特点">功能特点</a> •
-  <a href="#🚀-快速开始">快速开始</a> •
-  <a href="#📖-api-文档">API 文档</a> •
-  <a href="#🤝-贡献指南">贡献指南</a>
-</p>
-
-## ✨ 功能特点
-
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0;">
-
-<div>
-
-### 🌐 全球域名查询支持
-- 支持所有主流顶级域名查询
-- 实时域名可用性检测
-- 快速响应的查询接口
-
-### 🚀 双重数据源保障
-- WhoisXML API 数据源
-- WhoisFreaks 备用数据源
-- 智能故障切换机制
-
-### ⚡️ 智能缓存策略
-- Redis 高性能缓存
-- 基于域名到期时间的动态缓存时间
-  - 15天内到期：1小时缓存
-  - 30天内到期：6小时缓存
-  - 90天内到期：12小时缓存
-  - 其他情况：24小时缓存
-
-### 🎨 简洁的用户界面
-- 清晰的查询结果展示
-- 响应式布局设计
-- 直观的操作体验
-
+<div align="center">
+  
+  ![Whosee.me Logo](https://img.shields.io/badge/Whosee.me-域名查询工具-blue?style=for-the-badge&logo=internetexplorer)
+  
+  [![Svelte](https://img.shields.io/badge/Svelte-4.2-FF3E00?style=flat-square&logo=svelte)](https://svelte.dev/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+  [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+  
 </div>
 
-<div>
+Whosee.me是一个简单、优雅的域名查询工具，帮助您快速了解域名的WHOIS信息、DNS记录等详细数据。
 
-### 🔒 安全防护机制
-- JWT 身份认证
-- 请求速率限制
-- IP 风控策略
-- 标准的 CORS 配置
-- 安全响应头
+## ✨ 项目特点
 
-### 📊 专业信息展示
-- 注册商信息
-- 域名状态
-- 创建/更新/过期时间
-- 域名服务器信息
-- 注册人联系信息
-
-### 📱 全平台适配
-- 响应式布局设计
-- 移动端优化体验
-- 触摸屏友好操作
-- 跨浏览器兼容
-
-### 🔄 高可用性保障
-- 服务自动恢复
-- 负载均衡支持
-- 故障转移机制
-- 实时监控告警
-
-</div>
-
-</div>
-
-## 🎯 在线体验
-
-访问 [whosee.me](https://whosee.me) 立即体验！
+- 🔍 快速查询任意域名的WHOIS信息
+- 🌐 查询域名的DNS记录
+- 🖼️ 支持域名截图功能
+  - 🛠️ 增强的错误处理，当网站无法访问时提供友好提示
+  - 🔄 自动在域名变更时清除上一次的截图结果
+- 🚀 高效的缓存机制，加速查询过程
+- 🎨 现代化UI设计，优雅的用户体验
+- 📱 完全响应式，支持各种设备
+- 🔄 自动保存搜索历史
+- ⚡ 基于Svelte构建，性能卓越
 
 ## 🛠️ 技术栈
 
-### 前端
-<p align="center">
-  <img src="https://img.shields.io/badge/Svelte-4.x-FF3E00?style=for-the-badge&logo=svelte&logoColor=white" alt="Svelte"/>
-  <img src="https://img.shields.io/badge/SvelteKit-2.x-FF3E00?style=for-the-badge&logo=svelte&logoColor=white" alt="SvelteKit"/>
-  <img src="https://img.shields.io/badge/TypeScript-Latest-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"/>
-  <img src="https://img.shields.io/badge/Tailwind_CSS-Latest-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS"/>
-</p>
+<table>
+  <tr>
+    <th>前端</th>
+    <th>后端</th>
+  </tr>
+  <tr>
+    <td>
+      <ul>
+        <li>🔧 <b>框架</b>：Svelte + SvelteKit</li>
+        <li>🎭 <b>UI组件</b>：Skeleton UI</li>
+        <li>🎨 <b>样式处理</b>：TailwindCSS</li>
+        <li>🏗️ <b>构建工具</b>：Vite</li>
+        <li>📝 <b>开发语言</b>：TypeScript</li>
+        <li>📸 <b>截图工具</b>：Puppeteer</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>🚀 <b>框架</b>：Gin (Go)</li>
+        <li>⚡ <b>缓存</b>：Redis</li>
+        <li>🔐 <b>认证</b>：JWT</li>
+        <li>🔌 <b>API集成</b>：WHOIS API, DNS查询</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
-### 后端
-<p align="center">
-  <img src="https://img.shields.io/badge/Go-1.21+-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Go"/>
-  <img src="https://img.shields.io/badge/Redis-6.0+-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis"/>
-  <img src="https://img.shields.io/badge/Gin-Latest-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Gin"/>
-</p>
+## 📂 项目架构
 
-## 📁 项目结构
+这是前端仓库，后端代码位于单独的仓库 [whosee-server](https://github.com/AsisYu/whosee-server)。
 
 ```
-whosee-whois/
-├── 📂 src/             # 前端源代码
-│   ├── lib/           # 核心库文件
-│   │   ├── api/      # API 接口
-│   │   ├── components/# Svelte 组件
-│   │   ├── stores/   # 状态管理
-│   │   └── utils/    # 工具函数
-│   └── routes/       # 页面路由
-├── 📂 static/         # 静态资源
-│   └── screenshots/  # 截图资源
-└── 📂 docs/           # 项目文档
+src/                # 前端源代码
+├── lib/            # 共享库文件
+│   ├── api/        # API接口
+│   ├── components/ # 可复用组件
+│   ├── stores/     # 状态管理
+│   └── utils/      # 工具函数
+└── routes/         # 页面路由
 ```
 
-## 🚀 快速开始
+### 🧩 主要组件
+
+- **🔍 SearchBox**: 搜索框组件，支持历史记录功能
+- **📋 DomainResult**: WHOIS信息展示组件
+  - 集成截图功能，支持普通截图和测速截图
+  - 优化的错误处理，显示详细的错误信息和重试选项
+- **🌐 DNSResult**: DNS记录展示组件
+- **🏷️ Badge**: 通用状态标签组件
+
+## 🔌 API接口
+
+前端通过以下API接口与后端通信，后端实现位于 [whosee-server](https://github.com/AsisYu/whosee-server) 仓库。
+
+### WHOIS查询
+
+```
+GET /api/query?domain={domain}
+```
+
+### DNS查询
+
+```
+GET /api/dns?domain={domain}
+```
+
+### 域名截图
+
+```
+GET /api/screenshot/{domain}         # 普通网站截图
+GET /api/screenshot/itdog/{domain}   # ITDog测速截图
+POST /api/screenshot/element         # 网页元素截图
+```
+
+## 📥 安装指南
 
 ### 环境要求
 
-- Node.js ≥ 16
-- Bun ≥ 1.0 (推荐)
-- Redis ≥ 6.0
+- Node.js 18.0.0 或更高版本
+- npm 9.0.0 或更高版本
 
-### 前端部署方式
+### 安装依赖
 
-#### Vercel 一键部署
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAsisYu%2Fwhosee-whois)
-
-1. 点击上方按钮，使用 GitHub 账号登录 Vercel
-2. 导入项目后，Vercel 会自动检测项目配置
-3. 在环境变量中配置必要的 API秘钥和地址：
-   - `API_TOKEN`:  API 通信密钥
-   - `API_ENDPOINT`: 通信地址
-4. 点击 "Deploy" 开始部署
-
-### 后端
-仓库：[https://github.com/AsisYu/whosee-server](https://github.com/AsisYu/whosee-server)
-
-### 本地部署
-
-1. 克隆项目
 ```bash
-# 克隆前端项目
-git clone https://github.com/AsisYu/whosee-whois.git
-cd whosee-whois
-
-# 克隆后端项目
-git clone https://github.com/AsisYu/whosee-server.git
-```
-
-2. 配置环境变量
-```bash
-# 复制环境变量模板
-cp .env.example .env
-
-# 编辑 .env 文件，设置必要的环境变量
-# API_TOKEN: API通信密钥
-# API_ENDPOINT: API服务地址
-```
-
-3. 安装依赖并启动
-```bash
-# 使用 npm
+# 安装依赖
 npm install
+```
+
+### 截图功能依赖
+
+本项目使用Puppeteer实现域名截图功能。Puppeteer是一个Node库，它提供了一个高级API来通过DevTools Protocol控制Chromium或Chrome。
+
+```bash
+# 安装Puppeteer
+npm install puppeteer
+```
+
+注意事项：
+- 首次安装Puppeteer时会下载Chromium浏览器（约170MB），请确保网络连接良好
+- 如果遇到Chromium下载问题，可以设置环境变量跳过下载：`PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true`
+- 如果跳过下载，需要手动指定Chrome浏览器路径：
+  ```js
+  const browser = await puppeteer.launch({
+    executablePath: '/path/to/Chrome'
+  });
+  ```
+
+### 环境配置
+
+创建环境配置文件 `.env`：
+
+```
+API_PORT=3900
+API_HOST=localhost
+API_PROTOCOL=http
+```
+
+### 开发服务器
+
+启动开发服务器：
+
+```bash
 npm run dev
-
-# 或使用 bun（推荐）
-bun install
-bun run dev
 ```
 
-启动成功后，访问 http://localhost:5173 即可看到项目运行界面。
+在浏览器中打开：
 
-更多部署细节请参考 [部署文档](docs/deployment.md)
-
-## 📖 API 文档
-
-### 获取查询令牌
-```http
-POST /api/auth/token
+```bash
+npm run dev -- --open
 ```
 
-### 查询域名信息
-```http
-POST /api/query
-Authorization: Bearer <token>
+### 构建项目
 
-{
-  "domain": "example.com"
-}
+创建生产版本：
+
+```bash
+npm run build
 ```
 
-完整 API 文档请访问 [API 文档](docs/api.md)
+预览生产构建：
+
+```bash
+npm run preview
+```
+
+## 🔗 后端设置
+
+后端代码位于单独的仓库 [whosee-server](https://github.com/AsisYu/whosee-server)，请参考该仓库的README文件获取安装和配置指南。
 
 ## 🤝 贡献指南
 
-我们欢迎所有形式的贡献，无论是新功能、文档改进还是 bug 修复。
+欢迎提交问题和功能请求！如果您想贡献代码，请先创建一个issue讨论您的想法。
 
-1. Fork 项目
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add: amazing feature'`)
-4. 推送分支 (`git push origin feature/AmazingFeature`)
-5. 提交 Pull Request
+## 📄 许可证
 
-## 📄 开源协议
-
-本项目采用 [MIT](LICENSE) 开源协议
-
-## 👨‍💻 作者
-
-AsisYu ([GitHub](https://github.com/AsisYu) | [Email](mailto:2773943729@qq.com))
-
-## 🌟 致谢
-
-感谢所有为本项目做出贡献的开发者！
-
-<p align="center">
-  <img src="https://contrib.rocks/image?repo=AsisYu/whosee-whois" />
-</p>
-
----
-
-<p align="center">如果这个项目对你有帮助，请考虑给它一个 Star ⭐️</p>
+[MIT](LICENSE)
