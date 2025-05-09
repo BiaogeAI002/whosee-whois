@@ -1,4 +1,4 @@
-# 🌐 Whosee.me - 优雅的域名查询工具
+# Whosee.me - 优雅的域名查询工具
 
 <div align="center">
   
