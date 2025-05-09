@@ -54,6 +54,8 @@
       }, 100); // 短暂延迟以确保令牌处理完成
     }
   }
+  // 获取当前年份
+  const currentYear = new Date().getFullYear();
 </script>
 
 <svelte:head>
@@ -110,7 +112,7 @@
       <!-- 移动端不使用模糊效果 -->
       <div class="footer-blur hidden md:block absolute inset-0 backdrop-blur-sm -z-10"></div>
       <p class="text-sm">
-        2024 Whosee.me | 
+        © {currentYear} Whosee.me | 
         <a href="/health" class="hover:text-gray-900 transition-colors mr-2">
           系统状态
         </a>
