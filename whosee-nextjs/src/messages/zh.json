@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "domain": "域名",
+    "dns": "DNS",
+    "screenshot": "网站截图",
+    "health": "健康状态"
+  },
+  "common": {
+    "search": "搜索",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "copy": "复制",
+    "copied": "已复制！",
+    "lightMode": "浅色模式",
+    "darkMode": "深色模式",
+    "language": "语言",
+    "retry": "重试",
+    "networkError": "网络错误",
+    "networkErrorMessage": "无法连接到服务器，请检查网络连接并重试。",
+    "notFound": "未找到",
+    "notFoundMessage": "请求的资源未找到。",
+    "resourceNotFound": "未找到 {resource}"
+  },
+  "home": {
+    "title": "Whosee - 专业域名查询工具",
+    "subtitle": "快速全面的域名信息查询服务",
+    "placeholder": "输入域名 (例如: example.com)",
+    "search": "搜索",
+    "features": {
+      "domain": {
+        "title": "域名信息",
+        "description": "获取详细的WHOIS信息、注册详情和域名状态"
+      },
+      "dns": {
+        "title": "DNS记录",
+        "description": "查询DNS记录，包括A、AAAA、MX、TXT、NS等"
+      },
+      "screenshot": {
+        "title": "网站截图",
+        "description": "捕获和预览网站截图"
+      }
+    }
+  },
+  "domain": {
+    "title": "域名信息",
+    "registrar": "注册商",
+    "status": "状态",
+    "created": "创建时间",
+    "updated": "更新时间",
+    "expires": "过期时间",
+    "nameservers": "域名服务器",
+    "contacts": "联系信息",
+    "registrant": "注册人",
+    "admin": "管理员",
+    "tech": "技术联系人",
+    "billing": "账单联系人"
+  },
+  "dns": {
+    "title": "DNS记录",
+    "type": "类型",
+    "value": "值",
+    "ttl": "TTL",
+    "priority": "优先级"
+  },
+
+  "screenshot": {
+    "title": "网站截图",
+    "desktop": "桌面版",
+    "mobile": "移动版",
+    "tablet": "平板版",
+    "captureTime": "截图时间",
+    "fileSize": "文件大小"
+  }
+} 

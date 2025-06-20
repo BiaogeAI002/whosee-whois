@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "domain": "Domain",
+    "dns": "DNS",
+    "screenshot": "Screenshot",
+    "health": "Health"
+  },
+  "common": {
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
+    "language": "Language",
+    "retry": "Retry",
+    "networkError": "Network Error",
+    "networkErrorMessage": "Unable to connect to the server. Please check your internet connection and try again.",
+    "notFound": "Not Found",
+    "notFoundMessage": "The requested resource could not be found.",
+    "resourceNotFound": "{resource} not found"
+  },
+  "home": {
+    "title": "Whosee - Professional Domain Lookup Tool",
+    "subtitle": "Fast and comprehensive domain information lookup service",
+    "placeholder": "Enter domain name (e.g., example.com)",
+    "search": "Search",
+    "features": {
+      "domain": {
+        "title": "Domain Information",
+        "description": "Get detailed WHOIS information, registration details, and domain status"
+      },
+      "dns": {
+        "title": "DNS Records",
+        "description": "Lookup DNS records including A, AAAA, MX, TXT, NS, and more"
+      },
+      "screenshot": {
+        "title": "Website Screenshot",
+        "description": "Capture and preview website screenshots"
+      }
+    }
+  },
+  "domain": {
+    "title": "Domain Information",
+    "registrar": "Registrar",
+    "status": "Status",
+    "created": "Created",
+    "updated": "Updated",
+    "expires": "Expires",
+    "nameservers": "Name Servers",
+    "contacts": "Contacts",
+    "registrant": "Registrant",
+    "admin": "Admin",
+    "tech": "Technical",
+    "billing": "Billing"
+  },
+  "dns": {
+    "title": "DNS Records",
+    "type": "Type",
+    "value": "Value",
+    "ttl": "TTL",
+    "priority": "Priority"
+  },
+
+  "screenshot": {
+    "title": "Website Screenshot",
+    "desktop": "Desktop",
+    "mobile": "Mobile",
+    "tablet": "Tablet",
+    "captureTime": "Capture Time",
+    "fileSize": "File Size"
+  }
+} 
