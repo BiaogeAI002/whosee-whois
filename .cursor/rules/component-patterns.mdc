@@ -1,0 +1,778 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# UI 组件开发模式和最佳实践
+
+## 组件架构模式
+
+### 基础组件结构
+
+```typescript
+// src/components/ui/button.tsx
+import { cn } from '@/lib/utils';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { ButtonHTMLAttributes, forwardRef } from 'react';
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline: 'border border-input hover:bg-accent hover:text-accent-foreground',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        link: 'underline-offset-4 hover:underline text-primary',
+      },
+      size: {
+        default: 'h-10 py-2 px-4',
+        sm: 'h-9 px-3 rounded-md',
+        lg: 'h-11 px-8 rounded-md',
+        icon: 'h-10 w-10',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+);
+
+interface ButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  loading?: boolean;
+}
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, loading, children, ...props }, ref) => {
+    return (
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        disabled={loading || props.disabled}
+        {...props}
+      >
+        {loading && (
+          <svg className="animate-spin -ml-1 mr-3 h-4 w-4" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+          </svg>
+        )}
+        {children}
+      </button>
+    );
+  }
+);
+
+Button.displayName = 'Button';
+
+export { Button, buttonVariants };
+```
+
+### 搜索框组件
+
+```typescript
+// src/components/ui/search-box.tsx
+'use client';
+
+import { useState, KeyboardEvent } from 'react';
+import { Search, X } from 'lucide-react';
+import { Button } from './button';
+import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
+
+interface SearchBoxProps {
+  onSearch: (query: string) => void;
+  loading?: boolean;
+  placeholder?: string;
+  className?: string;
+  defaultValue?: string;
+}
+
+export function SearchBox({
+  onSearch,
+  loading = false,
+  placeholder,
+  className,
+  defaultValue = '',
+}: SearchBoxProps) {
+  const [query, setQuery] = useState(defaultValue);
+  const t = useTranslations('search');
+
+  const handleSubmit = () => {
+    if (query.trim()) {
+      onSearch(query.trim());
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSubmit();
+    }
+  };
+
+  const clearQuery = () => {
+    setQuery('');
+  };
+
+  return (
+    <div className={cn('relative max-w-2xl mx-auto', className)}>
+      <div className="relative flex items-center">
+        <div className="absolute left-3 flex items-center pointer-events-none">
+          <Search className="h-5 w-5 text-gray-400" />
+        </div>
+        
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder || t('placeholder')}
+          className="w-full pl-10 pr-20 py-3 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+          disabled={loading}
+        />
+        
+        {query && (
+          <button
+            onClick={clearQuery}
+            className="absolute right-16 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            type="button"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+        
+        <Button
+          onClick={handleSubmit}
+          loading={loading}
+          disabled={!query.trim() || loading}
+          className="absolute right-2 top-2 bottom-2"
+          size="sm"
+        >
+          {loading ? t('searching') : t('search')}
+        </Button>
+      </div>
+      
+      {/* 搜索建议或历史记录可以在这里添加 */}
+    </div>
+  );
+}
+```
+
+### 数据表格组件
+
+```typescript
+// src/components/ui/data-table.tsx
+'use client';
+
+import { useState } from 'react';
+import { ChevronDown, ChevronUp, Copy } from 'lucide-react';
+import { Button } from './button';
+import { CopyButton } from './copy-button';
+import { cn } from '@/lib/utils';
+
+interface TableColumn<T> {
+  key: keyof T;
+  title: string;
+  render?: (value: any, item: T) => React.ReactNode;
+  sortable?: boolean;
+  width?: string;
+}
+
+interface DataTableProps<T> {
+  data: T[];
+  columns: TableColumn<T>[];
+  loading?: boolean;
+  emptyMessage?: string;
+  className?: string;
+}
+
+export function DataTable<T extends Record<string, any>>({
+  data,
+  columns,
+  loading = false,
+  emptyMessage = '暂无数据',
+  className,
+}: DataTableProps<T>) {
+  const [sortColumn, setSortColumn] = useState<keyof T | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
+  const handleSort = (column: keyof T) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+
+  const sortedData = [...data].sort((a, b) => {
+    if (!sortColumn) return 0;
+    
+    const aValue = a[sortColumn];
+    const bValue = b[sortColumn];
+    
+    if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  if (loading) {
+    return (
+      <div className="animate-pulse">
+        <div className="h-10 bg-gray-200 rounded mb-4"></div>
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="h-8 bg-gray-100 rounded mb-2"></div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn('overflow-x-auto', className)}>
+      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead className="bg-gray-50 dark:bg-gray-800">
+          <tr>
+            {columns.map((column) => (
+              <th
+                key={String(column.key)}
+                className={cn(
+                  'px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider',
+                  column.sortable && 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700',
+                  column.width && `w-${column.width}`
+                )}
+                onClick={() => column.sortable && handleSort(column.key)}
+              >
+                <div className="flex items-center space-x-1">
+                  <span>{column.title}</span>
+                  {column.sortable && (
+                    <span className="flex flex-col">
+                      <ChevronUp 
+                        className={cn(
+                          'h-3 w-3',
+                          sortColumn === column.key && sortDirection === 'asc'
+                            ? 'text-gray-900 dark:text-gray-100'
+                            : 'text-gray-400'
+                        )}
+                      />
+                      <ChevronDown 
+                        className={cn(
+                          'h-3 w-3 -mt-1',
+                          sortColumn === column.key && sortDirection === 'desc'
+                            ? 'text-gray-900 dark:text-gray-100'
+                            : 'text-gray-400'
+                        )}
+                      />
+                    </span>
+                  )}
+                </div>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+          {sortedData.length === 0 ? (
+            <tr>
+              <td 
+                colSpan={columns.length}
+                className="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
+              >
+                {emptyMessage}
+              </td>
+            </tr>
+          ) : (
+            sortedData.map((item, index) => (
+              <tr 
+                key={index}
+                className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                {columns.map((column) => (
+                  <td 
+                    key={String(column.key)}
+                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                  >
+                    {column.render 
+                      ? column.render(item[column.key], item)
+                      : String(item[column.key] || '-')
+                    }
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+```
+
+### 复制按钮组件
+
+```typescript
+// src/components/ui/copy-button.tsx
+'use client';
+
+import { useState } from 'react';
+import { Copy, Check } from 'lucide-react';
+import { Button } from './button';
+import { cn } from '@/lib/utils';
+
+interface CopyButtonProps {
+  text: string;
+  className?: string;
+  size?: 'sm' | 'md' | 'lg';
+  variant?: 'ghost' | 'outline' | 'default';
+}
+
+export function CopyButton({ 
+  text, 
+  className, 
+  size = 'sm', 
+  variant = 'ghost' 
+}: CopyButtonProps) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text:', err);
+    }
+  };
+
+  return (
+    <Button
+      variant={variant}
+      size={size}
+      onClick={handleCopy}
+      className={cn('h-8 w-8 p-0', className)}
+      title={copied ? '已复制' : '复制'}
+    >
+      {copied ? (
+        <Check className="h-4 w-4 text-green-500" />
+      ) : (
+        <Copy className="h-4 w-4" />
+      )}
+    </Button>
+  );
+}
+```
+
+### 徽章组件
+
+```typescript
+// src/components/ui/badge.tsx
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
+
+const badgeVariants = cva(
+  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+  {
+    variants: {
+      variant: {
+        default: 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
+        secondary: 'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        destructive: 'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
+        outline: 'text-foreground',
+        success: 'border-transparent bg-green-500 text-white hover:bg-green-600',
+        warning: 'border-transparent bg-yellow-500 text-white hover:bg-yellow-600',
+        info: 'border-transparent bg-blue-500 text-white hover:bg-blue-600',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  }
+);
+
+interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof badgeVariants> {}
+
+function Badge({ className, variant, ...props }: BadgeProps) {
+  return (
+    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+  );
+}
+
+export { Badge, badgeVariants };
+```
+
+### 错误状态组件
+
+```typescript
+// src/components/ui/error-state.tsx
+import { AlertCircle, RefreshCw } from 'lucide-react';
+import { Button } from './button';
+import { cn } from '@/lib/utils';
+
+interface ErrorStateProps {
+  title?: string;
+  message: string;
+  onRetry?: () => void;
+  className?: string;
+}
+
+export function ErrorState({
+  title = '出现错误',
+  message,
+  onRetry,
+  className,
+}: ErrorStateProps) {
+  return (
+    <div className={cn('flex flex-col items-center justify-center p-8 text-center', className)}>
+      <div className="flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full mb-4">
+        <AlertCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
+      </div>
+      
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        {title}
+      </h3>
+      
+      <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md">
+        {message}
+      </p>
+      
+      {onRetry && (
+        <Button onClick={onRetry} variant="outline">
+          <RefreshCw className="w-4 h-4 mr-2" />
+          重试
+        </Button>
+      )}
+    </div>
+  );
+}
+```
+
+### 加载状态组件
+
+```typescript
+// src/components/ui/loading.tsx
+import { cn } from '@/lib/utils';
+
+interface LoadingProps {
+  size?: 'sm' | 'md' | 'lg';
+  className?: string;
+  text?: string;
+}
+
+export function Loading({ size = 'md', className, text }: LoadingProps) {
+  const sizeClasses = {
+    sm: 'w-4 h-4',
+    md: 'w-8 h-8',
+    lg: 'w-12 h-12',
+  };
+
+  return (
+    <div className={cn('flex flex-col items-center justify-center p-4', className)}>
+      <div className={cn('animate-spin', sizeClasses[size])}>
+        <svg className="w-full h-full" fill="none" viewBox="0 0 24 24">
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          />
+        </svg>
+      </div>
+      
+      {text && (
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{text}</p>
+      )}
+    </div>
+  );
+}
+
+// 骨架屏加载组件
+export function SkeletonLoader({ className }: { className?: string }) {
+  return (
+    <div className={cn('animate-pulse', className)}>
+      <div className="bg-gray-200 dark:bg-gray-700 rounded h-4 mb-2"></div>
+      <div className="bg-gray-200 dark:bg-gray-700 rounded h-4 mb-2 w-3/4"></div>
+      <div className="bg-gray-200 dark:bg-gray-700 rounded h-4 w-1/2"></div>
+    </div>
+  );
+}
+```
+
+## 主题和样式模式
+
+### 主题提供者
+
+```typescript
+// src/components/providers/theme-provider.tsx
+'use client';
+
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import { type ThemeProviderProps } from 'next-themes/dist/types';
+
+export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+  return (
+    <NextThemesProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+      {...props}
+    >
+      {children}
+    </NextThemesProvider>
+  );
+}
+```
+
+### 主题切换组件
+
+```typescript
+// src/components/ui/theme-toggle.tsx
+'use client';
+
+import { Moon, Sun, Monitor } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { Button } from './button';
+import { useEffect, useState } from 'react';
+
+export function ThemeToggle() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  const cycleTheme = () => {
+    if (theme === 'light') {
+      setTheme('dark');
+    } else if (theme === 'dark') {
+      setTheme('system');
+    } else {
+      setTheme('light');
+    }
+  };
+
+  const getIcon = () => {
+    switch (theme) {
+      case 'light':
+        return <Sun className="h-4 w-4" />;
+      case 'dark':
+        return <Moon className="h-4 w-4" />;
+      default:
+        return <Monitor className="h-4 w-4" />;
+    }
+  };
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={cycleTheme}
+      title={`当前主题: ${theme}`}
+    >
+      {getIcon()}
+    </Button>
+  );
+}
+```
+
+### 语言切换组件
+
+```typescript
+// src/components/ui/language-toggle.tsx
+'use client';
+
+import { useRouter, usePathname } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import { Button } from './button';
+import { Globe } from 'lucide-react';
+
+export function LanguageToggle() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const locale = useLocale();
+
+  const toggleLanguage = () => {
+    const newLocale = locale === 'zh' ? 'en' : 'zh';
+    const newPath = pathname.replace(`/${locale}`, `/${newLocale}`);
+    router.push(newPath);
+  };
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={toggleLanguage}
+      title={`切换到${locale === 'zh' ? 'English' : '中文'}`}
+    >
+      <Globe className="h-4 w-4 mr-1" />
+      {locale === 'zh' ? 'EN' : '中文'}
+    </Button>
+  );
+}
+```
+
+## 组件组合模式
+
+### 响应式导航栏
+
+```typescript
+// src/components/ui/navbar.tsx
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { Menu, X } from 'lucide-react';
+import { ThemeToggle } from './theme-toggle';
+import { LanguageToggle } from './language-toggle';
+import { Button } from './button';
+import { useTranslations } from 'next-intl';
+
+export function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const t = useTranslations('nav');
+
+  const navigation = [
+    { name: t('home'), href: '/' },
+    { name: t('domain'), href: '/domain' },
+    { name: t('dns'), href: '/dns' },
+    { name: t('screenshot'), href: '/screenshot' },
+  ];
+
+  return (
+    <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center">
+              <span className="text-xl font-bold text-gray-900 dark:text-white">
+                Whosee
+              </span>
+            </Link>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors"
+              >
+                {item.name}
+              </Link>
+            ))}
+            
+            <div className="flex items-center space-x-2">
+              <LanguageToggle />
+              <ThemeToggle />
+            </div>
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Navigation */}
+      {isOpen && (
+        <div className="md:hidden">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 block px-3 py-2 text-base font-medium"
+                onClick={() => setIsOpen(false)}
+              >
+                {item.name}
+              </Link>
+            ))}
+            
+            <div className="flex items-center space-x-2 px-3 py-2">
+              <LanguageToggle />
+              <ThemeToggle />
+            </div>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+}
+```
+
+## 使用指南
+
+### 组件导入规范
+
+```typescript
+// 推荐的导入方式
+import { Button } from '@/components/ui/button';
+import { DataTable } from '@/components/ui/data-table';
+import { SearchBox } from '@/components/ui/search-box';
+
+// 在页面中使用
+export default function Page() {
+  return (
+    <div>
+      <SearchBox onSearch={handleSearch} />
+      <DataTable data={tableData} columns={columns} />
+    </div>
+  );
+}
+```
+
+### 样式定制
+
+```typescript
+// 使用 cn() 函数组合样式
+import { cn } from '@/lib/utils';
+
+<Button 
+  className={cn(
+    'custom-styles',
+    condition && 'conditional-styles'
+  )}
+>
+  Button Text
+</Button>
+```
+
+### 类型安全
+
+```typescript
+// 确保组件 props 有完整的 TypeScript 定义
+interface ComponentProps {
+  required: string;
+  optional?: number;
+  callback: (value: string) => void;
+}
+
+export function Component({ required, optional, callback }: ComponentProps) {
+  // 组件实现
+}
+```

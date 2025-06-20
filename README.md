@@ -46,7 +46,9 @@
 ### 样式和 UI
 - **TailwindCSS 3.4** - 实用优先的 CSS 框架
 - **Lucide React** - 现代化图标库
-- **CSS 动画** - 流畅的交互动效
+- **Framer Motion** - 高性能动画库
+- **class-variance-authority** - 组件变体管理
+- **clsx & tailwind-merge** - 样式类名合并
 
 ### 国际化和主题
 - **next-intl** - 完整的国际化解决方案
@@ -54,8 +56,8 @@
 
 ### 开发工具
 - **ESLint** - 代码质量检查
-- **PostCSS** - CSS 后处理器
-- **Autoprefixer** - 自动添加浏览器前缀
+- **PostCSS** - CSS 后处理器  
+- **Turbopack** - 快速构建工具 (开发模式)
 
 ## 🚀 快速开始
 
@@ -65,7 +67,6 @@
 
 ### 安装依赖
 ```bash
-cd whosee-nextjs
 npm install
 ```
 
@@ -94,7 +95,7 @@ npm run lint
 ## 📁 项目结构
 
 ```
-whosee-nextjs/
+whosee-whois/
 ├── src/
 │   ├── app/                    # Next.js App Router 页面
 │   │   ├── domain/            # 域名查询页面
@@ -127,10 +128,15 @@ whosee-nextjs/
 创建 `.env.local` 文件配置环境变量：
 
 ```bash
-# API 基础 URL
-NEXT_PUBLIC_API_URL=https://api.whosee.me
+# API 基础 URL (如果有后端服务)
+NEXT_PUBLIC_API_URL=http://localhost:3001
 
-# 其他配置...
+# 功能开关
+NEXT_PUBLIC_ENABLE_SCREENSHOT=true
+NEXT_PUBLIC_ENABLE_DNS=true
+
+# 调试模式
+NEXT_PUBLIC_DEBUG_MODE=false
 ```
 
 ### API 集成
@@ -153,10 +159,10 @@ NEXT_PUBLIC_API_URL=https://api.whosee.me
 ### Docker 部署
 ```bash
 # 构建镜像
-docker build -t whosee-nextjs .
+docker build -t whosee-whois .
 
 # 运行容器
-docker run -p 3000:3000 whosee-nextjs
+docker run -p 3000:3000 whosee-whois
 ```
 
 ### 静态导出
