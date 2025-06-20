@@ -11,6 +11,7 @@ import { copyToClipboard } from '@/lib/utils';
 
 export default function DNSPage() {
   const t = useTranslations('dns');
+  const tCommon = useTranslations('common');
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [dnsInfo, setDnsInfo] = useState<DNSInfo | null>(null);
@@ -59,60 +60,60 @@ export default function DNSPage() {
 
   const recordTypeInfo = {
     A: { 
-      name: 'A 记录', 
-      desc: '指向 IPv4 地址',
+      name: t('recordInfo.a.name'), 
+      desc: t('recordInfo.a.description'),
       icon: '🌐',
       color: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20'
     },
     AAAA: { 
-      name: 'AAAA 记录', 
-      desc: '指向 IPv6 地址',
+      name: t('recordInfo.aaaa.name'), 
+      desc: t('recordInfo.aaaa.description'),
       icon: '🔗',
       color: 'text-purple-600 bg-purple-50 dark:bg-purple-900/20'
     },
     MX: { 
-      name: 'MX 记录', 
-      desc: '邮件服务器',
+      name: t('recordInfo.mx.name'), 
+      desc: t('recordInfo.mx.description'),
       icon: '📧',
       color: 'text-green-600 bg-green-50 dark:bg-green-900/20'
     },
     TXT: { 
-      name: 'TXT 记录', 
-      desc: '文本验证记录',
+      name: t('recordInfo.txt.name'), 
+      desc: t('recordInfo.txt.description'),
       icon: '📄',
       color: 'text-orange-600 bg-orange-50 dark:bg-orange-900/20'
     },
     NS: { 
-      name: 'NS 记录', 
-      desc: '域名服务器',
+      name: t('recordInfo.ns.name'), 
+      desc: t('recordInfo.ns.description'),
       icon: '🏢',
       color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
     },
     CNAME: { 
-      name: 'CNAME 记录', 
-      desc: '别名记录',
+      name: t('recordInfo.cname.name'), 
+      desc: t('recordInfo.cname.description'),
       icon: '🔄',
       color: 'text-pink-600 bg-pink-50 dark:bg-pink-900/20'
     },
     SOA: { 
-      name: 'SOA 记录', 
-      desc: '权威起始记录',
+      name: t('recordInfo.soa.name'), 
+      desc: t('recordInfo.soa.description'),
       icon: '👑',
       color: 'text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20'
     },
     PTR: { 
-      name: 'PTR 记录', 
-      desc: '反向解析记录',
+      name: t('recordInfo.ptr.name'), 
+      desc: t('recordInfo.ptr.description'),
       icon: '🔄',
       color: 'text-teal-600 bg-teal-50 dark:bg-teal-900/20'
     }
   };
 
   const dnsTools = [
-    { name: '域名信息', desc: '查看 WHOIS 信息', href: '/domain', icon: Globe },
-    { name: '网站截图', desc: '获取网站页面截图', href: '/screenshot', icon: Server },
-    { name: 'SSL 检查', desc: '检查 SSL 证书', href: '#', icon: Shield },
-    { name: '性能测试', desc: '网站速度测试', href: '#', icon: Zap }
+    { name: t('tools.domainInfo'), desc: t('tools.domainInfoDesc'), href: '/domain', icon: Globe },
+    { name: t('tools.websiteScreenshot'), desc: t('tools.websiteScreenshotDesc'), href: '/screenshot', icon: Server },
+    { name: t('tools.sslCheck'), desc: t('tools.sslCheckDesc'), href: '#', icon: Shield },
+    { name: t('tools.performanceTest'), desc: t('tools.performanceTestDesc'), href: '#', icon: Zap }
   ];
 
 
@@ -127,7 +128,7 @@ export default function DNSPage() {
             {t('title')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
-            查询域名的所有 DNS 记录，包括 A、AAAA、MX、TXT、NS、CNAME 等记录类型
+            {t('description')}
           </p>
           <SearchBox 
             onSearch={handleSearch} 
@@ -163,7 +164,7 @@ export default function DNSPage() {
                           <div className="flex items-center space-x-3">
                             <span>{typeInfo.name}</span>
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${typeInfo.color}`}>
-                              {records.length} 条记录
+                              {records.length} {t('records')}
                             </span>
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
@@ -180,7 +181,7 @@ export default function DNSPage() {
                               <th className="text-left py-3 font-medium">{t('value')}</th>
                               <th className="text-left py-3 font-medium">{t('ttl')}</th>
                               {recordType === 'MX' && <th className="text-left py-3 font-medium">{t('priority')}</th>}
-                              <th className="text-left py-3 font-medium">操作</th>
+                              <th className="text-left py-3 font-medium">{t('operation')}</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -206,7 +207,7 @@ export default function DNSPage() {
                                   <button
                                     onClick={() => handleCopy(record.value, `${recordType}-${index}`)}
                                     className="p-2 hover:bg-accent rounded-lg transition-colors"
-                                    title="复制记录值"
+                                    title={t('copyRecordValue')}
                                   >
                                     <Copy className="h-4 w-4" />
                                   </button>
@@ -228,7 +229,7 @@ export default function DNSPage() {
               <div className="bg-card rounded-lg border p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center">
                   <Info className="h-5 w-5 mr-2" />
-                  记录类型说明
+                  {t('recordTypes')}
                 </h3>
                 <div className="space-y-3">
                   {Object.entries(recordTypeInfo).map(([type, info]) => (
@@ -249,7 +250,7 @@ export default function DNSPage() {
 
               {/* 相关工具 */}
               <div className="bg-card rounded-lg border p-6">
-                <h3 className="text-lg font-semibold mb-4">相关工具</h3>
+                <h3 className="text-lg font-semibold mb-4">{t('relatedTools')}</h3>
                 <div className="space-y-3">
                   {dnsTools.map((tool, index) => (
                     <a
@@ -270,25 +271,25 @@ export default function DNSPage() {
 
               {/* 查询统计 */}
               <div className="bg-card rounded-lg border p-6">
-                <h3 className="text-lg font-semibold mb-4">查询信息</h3>
+                <h3 className="text-lg font-semibold mb-4">{t('queryInfo')}</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">查询域名</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('queryDomain')}</span>
                     <span className="font-mono text-sm">{dnsInfo?.domain}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">记录总数</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('totalRecords')}</span>
                     <span className="font-medium">
                       {Object.values(dnsInfo?.records || {}).reduce((total, records) => total + (records?.length || 0), 0)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">查询时间</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('queryTime')}</span>
                     <span className="font-mono text-sm">{new Date().toLocaleTimeString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">DNS 服务器</span>
-                    <span className="text-sm">系统默认</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('dnsServer')}</span>
+                    <span className="text-sm">{t('systemDefault')}</span>
                   </div>
                 </div>
               </div>
@@ -301,15 +302,15 @@ export default function DNSPage() {
           <div className="text-center py-16">
             <Server className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              开始 DNS 查询
+              {t('startQuery')}
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              输入域名查看其所有 DNS 记录，包括 A、MX、TXT、CNAME 等记录类型
+              {t('description')}
             </p>
             
             {/* 快速查询示例 */}
             <div className="mb-8">
-              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">快速查询示例：</h4>
+              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{t('quickQuery')}</h4>
               <div className="flex flex-wrap justify-center gap-2">
                 {['google.com', 'github.com', 'cloudflare.com', 'vercel.com'].map((domain) => (
                   <button
@@ -317,7 +318,7 @@ export default function DNSPage() {
                     onClick={() => handleSearch(domain)}
                     className="px-3 py-1 text-sm bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
                   >
-                    查询 {domain}
+                    {t('query')} {domain}
                   </button>
                 ))}
               </div>
@@ -328,19 +329,19 @@ export default function DNSPage() {
               <div className="bg-card rounded-lg border p-6">
                 <h4 className="font-semibold mb-3 flex items-center">
                   <Info className="h-5 w-5 mr-2 text-blue-600" />
-                  什么是 DNS？
+                  {t('dnsBasics.whatIsDns')}
                 </h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  DNS（域名系统）将人类可读的域名转换为计算机可理解的 IP 地址，是互联网的重要基础设施。
+                  {t('dnsBasics.dnsDescription')}
                 </p>
               </div>
               <div className="bg-card rounded-lg border p-6">
                 <h4 className="font-semibold mb-3 flex items-center">
                   <Clock className="h-5 w-5 mr-2 text-green-600" />
-                  TTL 是什么？
+                  {t('dnsBasics.whatIsTtl')}
                 </h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  TTL（生存时间）表示 DNS 记录可以被缓存的时间长度，较短的 TTL 意味着更快的更新传播。
+                  {t('dnsBasics.ttlDescription')}
                 </p>
               </div>
             </div>
@@ -350,7 +351,7 @@ export default function DNSPage() {
         {/* 复制成功提示 */}
         {copiedField && (
           <div className="fixed bottom-4 right-4 bg-primary text-primary-foreground px-4 py-2 rounded-md shadow-lg">
-            已复制到剪贴板！
+            {t('copied')}
           </div>
         )}
       </div>

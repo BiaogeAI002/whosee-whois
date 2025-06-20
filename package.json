@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
+    "dev:win": "next dev",
+    "dev:secure": "cross-env NEXT_PUBLIC_API_KEY=secure-random-key NEXT_PUBLIC_API_SECRET=secure-random-secret next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -26,6 +28,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "postcss": "^8.5.0",

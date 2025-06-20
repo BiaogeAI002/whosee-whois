@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# cursor editor configuration
+.cursor/
+*.cursor-workspace
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

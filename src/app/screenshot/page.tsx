@@ -11,6 +11,7 @@ import { formatDateTime, formatBytes } from '@/lib/utils';
 
 export default function ScreenshotPage() {
   const t = useTranslations('screenshot');
+  const tCommon = useTranslations('common');
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [screenshotInfo, setScreenshotInfo] = useState<ScreenshotInfo | null>(null);
@@ -50,30 +51,30 @@ export default function ScreenshotPage() {
       key: 'desktop' as const, 
       label: t('desktop'), 
       icon: Monitor,
-      description: '桌面版视图 (1920×1080)',
+      description: t('deviceDescriptions.desktop'),
       color: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20'
     },
     { 
       key: 'mobile' as const, 
       label: t('mobile'), 
       icon: Smartphone,
-      description: '手机版视图 (375×667)',
+      description: t('deviceDescriptions.mobile'),
       color: 'text-green-600 bg-green-50 dark:bg-green-900/20'
     },
     { 
       key: 'tablet' as const, 
       label: t('tablet'), 
       icon: Tablet,
-      description: '平板版视图 (768×1024)',
+      description: t('deviceDescriptions.tablet'),
       color: 'text-purple-600 bg-purple-50 dark:bg-purple-900/20'
     },
   ];
 
   const screenshotTools = [
-    { name: '域名信息', desc: '查看 WHOIS 信息', href: '/domain', icon: Globe },
-    { name: 'DNS 查询', desc: '查看 DNS 记录', href: '/dns', icon: Server },
-    { name: '性能分析', desc: '网站性能测试', href: '#', icon: Zap },
-    { name: '网站监控', desc: '持续监控网站', href: '#', icon: Clock }
+    { name: t('tools.domainInfo'), desc: t('tools.domainInfoDesc'), href: '/domain', icon: Globe },
+    { name: t('tools.dnsQuery'), desc: t('tools.dnsQueryDesc'), href: '/dns', icon: Server },
+    { name: t('tools.performanceAnalysis'), desc: t('tools.performanceAnalysisDesc'), href: '#', icon: Zap },
+    { name: t('tools.websiteMonitoring'), desc: t('tools.websiteMonitoringDesc'), href: '#', icon: Clock }
   ];
 
   const deviceSpecs = {
@@ -110,7 +111,7 @@ export default function ScreenshotPage() {
             {t('title')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
-            获取网站在不同设备上的截图，支持桌面、手机和平板三种视图模式
+            {t('description')}
           </p>
           <SearchBox 
             onSearch={handleSearch} 
@@ -135,7 +136,7 @@ export default function ScreenshotPage() {
               <div className="bg-card rounded-lg border p-6 mb-6">
                 <h2 className="text-lg font-semibold mb-4 flex items-center">
                   <Settings className="h-5 w-5 mr-2" />
-                  选择设备视图
+                  {t('selectDevice')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {viewOptions.map((option) => {
@@ -160,7 +161,7 @@ export default function ScreenshotPage() {
                           </span>
                           {screenshot && (
                             <span className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs rounded-full">
-                              已就绪
+                              {t('ready')}
                             </span>
                           )}
                         </div>
@@ -169,7 +170,7 @@ export default function ScreenshotPage() {
                         </p>
                         {screenshot && (
                           <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                            大小: {formatBytes(screenshot.fileSize)}
+                            {t('size')}: {formatBytes(screenshot.fileSize)}
                           </div>
                         )}
                       </button>
@@ -183,14 +184,14 @@ export default function ScreenshotPage() {
                 <div className="bg-card rounded-lg border p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold">
-                      {viewOptions.find(opt => opt.key === selectedView)?.label} 截图
+                      {viewOptions.find(opt => opt.key === selectedView)?.label} {t('screenshot')}
                     </h3>
                     <button
                       onClick={() => window.open(currentScreenshot.url, '_blank')}
                       className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
                     >
                       <Download className="h-4 w-4" />
-                      <span>下载截图</span>
+                      <span>{t('downloadScreenshot')}</span>
                     </button>
                   </div>
 
@@ -200,16 +201,16 @@ export default function ScreenshotPage() {
                       <div className="text-center p-8">
                         <Camera className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                         <p className="text-muted-foreground text-lg font-medium">
-                          {screenshotInfo.domain} 截图预览
+                          {screenshotInfo.domain} {t('screenshotPreview')}
                         </p>
                         <p className="text-sm text-muted-foreground mt-2">
-                          {selectedView === 'desktop' && '桌面版视图'}
-                          {selectedView === 'mobile' && '手机版视图'}
-                          {selectedView === 'tablet' && '平板版视图'}
+                          {selectedView === 'desktop' && t('desktopView')}
+                          {selectedView === 'mobile' && t('mobileView')}
+                          {selectedView === 'tablet' && t('tabletView')}
                         </p>
                         <div className="mt-4 inline-flex items-center px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">
                           <Clock className="h-4 w-4 mr-2" />
-                          拍摄于 {formatDateTime(currentScreenshot.captureTime)}
+                          {t('capturedAt')} {formatDateTime(currentScreenshot.captureTime)}
                         </div>
                       </div>
                     </div>
@@ -220,24 +221,24 @@ export default function ScreenshotPage() {
                     <div>
                       <h4 className="font-medium mb-3 flex items-center">
                         <Info className="h-4 w-4 mr-2" />
-                        截图信息
+                        {t('screenshotInfo')}
                       </h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">文件大小</span>
+                          <span className="text-gray-600 dark:text-gray-400">{t('fileSize')}</span>
                           <span className="font-mono">{formatBytes(currentScreenshot.fileSize)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">拍摄时间</span>
+                          <span className="text-gray-600 dark:text-gray-400">{t('captureTime')}</span>
                           <span className="font-mono">{formatDateTime(currentScreenshot.captureTime)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">图片格式</span>
+                          <span className="text-gray-600 dark:text-gray-400">{t('format')}</span>
                           <span>PNG</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">压缩质量</span>
-                          <span>高质量</span>
+                          <span className="text-gray-600 dark:text-gray-400">{t('quality')}</span>
+                          <span>{t('highQuality')}</span>
                         </div>
                       </div>
                     </div>
@@ -245,23 +246,23 @@ export default function ScreenshotPage() {
                     <div>
                       <h4 className="font-medium mb-3 flex items-center">
                         <Monitor className="h-4 w-4 mr-2" />
-                        设备规格
+                        {t('deviceSpecs')}
                       </h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">分辨率</span>
+                          <span className="text-gray-600 dark:text-gray-400">{t('resolution')}</span>
                           <span className="font-mono">{currentSpec.resolution}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">用户代理</span>
+                          <span className="text-gray-600 dark:text-gray-400">{t('userAgent')}</span>
                           <span>{currentSpec.userAgent}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">视口大小</span>
+                          <span className="text-gray-600 dark:text-gray-400">{t('viewport')}</span>
                           <span className="font-mono">{currentSpec.viewport}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">像素比</span>
+                          <span className="text-gray-600 dark:text-gray-400">{t('pixelRatio')}</span>
                           <span>{currentSpec.devicePixelRatio}</span>
                         </div>
                       </div>
@@ -306,25 +307,25 @@ export default function ScreenshotPage() {
               <div className="bg-card rounded-lg border p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center">
                   <Settings className="h-5 w-5 mr-2" />
-                  截图设置
+                  {t('screenshotSettings')}
                 </h3>
                 <div className="space-y-4 text-sm">
                   <div>
-                    <h4 className="font-medium mb-2">桌面版</h4>
+                    <h4 className="font-medium mb-2">{t('desktop')}</h4>
                     <p className="text-gray-600 dark:text-gray-400">
-                      模拟 Chrome 浏览器在 1920×1080 分辨率下的显示效果
+                      {t('desktopDesc')}
                     </p>
                   </div>
                   <div>
-                    <h4 className="font-medium mb-2">手机版</h4>
+                    <h4 className="font-medium mb-2">{t('mobile')}</h4>
                     <p className="text-gray-600 dark:text-gray-400">
-                      模拟 iPhone 设备在 375×667 分辨率下的显示效果
+                      {t('mobileDesc')}
                     </p>
                   </div>
                   <div>
-                    <h4 className="font-medium mb-2">平板版</h4>
+                    <h4 className="font-medium mb-2">{t('tablet')}</h4>
                     <p className="text-gray-600 dark:text-gray-400">
-                      模拟 iPad 设备在 768×1024 分辨率下的显示效果
+                      {t('tabletDesc')}
                     </p>
                   </div>
                 </div>
@@ -332,7 +333,7 @@ export default function ScreenshotPage() {
 
               {/* 相关工具 */}
               <div className="bg-card rounded-lg border p-6">
-                <h3 className="text-lg font-semibold mb-4">相关工具</h3>
+                <h3 className="text-lg font-semibold mb-4">{t('relatedTools')}</h3>
                 <div className="space-y-3">
                   {screenshotTools.map((tool, index) => (
                     <a
@@ -353,20 +354,20 @@ export default function ScreenshotPage() {
               {/* 截图统计 */}
               {screenshotInfo && (
                 <div className="bg-card rounded-lg border p-6">
-                  <h3 className="text-lg font-semibold mb-4">截图统计</h3>
+                  <h3 className="text-lg font-semibold mb-4">{t('screenshotStats')}</h3>
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">目标域名</span>
+                      <span className="text-gray-600 dark:text-gray-400">{t('targetDomain')}</span>
                       <span className="font-mono text-sm">{screenshotInfo.domain}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">截图数量</span>
+                      <span className="text-gray-600 dark:text-gray-400">{t('screenshotCount')}</span>
                       <span className="font-medium">
                         {[screenshotInfo.desktop, screenshotInfo.mobile, screenshotInfo.tablet].filter(Boolean).length}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">总文件大小</span>
+                      <span className="text-gray-600 dark:text-gray-400">{t('totalFileSize')}</span>
                       <span className="font-mono text-sm">
                         {formatBytes([screenshotInfo.desktop, screenshotInfo.mobile, screenshotInfo.tablet]
                           .filter(Boolean)
@@ -374,7 +375,7 @@ export default function ScreenshotPage() {
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">拍摄时间</span>
+                      <span className="text-gray-600 dark:text-gray-400">{t('captureTime')}</span>
                       <span className="font-mono text-sm">{new Date().toLocaleTimeString()}</span>
                     </div>
                   </div>
@@ -389,15 +390,15 @@ export default function ScreenshotPage() {
           <div className="text-center py-16">
             <Camera className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              开始网站截图
+              {t('startScreenshot')}
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              输入网站域名，获取在不同设备上的显示截图
+              {t('inputDomain')}
             </p>
             
             {/* 截图示例 */}
             <div className="mb-8">
-              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">热门网站截图：</h4>
+              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{t('popularScreenshots')}</h4>
               <div className="flex flex-wrap justify-center gap-2">
                 {['github.com', 'vercel.com', 'tailwindcss.com', 'nextjs.org'].map((domain) => (
                   <button
@@ -405,7 +406,7 @@ export default function ScreenshotPage() {
                     onClick={() => handleSearch(domain)}
                     className="px-3 py-1 text-sm bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors"
                   >
-                    截图 {domain}
+                    {t('screenshot')} {domain}
                   </button>
                 ))}
               </div>
@@ -416,28 +417,28 @@ export default function ScreenshotPage() {
               <div className="bg-card rounded-lg border p-6">
                 <h4 className="font-semibold mb-3 flex items-center">
                   <Monitor className="h-5 w-5 mr-2 text-blue-600" />
-                  多设备支持
+                  {t('features.multiDevice')}
                 </h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  支持桌面、手机、平板三种设备视图，全面了解网站在不同设备上的显示效果。
+                  {t('features.multiDeviceDesc')}
                 </p>
               </div>
               <div className="bg-card rounded-lg border p-6">
                 <h4 className="font-semibold mb-3 flex items-center">
                   <Camera className="h-5 w-5 mr-2 text-purple-600" />
-                  高质量截图
+                  {t('features.highQuality')}
                 </h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  使用先进的无头浏览器技术，确保截图的准确性和高质量，真实反映网站外观。
+                  {t('features.highQualityDesc')}
                 </p>
               </div>
               <div className="bg-card rounded-lg border p-6">
                 <h4 className="font-semibold mb-3 flex items-center">
                   <Download className="h-5 w-5 mr-2 text-green-600" />
-                  便捷下载
+                  {t('features.easyDownload')}
                 </h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  支持一键下载截图，方便保存和分享，适用于设计参考、竞品分析等场景。
+                  {t('features.easyDownloadDesc')}
                 </p>
               </div>
             </div>

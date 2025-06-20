@@ -3,12 +3,19 @@
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { SearchBox } from '@/components/ui/search-box';
-import { Globe, Server, Camera, ArrowRight, Shield, Clock, Users, TrendingUp, Zap, Star } from 'lucide-react';
+import { Globe, Server, Camera, Activity, Shield, Zap, Code } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Badge } from '@/components/ui/badge';
 
 export default function Home() {
   const t = useTranslations('home');
+  const tStats = useTranslations('stats');
+  const tHighlights = useTranslations('highlights');
+  const tTechStack = useTranslations('techStack');
+  const tPopularDomains = useTranslations('popularDomains');
+  const tTutorial = useTranslations('tutorial');
+  const tCta = useTranslations('cta');
   const [searchLoading, setSearchLoading] = useState(false);
 
   const handleSearch = async (domain: string) => {
@@ -24,42 +31,46 @@ export default function Home() {
   const features = [
     {
       icon: Globe,
-      title: t('features.domain.title'),
-      description: t('features.domain.description'),
-      href: '/domain',
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-50 dark:bg-blue-950',
+      title: t('features.whois.title'),
+      description: t('features.whois.description'),
+      color: 'bg-blue-500',
     },
     {
       icon: Server,
       title: t('features.dns.title'),
       description: t('features.dns.description'),
-      href: '/dns',
-      color: 'text-green-500',
-      bgColor: 'bg-green-50 dark:bg-green-950',
+      color: 'bg-green-500',
     },
     {
       icon: Camera,
       title: t('features.screenshot.title'),
       description: t('features.screenshot.description'),
-      href: '/screenshot',
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-50 dark:bg-purple-950',
+      color: 'bg-purple-500',
+    },
+    {
+      icon: Activity,
+      title: t('features.health.title'),
+      description: t('features.health.description'),
+      color: 'bg-orange-500',
     },
   ];
 
-  const stats = [
-    { icon: Users, value: '10K+', label: '活跃用户' },
-    { icon: Clock, value: '99.9%', label: '服务可用性' },
-    { icon: TrendingUp, value: '1M+', label: '查询次数' },
-    { icon: Shield, value: '24/7', label: '安全监控' },
-  ];
-
   const highlights = [
-    { icon: Zap, title: '极速查询', desc: '毫秒级响应，实时获取域名信息' },
-    { icon: Shield, title: '安全可靠', desc: '企业级安全保障，数据加密传输' },
-    { icon: Globe, title: '全球覆盖', desc: '支持全球 TLD 域名查询' },
-    { icon: Star, title: '专业级', desc: '提供详细的技术信息和分析' },
+    {
+      icon: Shield,
+      title: tHighlights('secure.title'),
+      description: tHighlights('secure.description'),
+    },
+    {
+      icon: Zap,
+      title: tHighlights('fast.title'),
+      description: tHighlights('fast.description'),
+    },
+    {
+      icon: Code,
+      title: tHighlights('opensource.title'),
+      description: tHighlights('opensource.description'),
+    },
   ];
 
   const popularDomains = [
@@ -70,31 +81,17 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="container mx-auto px-4 pt-20 pb-32">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center"
-          >
-            <div className="mb-8">
-              <span className="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm font-medium mb-4">
-                🚀 专业域名查询工具
-              </span>
-            </div>
-            
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {t('title')}
-              </span>
+      <section className="relative overflow-hidden bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
+        <div className="container mx-auto px-4 py-20">
+          <div className="text-center max-w-4xl mx-auto">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+              {t('title')}
             </h1>
-            
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-              {t('subtitle')}
+            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+              {t('description')}
             </p>
-
+            
+            {/* Search Box */}
             <div className="max-w-2xl mx-auto mb-12">
               <SearchBox 
                 onSearch={handleSearch} 
@@ -103,110 +100,156 @@ export default function Home() {
               />
             </div>
 
-            {/* 统计数据 */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="text-center"
-                >
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg mb-3">
-                    <stat.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</div>
-                </motion.div>
-              ))}
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">99.9%</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">{tStats('availability')}</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600 dark:text-green-400">50ms</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">{tStats('averageResponse')}</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">10M+</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">{tStats('totalQueries')}</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">24/7</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">{tStats('continuousService')}</div>
+              </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* 核心功能 */}
-      <section className="py-20 bg-white dark:bg-gray-900">
+      {/* Features Section */}
+      <section className="py-20 bg-white dark:bg-gray-800">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              强大的功能特性
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              {t('features.title')}
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              提供全面的域名信息查询服务，助您深入了解任何域名的详细信息
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              {t('features.subtitle')}
             </p>
-          </motion.div>
+          </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <motion.div
-                  key={feature.href}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="group"
-                >
-                  <Link href={feature.href}>
-                    <div className="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 p-8 transition-all duration-300 hover:shadow-2xl hover:border-blue-300 dark:hover:border-blue-600 group-hover:-translate-y-1">
-                      <div className={`inline-flex items-center justify-center w-16 h-16 rounded-xl ${feature.bgColor} mb-6`}>
-                        <Icon className={`h-8 w-8 ${feature.color}`} />
-                      </div>
-                      
-                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                        {feature.title}
-                      </h3>
-                      
-                      <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        {feature.description}
-                      </p>
-                      
-                      <div className="flex items-center text-blue-600 dark:text-blue-400 font-medium">
-                        了解更多
-                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
+                <div key={index} className="text-center p-6 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow">
+                  <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mx-auto mb-4`}>
+                    <Icon className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    {feature.description}
+                  </p>
+                </div>
               );
             })}
-          </div>
-
-          {/* 特色亮点 */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {highlights.map((highlight, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center"
-              >
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg mb-4">
-                  <highlight.icon className="h-6 w-6 text-white" />
-                </div>
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                  {highlight.title}
-                </h4>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  {highlight.desc}
-                </p>
-              </motion.div>
-            ))}
           </div>
         </div>
       </section>
 
-      {/* 热门域名示例 */}
+      {/* Highlights Section */}
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              {tHighlights('title')}
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              {tHighlights('subtitle')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {highlights.map((highlight, index) => {
+              const Icon = highlight.icon;
+              return (
+                <div key={index} className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Icon className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">{highlight.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {highlight.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Tech Stack Section */}
+      <section className="py-20 bg-white dark:bg-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              {tTechStack('title')}
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              {tTechStack('subtitle')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+            {/* Frontend */}
+            <div className="p-6 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+              <div className="mb-4">
+                <h3 className="text-2xl font-semibold mb-4 flex items-center">
+                  <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
+                    <Code className="h-5 w-5 text-white" />
+                  </div>
+                  {tTechStack('frontend.title')}
+                </h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary">Next.js 15</Badge>
+                  <Badge variant="secondary">React 19</Badge>
+                  <Badge variant="secondary">TypeScript</Badge>
+                  <Badge variant="secondary">Tailwind CSS</Badge>
+                  <Badge variant="secondary">shadcn/ui</Badge>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 text-sm mt-4">
+                  {tTechStack('frontend.description')}
+                </p>
+              </div>
+            </div>
+
+            {/* Backend */}
+            <div className="p-6 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+              <div className="mb-4">
+                <h3 className="text-2xl font-semibold mb-4 flex items-center">
+                  <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center mr-3">
+                    <Server className="h-5 w-5 text-white" />
+                  </div>
+                  {tTechStack('backend.title')}
+                </h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary">Go</Badge>
+                  <Badge variant="secondary">Gin</Badge>
+                  <Badge variant="secondary">Redis</Badge>
+                  <Badge variant="secondary">Docker</Badge>
+                  <Badge variant="secondary">Kubernetes</Badge>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 text-sm mt-4">
+                  {tTechStack('backend.description')}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Popular Domains */}
       <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <motion.div
@@ -217,10 +260,10 @@ export default function Home() {
             className="text-center mb-12"
           >
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              热门域名查询
+              {tPopularDomains('title')}
             </h2>
             <p className="text-gray-600 dark:text-gray-400">
-              点击下方域名快速查看详细信息
+              {tPopularDomains('subtitle')}
             </p>
           </motion.div>
 
@@ -242,7 +285,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 使用教程 */}
+      {/* Tutorial */}
       <section className="py-20 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <motion.div
@@ -253,18 +296,18 @@ export default function Home() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              如何使用
+              {tTutorial('title')}
             </h2>
             <p className="text-gray-600 dark:text-gray-400">
-              简单三步，快速获取域名详细信息
+              {tTutorial('subtitle')}
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { step: '01', title: '输入域名', desc: '在搜索框中输入您要查询的域名' },
-              { step: '02', title: '选择功能', desc: '选择 WHOIS、DNS 或截图功能' },
-              { step: '03', title: '查看结果', desc: '获取详细的域名信息和分析报告' },
+              { step: '01', titleKey: 'step1.title', descKey: 'step1.description' },
+              { step: '02', titleKey: 'step2.title', descKey: 'step2.description' },
+              { step: '03', titleKey: 'step3.title', descKey: 'step3.description' },
             ].map((item, index) => (
               <motion.div
                 key={index}
@@ -278,10 +321,10 @@ export default function Home() {
                   {item.step}
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  {item.title}
+                  {tTutorial(item.titleKey)}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  {item.desc}
+                  {tTutorial(item.descKey)}
                 </p>
               </motion.div>
             ))}
@@ -299,23 +342,23 @@ export default function Home() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl font-bold text-white mb-4">
-              准备开始域名查询了吗？
+              {tCta('title')}
             </h2>
             <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
-              立即使用我们的专业域名查询工具，发现任何域名的详细信息
+              {tCta('subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/domain"
                 className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
               >
-                开始域名查询
+                {tCta('startDomainQuery')}
               </Link>
               <Link
                 href="/dns"
                 className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white rounded-lg hover:bg-white hover:text-blue-600 transition-colors font-semibold"
               >
-                检查 DNS 记录
+                {tCta('checkDNS')}
               </Link>
             </div>
           </motion.div>

@@ -25,11 +25,18 @@
   "home": {
     "title": "Whosee - 专业域名查询工具",
     "subtitle": "快速全面的域名信息查询服务",
+    "description": "快速全面的域名信息查询服务，提供域名查询、DNS解析、网站截图和健康检查等专业工具",
     "placeholder": "输入域名 (例如: example.com)",
     "search": "搜索",
     "features": {
+      "title": "强大功能",
+      "subtitle": "提供全面的域名信息查询服务，助您深入了解任何域名的详细信息",
       "domain": {
         "title": "域名信息",
+        "description": "获取详细的WHOIS信息、注册详情和域名状态"
+      },
+      "whois": {
+        "title": "域名查询",
         "description": "获取详细的WHOIS信息、注册详情和域名状态"
       },
       "dns": {
@@ -39,11 +46,16 @@
       "screenshot": {
         "title": "网站截图",
         "description": "捕获和预览网站截图"
+      },
+      "health": {
+        "title": "健康检查",
+        "description": "检测网站的可用性和响应时间"
       }
     }
   },
   "domain": {
     "title": "域名信息",
+    "description": "获取详细的域名 WHOIS 信息，包括注册详情、联系信息和域名状态",
     "registrar": "注册商",
     "status": "状态",
     "created": "创建时间",
@@ -54,22 +66,309 @@
     "registrant": "注册人",
     "admin": "管理员",
     "tech": "技术联系人",
-    "billing": "账单联系人"
+    "billing": "账单联系人",
+    "basicInfo": "基本信息",
+    "domainName": "域名",
+    "statusDescription": "状态说明",
+    "relatedTools": "相关工具",
+    "contactInfo": "联系信息",
+    "name": "姓名",
+    "organization": "组织",
+    "email": "邮箱",
+    "phone": "电话",
+    "address": "地址",
+    "searchPlaceholder": "输入域名获取详细的 WHOIS 信息、注册详情和联系信息",
+    "startQuery": "开始域名查询",
+    "tryDomain": "试试",
+    "copied": "已复制到剪贴板！",
+    "queryStats": "查询统计",
+    "queryTime": "查询时间",
+    "responseTime": "响应时间",
+    "dataSource": "数据来源",
+    "whoisDatabase": "WHOIS 数据库",
+    "statusInfo": {
+      "transferProhibited": {
+        "title": "禁止转移",
+        "description": "域名被注册商锁定，防止意外转移"
+      },
+      "updateProhibited": {
+        "title": "禁止更新", 
+        "description": "域名信息被锁定，防止恶意修改"
+      },
+      "deleteProhibited": {
+        "title": "禁止删除",
+        "description": "域名受保护，防止意外删除"
+      },
+      "serverHold": {
+        "title": "服务器保留",
+        "description": "域名被注册局暂停，可能涉及争议"
+      }
+    },
+    "tools": {
+      "dnsQuery": "DNS 查询",
+      "dnsQueryDesc": "查看域名的 DNS 记录",
+      "websiteScreenshot": "网站截图",
+      "websiteScreenshotDesc": "获取网站页面截图",
+      "sslCheck": "SSL 检查",
+      "sslCheckDesc": "检查 SSL 证书状态",
+      "websitePerformance": "网站性能",
+      "websitePerformanceDesc": "分析网站加载速度"
+    }
   },
   "dns": {
     "title": "DNS记录",
+    "description": "查询域名的所有 DNS 记录，包括 A、AAAA、MX、TXT、NS、CNAME 等记录类型",
     "type": "类型",
     "value": "值",
     "ttl": "TTL",
-    "priority": "优先级"
+    "priority": "优先级",
+    "searchPlaceholder": "输入域名查看其所有 DNS 记录，包括 A、MX、TXT、CNAME 等记录类型",
+    "queryDomain": "查询域名",
+    "operation": "操作",
+    "copyRecordValue": "复制记录值",
+    "records": "条记录",
+    "recordTypes": "记录类型说明",
+    "relatedTools": "相关工具",
+    "queryInfo": "查询信息",
+    "totalRecords": "记录总数",
+    "queryTime": "查询时间",
+    "dnsServer": "DNS 服务器",
+    "systemDefault": "系统默认",
+    "startQuery": "开始 DNS 查询",
+    "quickQuery": "快速查询示例：",
+    "query": "查询",
+    "copied": "已复制到剪贴板！",
+    "dnsBasics": {
+      "whatIsDns": "什么是 DNS？",
+      "dnsDescription": "DNS（域名系统）将人类可读的域名转换为计算机可理解的 IP 地址，是互联网的重要基础设施。",
+      "whatIsTtl": "TTL 是什么？",
+      "ttlDescription": "TTL（生存时间）表示 DNS 记录可以被缓存的时间长度，较短的 TTL 意味着更快的更新传播。"
+    },
+    "recordInfo": {
+      "a": {
+        "name": "A 记录",
+        "description": "指向 IPv4 地址"
+      },
+      "aaaa": {
+        "name": "AAAA 记录",
+        "description": "指向 IPv6 地址"
+      },
+      "mx": {
+        "name": "MX 记录",
+        "description": "邮件服务器"
+      },
+      "txt": {
+        "name": "TXT 记录",
+        "description": "文本验证记录"
+      },
+      "ns": {
+        "name": "NS 记录",
+        "description": "域名服务器"
+      },
+      "cname": {
+        "name": "CNAME 记录",
+        "description": "别名记录"
+      },
+      "soa": {
+        "name": "SOA 记录",
+        "description": "权威起始记录"
+      },
+      "ptr": {
+        "name": "PTR 记录",
+        "description": "反向解析记录"
+      }
+    },
+    "tools": {
+      "domainInfo": "域名信息",
+      "domainInfoDesc": "查看 WHOIS 信息",
+      "websiteScreenshot": "网站截图",
+      "websiteScreenshotDesc": "获取网站页面截图",
+      "sslCheck": "SSL 检查",
+      "sslCheckDesc": "检查 SSL 证书",
+      "performanceTest": "性能测试",
+      "performanceTestDesc": "网站速度测试"
+    }
   },
 
   "screenshot": {
     "title": "网站截图",
+    "description": "获取网站在不同设备上的截图，支持桌面、手机和平板三种视图模式",
     "desktop": "桌面版",
     "mobile": "移动版",
     "tablet": "平板版",
     "captureTime": "截图时间",
-    "fileSize": "文件大小"
+    "fileSize": "文件大小",
+    "selectDevice": "选择设备视图",
+    "ready": "已就绪",
+    "size": "大小",
+    "downloadScreenshot": "下载截图",
+    "screenshotPreview": "截图预览",
+    "desktopView": "桌面版视图",
+    "mobileView": "手机版视图",
+    "tabletView": "平板版视图",
+    "capturedAt": "拍摄于",
+    "screenshotInfo": "截图信息",
+    "format": "图片格式",
+    "quality": "压缩质量",
+    "highQuality": "高质量",
+    "deviceSpecs": "设备规格",
+    "resolution": "分辨率",
+    "userAgent": "用户代理",
+    "viewport": "视口大小",
+    "pixelRatio": "像素比",
+    "screenshotSettings": "截图设置",
+    "desktopDesc": "模拟 Chrome 浏览器在 1920×1080 分辨率下的显示效果",
+    "mobileDesc": "模拟 iPhone 设备在 375×667 分辨率下的显示效果",
+    "tabletDesc": "模拟 iPad 设备在 768×1024 分辨率下的显示效果",
+    "relatedTools": "相关工具",
+    "screenshotStats": "截图统计",
+    "targetDomain": "目标域名",
+    "screenshotCount": "截图数量",
+    "totalFileSize": "总文件大小",
+    "captureTime": "拍摄时间",
+    "startScreenshot": "开始网站截图",
+    "inputDomain": "输入网站域名，获取在不同设备上的显示截图",
+    "popularScreenshots": "热门网站截图：",
+    "screenshot": "截图",
+    "features": {
+      "multiDevice": "多设备支持",
+      "multiDeviceDesc": "支持桌面、手机、平板三种设备视图，全面了解网站在不同设备上的显示效果。",
+      "highQuality": "高质量截图",
+      "highQualityDesc": "使用先进的无头浏览器技术，确保截图的准确性和高质量，真实反映网站外观。",
+      "easyDownload": "便捷下载",
+      "easyDownloadDesc": "支持一键下载截图，方便保存和分享，适用于设计参考、竞品分析等场景。"
+    },
+    "deviceDescriptions": {
+      "desktop": "桌面版视图 (1920×1080)",
+      "mobile": "手机版视图 (375×667)",
+      "tablet": "平板版视图 (768×1024)"
+    },
+    "tools": {
+      "domainInfo": "域名信息",
+      "domainInfoDesc": "查看 WHOIS 信息",
+      "dnsQuery": "DNS 查询",
+      "dnsQueryDesc": "查看 DNS 记录",
+      "performanceAnalysis": "性能分析",
+      "performanceAnalysisDesc": "网站性能测试",
+      "websiteMonitoring": "网站监控",
+      "websiteMonitoringDesc": "持续监控网站"
+    }
+  },
+  "stats": {
+    "availability": "可用性",
+    "averageResponse": "平均响应", 
+    "totalQueries": "查询次数",
+    "continuousService": "不间断服务"
+  },
+  "highlights": {
+    "title": "为什么选择 Whosee？",
+    "subtitle": "专业、快速、安全的域名查询解决方案",
+    "secure": {
+      "title": "安全可靠",
+      "description": "企业级安全保障，数据传输加密"
+    },
+    "fast": {
+      "title": "快速响应",
+      "description": "毫秒级响应，实时数据查询"
+    },
+    "opensource": {
+      "title": "开源免费",
+      "description": "完全开源，支持自部署"
+    }
+  },
+  "techStack": {
+    "title": "技术架构",
+    "subtitle": "基于现代技术栈构建的高性能应用",
+    "frontend": {
+      "title": "前端技术",
+      "description": "采用最新的 Next.js 15 和 React 19，提供极致的用户体验和开发效率。"
+    },
+    "backend": {
+      "title": "后端技术",
+      "description": "高性能 Go 语言后端，支持高并发处理和微服务架构。"
+    }
+  },
+  "popularDomains": {
+    "title": "热门域名查询",
+    "subtitle": "点击下方域名快速查看详细信息"
+  },
+  "tutorial": {
+    "title": "如何使用",
+    "subtitle": "简单三步，快速获取域名详细信息",
+    "step1": {
+      "title": "输入域名",
+      "description": "在搜索框中输入您要查询的域名"
+    },
+    "step2": {
+      "title": "选择功能", 
+      "description": "选择 WHOIS、DNS 或截图功能"
+    },
+    "step3": {
+      "title": "查看结果",
+      "description": "获取详细的域名信息和分析报告"
+    }
+  },
+  "cta": {
+    "title": "准备开始域名查询了吗？",
+    "subtitle": "立即使用我们的专业域名查询工具，发现任何域名的详细信息",
+    "startDomainQuery": "开始域名查询",
+    "checkDNS": "检查 DNS 记录"
+  },
+  "metadata": {
+    "title": "Whosee - 专业域名查询工具",
+    "description": "快速全面的域名信息查询服务。获取 WHOIS 信息、DNS 记录、健康检查和网站截图。",
+    "keywords": "域名,whois,dns,查询,域名检查,网站健康"
+  },
+  "health": {
+    "title": "系统健康状态",
+    "description": "实时监控所有系统组件和服务的健康状况",
+    "lastUpdated": "最后更新：",
+    "serviceStatus": "服务状态",
+    "systemStats": "系统统计",
+    "responseTime": "响应时间",
+    "uptime": "可用性",
+    "details": "详细信息",
+    "totalQueries": "总查询数",
+    "avgResponseTime": "平均响应时间",
+    "systemUptime": "系统可用性",
+    "memoryUsage": "内存使用率",
+    "cpuUsage": "CPU使用率",
+    "diskUsage": "磁盘使用率",
+    "healthCheckInfo": "健康检查信息",
+    "healthCheckDetails": [
+      "• 健康检查每30秒执行一次",
+      "• 服务状态自动实时更新",
+      "• 响应时间为最近5分钟的平均值",
+      "• 可用性百分比基于最近30天计算"
+    ],
+    "services": {
+      "whoisService": "WHOIS 服务",
+      "dnsService": "DNS 服务",
+      "screenshotService": "截图服务",
+      "database": "数据库"
+    },
+    "serviceDetails": {
+      "whoisNormal": "所有 WHOIS 服务器响应正常",
+      "dnsOperational": "所有 DNS 解析器运行正常",
+      "screenshotSlow": "检测到响应时间较长",
+      "databaseStable": "所有数据库连接稳定"
+    },
+    "status": {
+      "healthy": "健康",
+      "degraded": "降级",
+      "unhealthy": "不健康"
+    }
+  },
+  "footer": {
+    "projectDescription": "专业的域名查询工具，提供域名信息、DNS查询、网站截图等服务。",
+    "openSource": "开源项目",
+    "frontendRepo": "前端仓库",
+    "backendRepo": "后端仓库",
+    "techStack": "技术栈",
+    "frontend": "前端：Next.js 15 + React 19 + TypeScript",
+    "backend": "后端：Go + Gin + Redis",
+    "deployment": "部署：Vercel + Docker",
+    "copyright": "© 2024 Whosee. All rights reserved.",
+    "madeWithLove": "Made with ❤️"
   }
 } 

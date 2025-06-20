@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { LoadingSkeleton } from '@/components/ui/loading';
 import { ErrorState, NetworkErrorState } from '@/components/ui/error-state';
 import { Badge } from '@/components/ui/badge';
@@ -25,6 +26,8 @@ interface SystemStats {
 }
 
 export default function HealthPage() {
+  const t = useTranslations('health');
+  const tCommon = useTranslations('common');
   const [healthData, setHealthData] = useState<{
     services: HealthStatus[];
     stats: SystemStats;
@@ -41,36 +44,36 @@ export default function HealthPage() {
       const mockData = {
         services: [
           {
-            service: 'WHOIS Service',
+            service: t('services.whoisService'),
             status: 'healthy' as const,
             responseTime: 120,
             lastCheck: new Date().toISOString(),
             uptime: '99.9%',
-            details: 'All WHOIS servers responding normally'
+            details: t('serviceDetails.whoisNormal')
           },
           {
-            service: 'DNS Service',
+            service: t('services.dnsService'),
             status: 'healthy' as const,
             responseTime: 45,
             lastCheck: new Date().toISOString(),
             uptime: '99.8%',
-            details: 'All DNS resolvers operational'
+            details: t('serviceDetails.dnsOperational')
           },
           {
-            service: 'Screenshot Service',
+            service: t('services.screenshotService'),
             status: 'degraded' as const,
             responseTime: 3200,
             lastCheck: new Date().toISOString(),
             uptime: '98.5%',
-            details: 'High response times detected'
+            details: t('serviceDetails.screenshotSlow')
           },
           {
-            service: 'Database',
+            service: t('services.database'),
             status: 'healthy' as const,
             responseTime: 15,
             lastCheck: new Date().toISOString(),
             uptime: '99.9%',
-            details: 'All database connections stable'
+            details: t('serviceDetails.databaseStable')
           }
         ],
         stats: {
@@ -111,6 +114,19 @@ export default function HealthPage() {
         return 'error';
       default:
         return 'default';
+    }
+  };
+  
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'healthy':
+        return t('status.healthy');
+      case 'degraded':
+        return t('status.degraded');
+      case 'unhealthy':
+        return t('status.unhealthy');
+      default:
+        return status;
     }
   };
 
@@ -192,20 +208,20 @@ export default function HealthPage() {
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-4">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              System Health
+              {t('title')}
             </h1>
             <Badge 
               variant={getStatusVariant(overallStatus)} 
               size="lg"
             >
-              {overallStatus.toUpperCase()}
+              {getStatusText(overallStatus)}
             </Badge>
           </div>
           <p className="text-gray-600 dark:text-gray-400">
-            Real-time monitoring of all system components and services
+            {t('description')}
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-            Last updated: {new Date().toLocaleString()}
+            {t('lastUpdated')} {new Date().toLocaleString()}
           </p>
         </div>
 
@@ -214,7 +230,7 @@ export default function HealthPage() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Service Status
+                {t('serviceStatus')}
               </h2>
             </div>
             <div className="p-6">
@@ -226,16 +242,16 @@ export default function HealthPage() {
                         {service.service}
                       </h3>
                       <Badge variant={getStatusVariant(service.status)}>
-                        {service.status.toUpperCase()}
+                        {getStatusText(service.status)}
                       </Badge>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-400">
                       <div>
-                        <span className="font-medium">Response Time:</span> {service.responseTime}ms
+                        <span className="font-medium">{t('responseTime')}:</span> {service.responseTime}ms
                       </div>
                       <div>
-                        <span className="font-medium">Uptime:</span> {service.uptime}
+                        <span className="font-medium">{t('uptime')}:</span> {service.uptime}
                       </div>
                     </div>
                     
@@ -254,26 +270,26 @@ export default function HealthPage() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                System Statistics
+                {t('systemStats')}
               </h2>
             </div>
             <div className="p-6">
               <InfoTable
                 data={[
                   {
-                    label: 'Total Queries',
+                    label: t('totalQueries'),
                     value: healthData.stats.totalQueries.toLocaleString()
                   },
                   {
-                    label: 'Average Response Time',
+                    label: t('avgResponseTime'),
                     value: `${healthData.stats.avgResponseTime}ms`
                   },
                   {
-                    label: 'System Uptime',
+                    label: t('systemUptime'),
                     value: healthData.stats.uptime
                   },
                   {
-                    label: 'Memory Usage',
+                    label: t('memoryUsage'),
                     value: healthData.stats.memoryUsage,
                     render: (value) => (
                       <div className="flex items-center space-x-2">
@@ -288,7 +304,7 @@ export default function HealthPage() {
                     )
                   },
                   {
-                    label: 'CPU Usage',
+                    label: t('cpuUsage'),
                     value: healthData.stats.cpuUsage,
                     render: (value) => (
                       <div className="flex items-center space-x-2">
@@ -303,7 +319,7 @@ export default function HealthPage() {
                     )
                   },
                   {
-                    label: 'Disk Usage',
+                    label: t('diskUsage'),
                     value: healthData.stats.diskUsage,
                     render: (value) => (
                       <div className="flex items-center space-x-2">
@@ -326,13 +342,13 @@ export default function HealthPage() {
         {/* 附加信息 */}
         <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6">
           <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-2">
-            Health Check Information
+            {t('healthCheckInfo')}
           </h3>
           <div className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
-            <p>• Health checks are performed every 30 seconds</p>
-            <p>• Service status automatically updates in real-time</p>
-            <p>• Response times are averaged over the last 5 minutes</p>
-            <p>• Uptime percentages calculated over the last 30 days</p>
+            <p>• {t('healthCheckDetails.0')}</p>
+            <p>• {t('healthCheckDetails.1')}</p>
+            <p>• {t('healthCheckDetails.2')}</p>
+            <p>• {t('healthCheckDetails.3')}</p>
           </div>
         </div>
       </div>

@@ -25,11 +25,18 @@
   "home": {
     "title": "Whosee - Professional Domain Lookup Tool",
     "subtitle": "Fast and comprehensive domain information lookup service",
+    "description": "Fast and comprehensive domain information lookup service, providing domain queries, DNS resolution, website screenshots, and health checks",
     "placeholder": "Enter domain name (e.g., example.com)",
     "search": "Search",
     "features": {
+      "title": "Powerful Features",
+      "subtitle": "Comprehensive domain information lookup services to help you understand any domain in detail",
       "domain": {
         "title": "Domain Information",
+        "description": "Get detailed WHOIS information, registration details, and domain status"
+      },
+      "whois": {
+        "title": "Domain Lookup",
         "description": "Get detailed WHOIS information, registration details, and domain status"
       },
       "dns": {
@@ -39,11 +46,16 @@
       "screenshot": {
         "title": "Website Screenshot",
         "description": "Capture and preview website screenshots"
+      },
+      "health": {
+        "title": "Health Check",
+        "description": "Monitor website availability and response time"
       }
     }
   },
   "domain": {
     "title": "Domain Information",
+    "description": "Get detailed domain WHOIS information, including registration details, contact information and domain status",
     "registrar": "Registrar",
     "status": "Status",
     "created": "Created",
@@ -54,22 +66,309 @@
     "registrant": "Registrant",
     "admin": "Admin",
     "tech": "Technical",
-    "billing": "Billing"
+    "billing": "Billing",
+    "basicInfo": "Basic Information",
+    "domainName": "Domain",
+    "statusDescription": "Status Description",
+    "relatedTools": "Related Tools",
+    "contactInfo": "Contact Information",
+    "name": "Name",
+    "organization": "Organization",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "searchPlaceholder": "Enter domain to get detailed WHOIS information, registration details and contact information",
+    "startQuery": "Start Domain Query",
+    "tryDomain": "Try",
+    "copied": "Copied to clipboard!",
+    "queryStats": "Query Statistics", 
+    "queryTime": "Query Time",
+    "responseTime": "Response Time",
+    "dataSource": "Data Source",
+    "whoisDatabase": "WHOIS Database",
+    "statusInfo": {
+      "transferProhibited": {
+        "title": "Transfer Prohibited",
+        "description": "Domain is locked by registrar to prevent accidental transfer"
+      },
+      "updateProhibited": {
+        "title": "Update Prohibited",
+        "description": "Domain information is locked to prevent malicious modifications"
+      },
+      "deleteProhibited": {
+        "title": "Delete Prohibited",
+        "description": "Domain is protected against accidental deletion"
+      },
+      "serverHold": {
+        "title": "Server Hold",
+        "description": "Domain is suspended by registry, possibly due to disputes"
+      }
+    },
+    "tools": {
+      "dnsQuery": "DNS Query",
+      "dnsQueryDesc": "View domain DNS records",
+      "websiteScreenshot": "Website Screenshot",
+      "websiteScreenshotDesc": "Capture website page screenshots",
+      "sslCheck": "SSL Check",
+      "sslCheckDesc": "Check SSL certificate status",
+      "websitePerformance": "Website Performance",
+      "websitePerformanceDesc": "Analyze website loading speed"
+    }
   },
   "dns": {
     "title": "DNS Records",
+    "description": "Query all DNS records for the domain, including A, AAAA, MX, TXT, NS, CNAME and other record types",
     "type": "Type",
     "value": "Value",
     "ttl": "TTL",
-    "priority": "Priority"
+    "priority": "Priority",
+    "searchPlaceholder": "Enter domain to view all its DNS records, including A, MX, TXT, CNAME and other types",
+    "queryDomain": "Query Domain",
+    "operation": "Operation",
+    "copyRecordValue": "Copy record value",
+    "records": "records",
+    "recordTypes": "Record Type Description",
+    "relatedTools": "Related Tools",
+    "queryInfo": "Query Information",
+    "totalRecords": "Total Records",
+    "queryTime": "Query Time",
+    "dnsServer": "DNS Server",
+    "systemDefault": "System Default",
+    "startQuery": "Start DNS Query",
+    "quickQuery": "Quick query examples:",
+    "query": "Query",
+    "copied": "Copied to clipboard!",
+    "dnsBasics": {
+      "whatIsDns": "What is DNS?",
+      "dnsDescription": "DNS (Domain Name System) translates human-readable domain names to computer-understandable IP addresses, a crucial internet infrastructure.",
+      "whatIsTtl": "What is TTL?",
+      "ttlDescription": "TTL (Time To Live) indicates how long DNS records can be cached, shorter TTL means faster update propagation."
+    },
+    "recordInfo": {
+      "a": {
+        "name": "A Record",
+        "description": "Points to IPv4 address"
+      },
+      "aaaa": {
+        "name": "AAAA Record",
+        "description": "Points to IPv6 address"
+      },
+      "mx": {
+        "name": "MX Record",
+        "description": "Mail server"
+      },
+      "txt": {
+        "name": "TXT Record",
+        "description": "Text verification record"
+      },
+      "ns": {
+        "name": "NS Record",
+        "description": "Name server"
+      },
+      "cname": {
+        "name": "CNAME Record",
+        "description": "Alias record"
+      },
+      "soa": {
+        "name": "SOA Record",
+        "description": "Start of authority record"
+      },
+      "ptr": {
+        "name": "PTR Record",
+        "description": "Reverse lookup record"
+      }
+    },
+    "tools": {
+      "domainInfo": "Domain Information",
+      "domainInfoDesc": "View WHOIS information",
+      "websiteScreenshot": "Website Screenshot",
+      "websiteScreenshotDesc": "Capture website page screenshots",
+      "sslCheck": "SSL Check",
+      "sslCheckDesc": "Check SSL certificate",
+      "performanceTest": "Performance Test",
+      "performanceTestDesc": "Website speed test"
+    }
   },
 
   "screenshot": {
     "title": "Website Screenshot",
+    "description": "Capture website screenshots on different devices, supporting desktop, mobile and tablet views",
     "desktop": "Desktop",
     "mobile": "Mobile",
     "tablet": "Tablet",
     "captureTime": "Capture Time",
-    "fileSize": "File Size"
+    "fileSize": "File Size",
+    "selectDevice": "Select Device View",
+    "ready": "Ready",
+    "size": "Size",
+    "downloadScreenshot": "Download Screenshot",
+    "screenshotPreview": "Screenshot Preview",
+    "desktopView": "Desktop View",
+    "mobileView": "Mobile View",
+    "tabletView": "Tablet View",
+    "capturedAt": "Captured at",
+    "screenshotInfo": "Screenshot Information",
+    "format": "Image Format",
+    "quality": "Compression Quality",
+    "highQuality": "High Quality",
+    "deviceSpecs": "Device Specifications",
+    "resolution": "Resolution",
+    "userAgent": "User Agent",
+    "viewport": "Viewport Size",
+    "pixelRatio": "Pixel Ratio",
+    "screenshotSettings": "Screenshot Settings",
+    "desktopDesc": "Simulates Chrome browser display at 1920×1080 resolution",
+    "mobileDesc": "Simulates iPhone device display at 375×667 resolution",
+    "tabletDesc": "Simulates iPad device display at 768×1024 resolution",
+    "relatedTools": "Related Tools",
+    "screenshotStats": "Screenshot Statistics",
+    "targetDomain": "Target Domain",
+    "screenshotCount": "Screenshot Count",
+    "totalFileSize": "Total File Size",
+    "captureTime": "Capture Time",
+    "startScreenshot": "Start Website Screenshot",
+    "inputDomain": "Enter website domain to capture screenshots on different devices",
+    "popularScreenshots": "Popular website screenshots:",
+    "screenshot": "Screenshot",
+    "features": {
+      "multiDevice": "Multi-Device Support",
+      "multiDeviceDesc": "Supports desktop, mobile, and tablet views to comprehensively understand website display across different devices.",
+      "highQuality": "High Quality Screenshots",
+      "highQualityDesc": "Uses advanced headless browser technology to ensure screenshot accuracy and quality, truly reflecting website appearance.",
+      "easyDownload": "Easy Download",
+      "easyDownloadDesc": "Supports one-click screenshot downloads, convenient for saving and sharing, suitable for design reference and competitive analysis."
+    },
+    "deviceDescriptions": {
+      "desktop": "Desktop View (1920×1080)",
+      "mobile": "Mobile View (375×667)",
+      "tablet": "Tablet View (768×1024)"
+    },
+    "tools": {
+      "domainInfo": "Domain Information",
+      "domainInfoDesc": "View WHOIS information",
+      "dnsQuery": "DNS Query",
+      "dnsQueryDesc": "View DNS records",
+      "performanceAnalysis": "Performance Analysis",
+      "performanceAnalysisDesc": "Website performance testing",
+      "websiteMonitoring": "Website Monitoring",
+      "websiteMonitoringDesc": "Continuous website monitoring"
+    }
+  },
+  "stats": {
+    "availability": "Availability",
+    "averageResponse": "Avg Response", 
+    "totalQueries": "Total Queries",
+    "continuousService": "24/7 Service"
+  },
+  "highlights": {
+    "title": "Why Choose Whosee?",
+    "subtitle": "Professional, fast, and secure domain lookup solution",
+    "secure": {
+      "title": "Secure & Reliable",
+      "description": "Enterprise-grade security with encrypted data transmission"
+    },
+    "fast": {
+      "title": "Lightning Fast",
+      "description": "Millisecond response time with real-time data queries"
+    },
+    "opensource": {
+      "title": "Open Source",
+      "description": "Completely open source with self-deployment support"
+    }
+  },
+  "techStack": {
+    "title": "Technology Stack",
+    "subtitle": "High-performance application built on modern technology stack",
+    "frontend": {
+      "title": "Frontend Technology",
+      "description": "Built with the latest Next.js 15 and React 19, providing ultimate user experience and development efficiency."
+    },
+    "backend": {
+      "title": "Backend Technology",
+      "description": "High-performance Go backend supporting high concurrency and microservice architecture."
+    }
+  },
+  "popularDomains": {
+    "title": "Popular Domain Queries",
+    "subtitle": "Click on any domain below to view detailed information"
+  },
+  "tutorial": {
+    "title": "How to Use",
+    "subtitle": "Get detailed domain information in three simple steps",
+    "step1": {
+      "title": "Enter Domain",
+      "description": "Type the domain name you want to query in the search box"
+    },
+    "step2": {
+      "title": "Choose Feature", 
+      "description": "Select WHOIS, DNS, or screenshot functionality"
+    },
+    "step3": {
+      "title": "View Results",
+      "description": "Get detailed domain information and analysis reports"
+    }
+  },
+  "cta": {
+    "title": "Ready to Start Domain Lookup?",
+    "subtitle": "Use our professional domain lookup tool now to discover detailed information about any domain",
+    "startDomainQuery": "Start Domain Query",
+    "checkDNS": "Check DNS Records"
+  },
+  "health": {
+    "title": "System Health Status",
+    "description": "Real-time monitoring of all system components and services",
+    "lastUpdated": "Last updated:",
+    "serviceStatus": "Service Status",
+    "systemStats": "System Statistics",
+    "responseTime": "Response Time",
+    "uptime": "Uptime",
+    "details": "Details",
+    "totalQueries": "Total Queries",
+    "avgResponseTime": "Average Response Time",
+    "systemUptime": "System Uptime",
+    "memoryUsage": "Memory Usage",
+    "cpuUsage": "CPU Usage",
+    "diskUsage": "Disk Usage",
+    "healthCheckInfo": "Health Check Information",
+    "healthCheckDetails": [
+      "• Health checks are performed every 30 seconds",
+      "• Service status automatically updates in real-time",
+      "• Response times are averaged over the last 5 minutes",
+      "• Uptime percentages calculated over the last 30 days"
+    ],
+    "services": {
+      "whoisService": "WHOIS Service",
+      "dnsService": "DNS Service",
+      "screenshotService": "Screenshot Service",
+      "database": "Database"
+    },
+    "serviceDetails": {
+      "whoisNormal": "All WHOIS servers responding normally",
+      "dnsOperational": "All DNS resolvers operational",
+      "screenshotSlow": "High response times detected",
+      "databaseStable": "All database connections stable"
+    },
+    "status": {
+      "healthy": "Healthy",
+      "degraded": "Degraded",
+      "unhealthy": "Unhealthy"
+    }
+  },
+  "metadata": {
+    "title": "Whosee - Professional Domain Lookup Tool",
+    "description": "Fast and comprehensive domain information lookup service. Get WHOIS info, DNS records, health checks and website screenshots.",
+    "keywords": "domain,whois,dns,lookup,domain check,website health"
+  },
+  "footer": {
+    "projectDescription": "Professional domain lookup tool providing domain information, DNS queries, website screenshots and more.",
+    "openSource": "Open Source",
+    "frontendRepo": "Frontend Repo",
+    "backendRepo": "Backend Repo",
+    "techStack": "Tech Stack",
+    "frontend": "Frontend: Next.js 15 + React 19 + TypeScript",
+    "backend": "Backend: Go + Gin + Redis",
+    "deployment": "Deployment: Vercel + Docker",
+    "copyright": "© 2024 Whosee. All rights reserved.",
+    "madeWithLove": "Made with ❤️"
   }
 } 

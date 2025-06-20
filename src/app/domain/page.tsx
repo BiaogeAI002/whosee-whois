@@ -11,6 +11,7 @@ import { copyToClipboard, formatDateTime } from '@/lib/utils';
 
 export default function DomainPage() {
   const t = useTranslations('domain');
+  const tCommon = useTranslations('common');
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [domainInfo, setDomainInfo] = useState<DomainInfo | null>(null);
@@ -56,35 +57,35 @@ export default function DomainPage() {
   const statusInfo = [
     {
       status: 'clientTransferProhibited',
-      title: '禁止转移',
-      description: '域名被注册商锁定，防止意外转移',
+      title: t('statusInfo.transferProhibited.title'),
+      description: t('statusInfo.transferProhibited.description'),
       color: 'text-orange-600 bg-orange-100 dark:bg-orange-900/20'
     },
     {
       status: 'clientUpdateProhibited', 
-      title: '禁止更新',
-      description: '域名信息被锁定，防止恶意修改',
+      title: t('statusInfo.updateProhibited.title'),
+      description: t('statusInfo.updateProhibited.description'),
       color: 'text-blue-600 bg-blue-100 dark:bg-blue-900/20'
     },
     {
       status: 'clientDeleteProhibited',
-      title: '禁止删除', 
-      description: '域名受保护，防止意外删除',
+      title: t('statusInfo.deleteProhibited.title'), 
+      description: t('statusInfo.deleteProhibited.description'),
       color: 'text-green-600 bg-green-100 dark:bg-green-900/20'
     },
     {
       status: 'serverHold',
-      title: '服务器保留',
-      description: '域名被注册局暂停，可能涉及争议',
+      title: t('statusInfo.serverHold.title'),
+      description: t('statusInfo.serverHold.description'),
       color: 'text-red-600 bg-red-100 dark:bg-red-900/20'
     }
   ];
 
   const relatedTools = [
-    { name: 'DNS 查询', desc: '查看域名的 DNS 记录', href: '/dns', icon: Server },
-    { name: '网站截图', desc: '获取网站页面截图', href: '/screenshot', icon: Globe },
-    { name: 'SSL 检查', desc: '检查 SSL 证书状态', href: '#', icon: Shield },
-    { name: '网站性能', desc: '分析网站加载速度', href: '#', icon: Clock }
+    { name: t('tools.dnsQuery'), desc: t('tools.dnsQueryDesc'), href: '/dns', icon: Server },
+    { name: t('tools.websiteScreenshot'), desc: t('tools.websiteScreenshotDesc'), href: '/screenshot', icon: Globe },
+    { name: t('tools.sslCheck'), desc: t('tools.sslCheckDesc'), href: '#', icon: Shield },
+    { name: t('tools.websitePerformance'), desc: t('tools.websitePerformanceDesc'), href: '#', icon: Clock }
   ];
 
   return (
@@ -97,7 +98,7 @@ export default function DomainPage() {
             {t('title')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
-            获取详细的域名 WHOIS 信息，包括注册详情、联系信息和域名状态
+            {t('description')}
           </p>
           <SearchBox 
             onSearch={handleSearch} 
@@ -122,11 +123,11 @@ export default function DomainPage() {
               <div className="bg-card rounded-lg border p-6">
                 <h2 className="text-xl font-semibold mb-4 flex items-center">
                   <Globe className="h-5 w-5 mr-2" />
-                  基本信息
+                  {t('basicInfo')}
                 </h2>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">域名</label>
+                    <label className="text-sm font-medium text-muted-foreground">{t('domainName')}</label>
                     <div className="mt-1 p-2 bg-muted rounded flex items-center justify-between">
                       <span className="font-mono">{domainInfo.domain}</span>
                       <button
@@ -211,24 +212,24 @@ export default function DomainPage() {
                   <div key={type} className="bg-card rounded-lg border p-6">
                     <h2 className="text-xl font-semibold mb-4 flex items-center">
                       <User className="h-5 w-5 mr-2" />
-                      {t(type as keyof typeof t)} 联系信息
+                      {t(type as keyof typeof t)} {t('contactInfo')}
                     </h2>
                     <div className="grid md:grid-cols-2 gap-4">
                       {contact.name && (
                         <div>
-                          <label className="text-sm font-medium text-muted-foreground">姓名</label>
+                          <label className="text-sm font-medium text-muted-foreground">{t('name')}</label>
                           <p className="mt-1 p-2 bg-muted rounded">{contact.name}</p>
                         </div>
                       )}
                       {contact.organization && (
                         <div>
-                          <label className="text-sm font-medium text-muted-foreground">组织</label>
+                          <label className="text-sm font-medium text-muted-foreground">{t('organization')}</label>
                           <p className="mt-1 p-2 bg-muted rounded">{contact.organization}</p>
                         </div>
                       )}
                       {contact.email && (
                         <div>
-                          <label className="text-sm font-medium text-muted-foreground">邮箱</label>
+                          <label className="text-sm font-medium text-muted-foreground">{t('email')}</label>
                           <div className="mt-1 p-2 bg-muted rounded flex items-center justify-between">
                             <span>{contact.email}</span>
                             <button
@@ -242,13 +243,13 @@ export default function DomainPage() {
                       )}
                       {contact.phone && (
                         <div>
-                          <label className="text-sm font-medium text-muted-foreground">电话</label>
+                          <label className="text-sm font-medium text-muted-foreground">{t('phone')}</label>
                           <p className="mt-1 p-2 bg-muted rounded">{contact.phone}</p>
                         </div>
                       )}
                       {contact.address && (
                         <div className="md:col-span-2">
-                          <label className="text-sm font-medium text-muted-foreground">地址</label>
+                          <label className="text-sm font-medium text-muted-foreground">{t('address')}</label>
                           <p className="mt-1 p-2 bg-muted rounded">
                             {contact.address}
                             {contact.city && `, ${contact.city}`}
@@ -270,7 +271,7 @@ export default function DomainPage() {
               <div className="bg-card rounded-lg border p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center">
                   <Info className="h-5 w-5 mr-2" />
-                  状态说明
+                  {t('statusDescription')}
                 </h3>
                 <div className="space-y-3 text-sm">
                   {statusInfo.map((info, index) => (
@@ -286,7 +287,7 @@ export default function DomainPage() {
 
               {/* 相关工具 */}
               <div className="bg-card rounded-lg border p-6">
-                <h3 className="text-lg font-semibold mb-4">相关工具</h3>
+                <h3 className="text-lg font-semibold mb-4">{t('relatedTools')}</h3>
                 <div className="space-y-3">
                   {relatedTools.map((tool, index) => (
                     <a
@@ -307,19 +308,19 @@ export default function DomainPage() {
 
               {/* 查询统计 */}
               <div className="bg-card rounded-lg border p-6">
-                <h3 className="text-lg font-semibold mb-4">查询统计</h3>
+                <h3 className="text-lg font-semibold mb-4">{t('queryStats')}</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">查询时间</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('queryTime')}</span>
                     <span className="font-mono text-sm">{new Date().toLocaleTimeString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">响应时间</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('responseTime')}</span>
                     <span className="font-mono text-sm">0.8s</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">数据来源</span>
-                    <span className="text-sm">WHOIS 数据库</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('dataSource')}</span>
+                    <span className="text-sm">{t('whoisDatabase')}</span>
                   </div>
                 </div>
               </div>
@@ -332,10 +333,10 @@ export default function DomainPage() {
           <div className="text-center py-16">
             <Globe className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              开始域名查询
+              {t('startQuery')}
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              输入域名获取详细的 WHOIS 信息、注册详情和联系信息
+              {t('description')}
             </p>
             <div className="flex flex-wrap justify-center gap-2">
               {['google.com', 'github.com', 'vercel.com'].map((domain) => (
@@ -344,7 +345,7 @@ export default function DomainPage() {
                   onClick={() => handleSearch(domain)}
                   className="px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
                 >
-                  试试 {domain}
+                  {t('tryDomain')} {domain}
                 </button>
               ))}
             </div>
@@ -354,7 +355,7 @@ export default function DomainPage() {
         {/* 复制成功提示 */}
         {copiedField && (
           <div className="fixed bottom-4 right-4 bg-primary text-primary-foreground px-4 py-2 rounded-md shadow-lg">
-            已复制到剪贴板！
+            {t('copied')}
           </div>
         )}
       </div>

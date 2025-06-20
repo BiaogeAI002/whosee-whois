@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { cookies } from 'next/headers';
@@ -7,13 +6,6 @@ import { defaultLocale } from '@/i18n/config';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Navbar } from '@/components/ui/navbar';
 import "./globals.css";
-import { Footer } from '@/components/ui/footer';
-
-const inter = Inter({ 
-  subsets: ["latin"],
-  display: 'swap',
-  variable: '--font-inter'
-});
 
 export const metadata: Metadata = {
   title: "Whosee - 专业域名查询工具",
@@ -46,7 +38,13 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans`} suppressHydrationWarning>
+      <head>
+        <link 
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" 
+          rel="stylesheet" 
+        />
+      </head>
+      <body className="font-sans" suppressHydrationWarning>
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
             <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
@@ -54,11 +52,10 @@ export default async function RootLayout({
               <main>
                 {children}
               </main>
-              <Footer />
             </div>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>
     </html>
   );
-}
+} 
