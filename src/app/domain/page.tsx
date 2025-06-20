@@ -11,7 +11,6 @@ import { copyToClipboard, formatDateTime } from '@/lib/utils';
 
 export default function DomainPage() {
   const t = useTranslations('domain');
-  const tCommon = useTranslations('common');
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [domainInfo, setDomainInfo] = useState<DomainInfo | null>(null);

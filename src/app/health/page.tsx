@@ -27,7 +27,6 @@ interface SystemStats {
 
 export default function HealthPage() {
   const t = useTranslations('health');
-  const tCommon = useTranslations('common');
   const [healthData, setHealthData] = useState<{
     services: HealthStatus[];
     stats: SystemStats;
@@ -102,7 +101,7 @@ export default function HealthPage() {
     const interval = setInterval(fetchHealthData, 30000); // 30秒刷新一次
     
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchHealthData]);
 
   const getStatusVariant = (status: string) => {
     switch (status) {

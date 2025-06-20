@@ -11,7 +11,6 @@ import { copyToClipboard } from '@/lib/utils';
 
 export default function DNSPage() {
   const t = useTranslations('dns');
-  const tCommon = useTranslations('common');
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [dnsInfo, setDnsInfo] = useState<DNSInfo | null>(null);

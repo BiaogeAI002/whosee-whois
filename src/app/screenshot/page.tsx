@@ -11,7 +11,6 @@ import { formatDateTime, formatBytes } from '@/lib/utils';
 
 export default function ScreenshotPage() {
   const t = useTranslations('screenshot');
-  const tCommon = useTranslations('common');
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [screenshotInfo, setScreenshotInfo] = useState<ScreenshotInfo | null>(null);
