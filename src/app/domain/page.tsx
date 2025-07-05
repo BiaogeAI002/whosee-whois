@@ -125,6 +125,7 @@ export default function DomainPage() {
                   {t('basicInfo')}
                 </h2>
                 <div className="grid md:grid-cols-2 gap-4">
+                  {/* 域名 */}
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">{t('domainName')}</label>
                     <div className="mt-1 p-2 bg-muted rounded flex items-center justify-between">
@@ -137,18 +138,22 @@ export default function DomainPage() {
                       </button>
                     </div>
                   </div>
+                  {/* 注册商 */}
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">{t('registrar')}</label>
                     <p className="mt-1 p-2 bg-muted rounded">{domainInfo.registrar}</p>
                   </div>
+                  {/* 创建时间 */}
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">{t('created')}</label>
                     <p className="mt-1 p-2 bg-muted rounded">{formatDateTime(domainInfo.created)}</p>
                   </div>
+                  {/* 更新时间 */}
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">{t('updated')}</label>
                     <p className="mt-1 p-2 bg-muted rounded">{formatDateTime(domainInfo.updated)}</p>
                   </div>
+                  {/* 过期时间 */}
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">{t('expires')}</label>
                     <p className="mt-1 p-2 bg-muted rounded text-red-600 font-medium">{formatDateTime(domainInfo.expires)}</p>

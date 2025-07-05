@@ -35,7 +35,7 @@ const nextConfig: NextConfig = {
 
   // 环境变量配置
   env: {
-    NEXT_PUBLIC_API_URL: isDevelopment ? 'http://localhost:3000' : 'https://api.whosee.me',
+    NEXT_PUBLIC_API_URL: isDevelopment ? 'http://localhost:3900' : 'https://api.whosee.me',
     NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY || 'your_api_key',
   },
 
@@ -45,11 +45,11 @@ const nextConfig: NextConfig = {
       return [
         {
           source: '/api/:path*',
-          destination: 'http://localhost:3000/api/:path*',
+          destination: 'http://localhost:3900/api/:path*',
         },
         {
           source: '/static/:path*',
-          destination: 'http://localhost:3000/static/:path*',
+          destination: 'http://localhost:3900/static/:path*',
         },
       ];
     }

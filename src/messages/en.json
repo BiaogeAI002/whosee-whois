@@ -344,9 +344,13 @@
     },
     "serviceDetails": {
       "whoisNormal": "All WHOIS servers responding normally",
+      "whoisError": "WHOIS service experiencing issues",
       "dnsOperational": "All DNS resolvers operational",
+      "dnsError": "DNS service experiencing issues",
+      "screenshotNormal": "Screenshot service operating normally",
       "screenshotSlow": "High response times detected",
-      "databaseStable": "All database connections stable"
+      "databaseStable": "All database connections stable",
+      "databaseError": "Database connection issues detected"
     },
     "status": {
       "healthy": "Healthy",
@@ -371,4 +375,4 @@
     "copyright": "© 2024 Whosee. All rights reserved.",
     "madeWithLove": "Made with ❤️"
   }
-} 
+}

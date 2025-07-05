@@ -349,9 +349,13 @@
     },
     "serviceDetails": {
       "whoisNormal": "所有 WHOIS 服务器响应正常",
+      "whoisError": "WHOIS 服务出现异常",
       "dnsOperational": "所有 DNS 解析器运行正常",
+      "dnsError": "DNS 服务出现异常",
+      "screenshotNormal": "截图服务运行正常",
       "screenshotSlow": "检测到响应时间较长",
-      "databaseStable": "所有数据库连接稳定"
+      "databaseStable": "所有数据库连接稳定",
+      "databaseError": "数据库连接异常"
     },
     "status": {
       "healthy": "健康",
@@ -371,4 +375,4 @@
     "copyright": "© 2024 Whosee. All rights reserved.",
     "madeWithLove": "Made with ❤️"
   }
-} 
+}

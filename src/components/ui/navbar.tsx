@@ -12,6 +12,28 @@ export function Navbar() {
   const t = useTranslations('nav');
   const pathname = usePathname();
 
+  // 检测当前是否在英文路径下
+  const isEnglishPath = pathname.startsWith('/en');
+  const currentLocale = isEnglishPath ? 'en' : 'zh';
+  
+  // 生成带语言前缀的链接
+  const getLocalizedHref = (href: string) => {
+    if (currentLocale === 'en') {
+      return `/en${href}`;
+    }
+    return href;
+  };
+
+  // 检查是否为激活状态
+  const isActiveLink = (href: string) => {
+    const localizedHref = getLocalizedHref(href);
+    if (localizedHref === '/' || localizedHref === '/en') {
+      // 首页需要精确匹配
+      return pathname === localizedHref;
+    }
+    return pathname.startsWith(localizedHref);
+  };
+
   const navItems = [
     {
       href: '/domain',
@@ -40,7 +62,7 @@ export function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-8">
-            <Link href="/" className="flex items-center space-x-2">
+            <Link href={getLocalizedHref('/')} className="flex items-center space-x-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white">
                 <Globe className="h-5 w-5" />
               </div>
@@ -50,12 +72,13 @@ export function Navbar() {
             <div className="hidden md:flex items-center space-x-6">
               {navItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = pathname.startsWith(item.href);
+                const localizedHref = getLocalizedHref(item.href);
+                const isActive = isActiveLink(item.href);
                 
                 return (
                   <Link
                     key={item.href}
-                    href={item.href}
+                    href={localizedHref}
                     className={cn(
                       'flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors',
                       isActive

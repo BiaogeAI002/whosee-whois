@@ -1,44 +1,114 @@
 'use client';
 
-import { Languages } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { Globe, Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-export function LanguageToggle() {
-  const t = useTranslations('common');
-  const [isOpen, setIsOpen] = useState(false);
+interface LanguageToggleProps {
+  className?: string;
+}
 
-  const changeLanguage = (locale: string) => {
-    document.cookie = `locale=${locale}; path=/; max-age=31536000`;
-    window.location.reload();
+export function LanguageToggle({ className }: LanguageToggleProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  
+  // 使用state来避免hydration不匹配
+  const [mounted, setMounted] = useState(false);
+  const [currentLocale, setCurrentLocale] = useState<'zh' | 'en'>('zh');
+  const [switching, setSwitching] = useState(false);
+
+  // 在客户端挂载后设置语言状态
+  useEffect(() => {
+    setMounted(true);
+    const locale = pathname.startsWith('/en') ? 'en' : 'zh';
+    setCurrentLocale(locale);
+  }, [pathname]);
+  
+  const switchLanguage = (locale: 'zh' | 'en') => {
+    // 如果已经是当前语言，不需要切换
+    if (locale === currentLocale) return;
+    
+    setSwitching(true);
+    
+    let newPath = pathname;
+    
+    if (locale === 'en') {
+      // 切换到英文
+      if (!pathname.startsWith('/en')) {
+        newPath = `/en${pathname}`;
+      }
+    } else {
+      // 切换到中文
+      if (pathname.startsWith('/en')) {
+        newPath = pathname.replace('/en', '') || '/';
+      }
+    }
+    
+    // 使用 window.location.href 强制刷新页面，确保重新加载翻译内容
+    window.location.href = newPath;
   };
 
-  return (
-    <div className="relative">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center justify-center w-10 h-10 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-        aria-label={t('language')}
-      >
-        <Languages className="h-[1.2rem] w-[1.2rem]" />
-      </button>
-      
-      {isOpen && (
-        <div className="absolute right-0 mt-2 w-32 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-1 shadow-md">
+  // 在组件挂载前显示默认状态，避免hydration不匹配
+  if (!mounted) {
+    return (
+      <div className={cn("flex items-center gap-1", className)}>
+        <Globe className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+        
+        <div className="flex rounded-md border border-gray-200 dark:border-gray-700">
           <button
-            onClick={() => changeLanguage('en')}
-            className="flex w-full items-center px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-sm"
+            className="rounded-r-none px-2 py-1 text-xs font-medium transition-colors text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
           >
-            🇺🇸 English
+            中文
           </button>
+          
           <button
-            onClick={() => changeLanguage('zh')}
-            className="flex w-full items-center px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-sm"
+            className="rounded-l-none border-l border-gray-200 px-2 py-1 text-xs font-medium transition-colors dark:border-gray-700 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
           >
-            🇨🇳 中文
+            EN
           </button>
         </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn("flex items-center gap-1", className)}>
+      {switching ? (
+        <Loader2 className="h-4 w-4 text-blue-600 animate-spin" />
+      ) : (
+        <Globe className="h-4 w-4 text-gray-600 dark:text-gray-400" />
       )}
+      
+      <div className="flex rounded-md border border-gray-200 dark:border-gray-700">
+        <button
+          onClick={() => switchLanguage('zh')}
+          disabled={switching}
+          className={cn(
+            "rounded-r-none px-2 py-1 text-xs font-medium transition-colors",
+            switching && "opacity-50 cursor-not-allowed",
+            currentLocale === 'zh'
+              ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
+              : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+          )}
+        >
+          中文
+        </button>
+        
+        <button
+          onClick={() => switchLanguage('en')}
+          disabled={switching}
+          className={cn(
+            "rounded-l-none border-l border-gray-200 px-2 py-1 text-xs font-medium transition-colors dark:border-gray-700",
+            switching && "opacity-50 cursor-not-allowed",
+            currentLocale === 'en'
+              ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
+              : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+          )}
+        >
+          EN
+        </button>
+      </div>
     </div>
   );
 } 
