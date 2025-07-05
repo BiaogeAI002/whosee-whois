@@ -44,6 +44,12 @@ next-env.d.ts
 .cursor/
 *.cursor-workspace
 
+<<<<<<< HEAD
+# trae ai configuration
+.trae
+
+=======
+>>>>>>> d5ec76258e1d879a0dcb80fe5ae6ed6a253f7e87
 # IDEs and editors
 .vscode/
 .idea/

@@ -1,11 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { LoadingSkeleton } from '@/components/ui/loading';
 import { ErrorState, NetworkErrorState } from '@/components/ui/error-state';
 import { Badge } from '@/components/ui/badge';
 import { InfoTable } from '@/components/ui/data-table';
+import { queryHealthInfo } from '@/lib/api';
+import type { HealthInfo } from '@/types';
 
 interface HealthStatus {
   service: string;
@@ -34,65 +36,94 @@ export default function HealthPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchHealthData = async () => {
+  const fetchHealthData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // 模拟健康检查数据
-      const mockData = {
-        services: [
-          {
-            service: t('services.whoisService'),
-            status: 'healthy' as const,
-            responseTime: 120,
-            lastCheck: new Date().toISOString(),
-            uptime: '99.9%',
-            details: t('serviceDetails.whoisNormal')
-          },
-          {
-            service: t('services.dnsService'),
-            status: 'healthy' as const,
-            responseTime: 45,
-            lastCheck: new Date().toISOString(),
-            uptime: '99.8%',
-            details: t('serviceDetails.dnsOperational')
-          },
-          {
-            service: t('services.screenshotService'),
-            status: 'degraded' as const,
-            responseTime: 3200,
-            lastCheck: new Date().toISOString(),
-            uptime: '98.5%',
-            details: t('serviceDetails.screenshotSlow')
-          },
-          {
-            service: t('services.database'),
-            status: 'healthy' as const,
-            responseTime: 15,
-            lastCheck: new Date().toISOString(),
-            uptime: '99.9%',
-            details: t('serviceDetails.databaseStable')
-          }
-        ],
+      // 调用后端健康检查API
+      const healthInfo: HealthInfo = await queryHealthInfo(true);
+      
+      // 转换后端数据为前端显示格式
+      const services: HealthStatus[] = [];
+      
+      // WHOIS服务状态
+      if (healthInfo.services?.whois) {
+        const whois = healthInfo.services.whois;
+        services.push({
+          service: t('services.whoisService'),
+          status: whois.status === 'up' ? 'healthy' : whois.status === 'degraded' ? 'degraded' : 'unhealthy',
+          responseTime: whois.providers ? Math.round(Object.values(whois.providers).reduce((avg, p) => avg + (p.responseTime || 0), 0) / Object.keys(whois.providers).length) : 0,
+          lastCheck: whois.lastCheck || new Date().toISOString(),
+          uptime: whois.available && whois.total ? `${((whois.available / whois.total) * 100).toFixed(1)}%` : '0%',
+          details: whois.status === 'up' ? t('serviceDetails.whoisNormal') : t('serviceDetails.whoisError')
+        });
+      }
+      
+      // DNS服务状态
+      if (healthInfo.services?.dns) {
+        const dns = healthInfo.services.dns;
+        services.push({
+          service: t('services.dnsService'),
+          status: dns.status === 'up' ? 'healthy' : dns.status === 'degraded' ? 'degraded' : 'unhealthy',
+          responseTime: dns.servers ? Math.round(dns.servers.reduce((avg, s) => avg + (s.responseTime || 0), 0) / dns.servers.length) : 0,
+          lastCheck: dns.lastCheck || new Date().toISOString(),
+          uptime: dns.available && dns.total ? `${((dns.available / dns.total) * 100).toFixed(1)}%` : '0%',
+          details: dns.status === 'up' ? t('serviceDetails.dnsOperational') : t('serviceDetails.dnsError')
+        });
+      }
+      
+      // 截图服务状态
+      if (healthInfo.services?.screenshot) {
+        const screenshot = healthInfo.services.screenshot;
+        services.push({
+          service: t('services.screenshotService'),
+          status: screenshot.status === 'up' ? 'healthy' : screenshot.status === 'degraded' ? 'degraded' : 'unhealthy',
+          responseTime: 3000, // 截图服务通常较慢
+          lastCheck: screenshot.lastCheck || new Date().toISOString(),
+          uptime: screenshot.available && screenshot.total ? `${((screenshot.available / screenshot.total) * 100).toFixed(1)}%` : '0%',
+          details: screenshot.status === 'up' ? t('serviceDetails.screenshotNormal') : t('serviceDetails.screenshotSlow')
+        });
+      }
+      
+      // Redis/数据库状态
+      if (healthInfo.services?.redis) {
+        const redis = healthInfo.services.redis;
+        services.push({
+          service: t('services.database'),
+          status: redis.status === 'up' ? 'healthy' : 'unhealthy',
+          responseTime: Math.round(redis.latency || 0),
+          lastCheck: redis.lastCheck || new Date().toISOString(),
+          uptime: redis.status === 'up' ? '99.9%' : '0%',
+          details: redis.status === 'up' ? t('serviceDetails.databaseStable') : t('serviceDetails.databaseError')
+        });
+      }
+      
+      // 生成系统统计数据（基于服务状态）
+      const totalServices = services.length;
+      const healthyServices = services.filter(s => s.status === 'healthy').length;
+      const avgResponseTime = services.length > 0 ? Math.round(services.reduce((sum, s) => sum + s.responseTime, 0) / services.length) : 0;
+      
+      const transformedData = {
+        services,
         stats: {
-          totalQueries: 1245678,
-          avgResponseTime: 180,
-          uptime: '99.7%',
-          memoryUsage: '45.2%',
-          cpuUsage: '23.8%',
-          diskUsage: '67.4%'
+          totalQueries: 0, // 后端暂未提供此数据
+          avgResponseTime,
+          uptime: `${((healthyServices / totalServices) * 100).toFixed(1)}%`,
+          memoryUsage: '0%', // 后端暂未提供此数据
+          cpuUsage: '0%', // 后端暂未提供此数据
+          diskUsage: '0%' // 后端暂未提供此数据
         }
       };
 
-      setHealthData(mockData);
+      setHealthData(transformedData);
     } catch (err) {
       console.error('Failed to fetch health data:', err);
       setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
 
   useEffect(() => {
     fetchHealthData();
@@ -353,4 +384,4 @@ export default function HealthPage() {
       </div>
     </div>
   );
-} 
+}
