@@ -1,9 +1,7 @@
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { getBlogPostBySlug, getRelatedBlogPosts } from '@/lib/api';
+import { getBlogPostBySlug } from '@/lib/api';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
-import { Loading } from '@/components/ui/loading';
 
 interface BlogPostPageProps {
   params: Promise<{ locale: string; slug: string }>;

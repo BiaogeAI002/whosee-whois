@@ -104,8 +104,3 @@ function escapeXml(unsafe: string): string {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
-
-// 辅助函数：去除HTML标签
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>?/gm, '').trim();
-}

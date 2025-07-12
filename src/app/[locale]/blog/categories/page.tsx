@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import { useTranslations } from 'next-intl';
-import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { getBlogCategories } from '@/lib/api';

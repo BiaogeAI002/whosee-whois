@@ -13,7 +13,6 @@ interface SEOCheckResult {
 }
 
 export default function SEOCheckPage() {
-  const t = useTranslations('common');
   const [results, setResults] = useState<SEOCheckResult[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -128,7 +127,7 @@ export default function SEOCheckPage() {
         if (data.inLanguage || data.availableLanguage) {
           structuredDataLangSupport = true;
         }
-      } catch (e) {
+      } catch {
         // 忽略解析错误
       }
     });

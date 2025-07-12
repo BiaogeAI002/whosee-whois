@@ -1,7 +1,6 @@
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Badge } from '@/components/ui/badge';
 import type { BlogPost, BlogCategory } from '@/types';
 import { Clock, TrendingUp, Hash, Folder } from 'lucide-react';
 
@@ -11,15 +10,13 @@ import { Clock, TrendingUp, Hash, Folder } from 'lucide-react';
 interface BlogSidebarProps {
   /** 当前语言环境 */
   locale: string;
-  /** 推荐文章列表（用于英雄区域，这里备用） */
-  featuredPosts: BlogPost[];
   /** 最新文章列表（按发布时间排序） */
   recentPosts: BlogPost[];
   /** 所有分类列表 */
   categories: BlogCategory[];
 }
 
-export default function BlogSidebar({ locale, featuredPosts, recentPosts, categories }: BlogSidebarProps) {
+export default function BlogSidebar({ locale, recentPosts, categories }: BlogSidebarProps) {
   const t = useTranslations('blog.sidebar');
   const tCommon = useTranslations('common');
   

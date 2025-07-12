@@ -133,7 +133,6 @@ export default function BlogGrid({ posts, pagination, locale, searchParams }: Bl
         <BlogPagination
           currentPage={currentPage}
           totalPages={totalPages}
-          locale={locale}
         />
       )}
     </div>
@@ -269,11 +268,9 @@ function BlogPostCard({
 function BlogPagination({
   currentPage,
   totalPages,
-  locale,
 }: {
   currentPage: number;
   totalPages: number;
-  locale: string;
 }) {
   const t = useTranslations('blog.pagination');
   

@@ -10,7 +10,6 @@ interface LanguageToggleProps {
 }
 
 export function LanguageToggle({ className }: LanguageToggleProps) {
-  const router = useRouter();
   const pathname = usePathname();
   
   // 使用state来避免hydration不匹配

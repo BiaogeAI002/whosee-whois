@@ -8,7 +8,6 @@ import { getCurrentLocale } from '@/lib/locale-utils';
 import { Globe, ArrowRight, CheckCircle } from 'lucide-react';
 
 export default function DemoLanguageSwitchPage() {
-  const t = useTranslations('common');
   const pathname = usePathname();
   const [currentLocale, setCurrentLocale] = useState<'zh' | 'en'>('zh');
   const [showDemo, setShowDemo] = useState(false);

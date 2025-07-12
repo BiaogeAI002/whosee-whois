@@ -5,8 +5,30 @@ import { Button } from '@/components/ui/button';
 import { getBlogPosts } from '@/lib/api';
 import { toCMSLocale, toFrontendLocale } from '@/i18n/config';
 
+// 定义类型接口
+interface MappingTest {
+  input: string;
+  expected: string;
+  type: string;
+  actual?: string;
+  success?: boolean;
+}
+
+interface DebugResult {
+  type?: string;
+  data?: unknown[];
+  meta?: unknown;
+  mappingResults?: MappingTest[];
+  urlExamples?: Array<{
+    frontend: string;
+    cms: string;
+    url: string;
+  }>;
+  environmentVariables?: Record<string, string>;
+}
+
 export default function DebugPage() {
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<DebugResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -108,9 +130,9 @@ export default function DebugPage() {
         { frontend: 'en', cms: toCMSLocale('en'), url: url2 }
       ],
       environmentVariables: {
-        NEXT_PUBLIC_STRAPI_URL: process.env.NEXT_PUBLIC_STRAPI_URL,
+        NEXT_PUBLIC_STRAPI_URL: process.env.NEXT_PUBLIC_STRAPI_URL || '未设置',
         NEXT_PUBLIC_STRAPI_API_TOKEN: process.env.NEXT_PUBLIC_STRAPI_API_TOKEN ? '***已设置***' : '未设置',
-        NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+        NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || '未设置',
         NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY ? '***已设置***' : '未设置',
       }
     });
@@ -161,14 +183,14 @@ export default function DebugPage() {
               <div className="space-y-4 text-sm">
                 <div>
                   <h4 className="font-medium mb-2">映射函数测试结果:</h4>
-                  {result.mappingResults.map((test: any, i: number) => (
+                  {result.mappingResults?.map((test: MappingTest, i: number) => (
                     <div key={i} className="flex items-center gap-2">
                       <span className={test.success ? 'text-green-600' : 'text-red-600'}>
                         {test.success ? '✅' : '❌'}
                       </span>
                       <span>
-                        {test.type}: "{test.input}" → "{test.actual}" 
-                        (expected: "{test.expected}")
+                        {test.type}: &quot;{test.input}&quot; → &quot;{test.actual}&quot; 
+                        (expected: &quot;{test.expected}&quot;)
                       </span>
                     </div>
                   ))}
@@ -187,7 +209,7 @@ export default function DebugPage() {
                 
                 <div>
                   <h4 className="font-medium mb-2">生成的 API URL 示例:</h4>
-                  {result.urlExamples.map((example: any, i: number) => (
+                  {result.urlExamples?.map((example, i: number) => (
                     <div key={i} className="bg-gray-100 p-2 rounded text-xs mb-2">
                       <div><strong>前端 Locale:</strong> {example.frontend}</div>
                       <div><strong>CMS Locale:</strong> {example.cms}</div>

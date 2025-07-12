@@ -1,11 +1,9 @@
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { getBlogPosts, getFeaturedBlogPosts, getBlogCategories } from '@/lib/api';
+import { getBlogPosts, getBlogCategories } from '@/lib/api';
 import BlogGrid from '@/components/blog/blog-grid';
 import BlogHero from '@/components/blog/blog-hero';
 import BlogSidebar from '@/components/blog/blog-sidebar';
-import { Suspense } from 'react';
-import { Loading } from '@/components/ui/loading';
 
 interface BlogPageProps {
   params: Promise<{ locale: string }>;
@@ -144,7 +142,6 @@ export default async function BlogPage({ params, searchParams }: BlogPageProps) 
             <div className="lg:col-span-1">
               <BlogSidebar
                 locale={locale}
-                featuredPosts={featuredPosts}
                 recentPosts={recentPosts}
                 categories={categories}
               />
