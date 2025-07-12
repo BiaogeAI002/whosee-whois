@@ -17,6 +17,22 @@ const withNextIntl = createNextIntlPlugin();
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const nextConfig: NextConfig = {
+  
+  // 📁 排除不需要编译的文件夹
+  webpack: (config, { isServer }) => {
+    // 忽略 cms 文件夹
+    config.resolve.alias = {
+      ...config.resolve.alias,
+    };
+    
+    // 在服务端构建时排除 cms 相关文件
+    if (isServer) {
+      config.externals = config.externals || [];
+      config.externals.push(/^cms\//);
+    }
+    
+    return config;
+  },
 
   // 🚀 开发环境代理配置 - 解决 CORS 问题
   async rewrites() {

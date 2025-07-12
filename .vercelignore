@@ -1,0 +1,28 @@
+# CMS 文件夹和相关文件
+cms/
+cms/**
+
+# 其他不需要部署的文件夹
+docs/
+static/screenshots/
+server/
+
+# 开发相关文件
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+.vscode/
+.idea/
+
+# 测试文件
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+coverage/
+
+# 备份文件
+**/*-backup.*
+layout-backup.tsx 

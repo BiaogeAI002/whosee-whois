@@ -11,12 +11,15 @@ import {
   queryDomainAll,
   ApiError 
 } from '@/lib/api';
-import type { DomainInfo, DNSInfo, HealthInfo, ScreenshotInfo } from '@/types';
+interface APIResults {
+  type: string;
+  data: Record<string, unknown>;
+}
 
 export function ApiDemo() {
   const [domain, setDomain] = useState('example.com');
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<APIResults | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // WHOIS查询示例
