@@ -33,16 +33,19 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
     
     let newPath = pathname;
     
+    // 先移除现有的语言前缀
+    if (newPath.startsWith('/en')) {
+      newPath = newPath.replace('/en', '') || '/';
+    } else if (newPath.startsWith('/zh')) {
+      newPath = newPath.replace('/zh', '') || '/';
+    }
+    
+    // 然后添加新的语言前缀
     if (locale === 'en') {
-      // 切换到英文
-      if (!pathname.startsWith('/en')) {
-        newPath = `/en${pathname}`;
-      }
+      newPath = `/en${newPath}`;
     } else {
-      // 切换到中文
-      if (pathname.startsWith('/en')) {
-        newPath = pathname.replace('/en', '') || '/';
-      }
+      // 中文也需要添加 /zh 前缀
+      newPath = `/zh${newPath}`;
     }
     
     // 使用 window.location.href 强制刷新页面，确保重新加载翻译内容

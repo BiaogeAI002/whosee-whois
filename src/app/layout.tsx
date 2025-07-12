@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   
   const isEnglish = locale === 'en';
-  const baseUrl = 'https://whosee.me';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://whosee.me';
   
   const metadata = {
     zh: {
@@ -93,15 +93,20 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
-        {/* Hreflang标签 */}
-        <link rel="alternate" hrefLang="zh" href="https://whosee.me" />
-        <link rel="alternate" hrefLang="en" href="https://whosee.me/en" />
-        <link rel="alternate" hrefLang="x-default" href="https://whosee.me" />
+        {/* Hreflang标签 - 从环境变量获取站点URL */}
+        <link rel="alternate" hrefLang="zh" href={process.env.NEXT_PUBLIC_SITE_URL || 'https://whosee.me'} />
+        <link rel="alternate" hrefLang="en" href={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://whosee.me'}/en`} />
+        <link rel="alternate" hrefLang="x-default" href={process.env.NEXT_PUBLIC_SITE_URL || 'https://whosee.me'} />
         
         {/* 预加载关键资源 */}
         <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="//api.whosee.me" />
-        <link rel="preconnect" href="https://api.whosee.me" crossOrigin="anonymous" />
+        {/* DNS预解析 - 从环境变量获取API地址 */}
+        {process.env.NEXT_PUBLIC_API_URL && (
+          <>
+            <link rel="dns-prefetch" href={`//${new URL(process.env.NEXT_PUBLIC_API_URL).hostname}`} />
+            <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_URL} crossOrigin="anonymous" />
+          </>
+        )}
         
         {/* Favicon */}
         <link rel="icon" href="/favicon.ico" />

@@ -70,9 +70,13 @@ export function SEOMetadata({
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="format-detection" content="telephone=no" />
       
-      {/* DNS预解析 */}
-      <link rel="dns-prefetch" href="//api.whosee.me" />
-      <link rel="preconnect" href="https://api.whosee.me" crossOrigin="anonymous" />
+      {/* DNS预解析 - 从环境变量获取API地址 */}
+      {process.env.NEXT_PUBLIC_API_URL && (
+        <>
+          <link rel="dns-prefetch" href={`//${new URL(process.env.NEXT_PUBLIC_API_URL).hostname}`} />
+          <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_URL} crossOrigin="anonymous" />
+        </>
+      )}
     </Head>
   );
 } 

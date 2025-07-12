@@ -1,4 +1,16 @@
 import type { DomainInfo, DNSInfo, HealthInfo, ScreenshotInfo, DNSRecord } from '@/types';
+import type { 
+  BlogPost, 
+  BlogCategory, 
+  BlogTag, 
+  BlogPostsResponse, 
+  BlogPostResponse, 
+  BlogCategoriesResponse, 
+  BlogTagsResponse, 
+  BlogQueryParams, 
+  StrapiResponse
+} from '@/types';
+import { toCMSLocale } from '@/i18n/config';
 
 // API 基础配置 - 参考原项目方案
 // 开发环境：使用相对路径，让Next.js代理转发请求
@@ -9,15 +21,28 @@ const isDevelopment = typeof window !== 'undefined'
 
 const API_BASE_URL = isDevelopment ? '' : 'http://localhost:3000';
 
-// 调试信息
-console.log('🚀 API Strategy:', isDevelopment ? 'Using Next.js Proxy' : 'Direct API calls');
-console.log('🔗 API Base URL:', `"${API_BASE_URL}"`);
-console.log('🌍 Environment:', isDevelopment ? 'development' : 'production');
+// CMS API 配置
+const CMS_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
+const CMS_API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN || process.env.STRAPI_API_TOKEN;
+
+// 仅在开发环境输出调试信息
+if (process.env.NODE_ENV === 'development') {
+  console.log('🚀 API Strategy:', isDevelopment ? 'Using Next.js Proxy' : 'Direct API calls');
+  console.log('🔗 API Base URL:', `"${API_BASE_URL}"`);
+  console.log('🎨 CMS Base URL:', `"${CMS_BASE_URL}"`);
+  console.log('🌍 Environment:', isDevelopment ? 'development' : 'production');
+}
 
 // 请求配置
 const defaultHeaders = {
   'Content-Type': 'application/json',
   'User-Agent': 'Whosee-Client/1.0',
+};
+
+// CMS 请求头
+const cmsHeaders = {
+  'Content-Type': 'application/json',
+  ...(CMS_API_TOKEN && { 'Authorization': `Bearer ${CMS_API_TOKEN}` }),
 };
 
 // JWT Token 管理
@@ -208,12 +233,8 @@ class ApiError extends Error {
 async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
   
-  // 开发环境下打印完整URL，便于调试
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🌐 Full URL:', `"${url}"`);
-    console.log('📍 Base URL:', `"${API_BASE_URL}"`);
-    console.log('🛤️ Endpoint:', `"${endpoint}"`);
-  }
+  // 开发环境下仅在需要时输出URL（减少日志噪音）
+  // console.log('🌐 Full URL:', url);
   
   // 为需要认证的接口添加JWT token
   const needsAuth = !endpoint.includes('/api/health') && !endpoint.includes('/api/auth/token');
@@ -283,6 +304,114 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
     
     // 网络错误或其他错误
     throw new ApiError(0, `网络错误: ${error instanceof Error ? error.message : '未知错误'}`);
+  }
+}
+
+// CMS 请求函数
+async function cmsRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  const url = `${CMS_BASE_URL}${endpoint}`;
+  
+  // 开发环境下仅在需要时输出CMS URL
+  // console.log('🎨 CMS URL:', url);
+  
+  const headers: Record<string, string> = { ...cmsHeaders };
+  
+  // 合并用户提供的headers
+  if (options.headers) {
+    Object.assign(headers, options.headers);
+  }
+
+  const config: RequestInit = {
+    headers,
+    ...options,
+  };
+
+  try {
+    const response = await fetch(url, config);
+    
+    if (!response.ok) {
+      // 尝试解析错误响应
+      let errorData: any = {};
+      let errorText = '';
+      
+      try {
+        const responseText = await response.text();
+        errorText = responseText;
+        
+        // 尝试解析为JSON
+        if (responseText) {
+          errorData = JSON.parse(responseText);
+        }
+      } catch (parseError) {
+        // 如果不是JSON，使用原始文本
+        errorData = { rawError: errorText };
+      }
+
+      // 构建详细错误信息
+      let errorMessage = '';
+      
+      if (errorData.error) {
+        // Strapi 4/5 错误格式
+        if (typeof errorData.error === 'object') {
+          errorMessage = errorData.error.message || errorData.error.name || 'CMS错误';
+          if (errorData.error.details) {
+            errorMessage += `: ${JSON.stringify(errorData.error.details)}`;
+          }
+        } else {
+          errorMessage = String(errorData.error);
+        }
+      } else if (errorData.message) {
+        errorMessage = errorData.message;
+      } else if (errorText) {
+        errorMessage = errorText;
+      } else {
+        errorMessage = `CMS请求失败: ${response.status} ${response.statusText}`;
+      }
+
+      console.error('🚨 CMS Error Details:', {
+        status: response.status,
+        statusText: response.statusText,
+        url,
+        errorData,
+        errorText: errorText.substring(0, 500) // 限制日志长度
+      });
+      
+      throw new CMSError(response.status, 'CMSError', errorMessage, errorData);
+    }
+
+    const data = await response.json();
+    
+    // 检查CMS响应格式
+    if (data.error) {
+      throw new CMSError(
+        response.status,
+        data.error.name || 'CMSError',
+        data.error.message || '请求失败',
+        data.error.details
+      );
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof CMSError) {
+      throw error;
+    }
+    
+    // 网络错误或其他错误
+    throw new CMSError(0, 'NetworkError', `网络错误: ${error instanceof Error ? error.message : '未知错误'}`);
+  }
+}
+
+// CMS 错误类
+class CMSError extends Error {
+  constructor(
+    public status: number, 
+    public name: string, 
+    message: string, 
+    public details?: Record<string, any>
+  ) {
+    super(message);
+    this.name = name;
   }
 }
 
@@ -502,60 +631,481 @@ export async function queryDomainAll(domain: string, options: {
   } = options;
 
   const results: any = {};
-  const errors: any = {};
 
-  // 并发执行多个查询
-  const promises: Array<Promise<void>> = [];
+  try {
+    // 并行执行多个查询
+    const promises: Promise<any>[] = [];
+    const queryTypes: string[] = [];
 
-  if (includeWhois) {
-    promises.push(
-      queryDomainInfo(domain)
-        .then(data => { results.whois = data; })
-        .catch(error => { errors.whois = error.message; })
-    );
+    if (includeWhois) {
+      promises.push(queryDomainInfo(domain));
+      queryTypes.push('whois');
+    }
+
+    if (includeRDAP) {
+      promises.push(queryRDAPInfo(domain));
+      queryTypes.push('rdap');
+    }
+
+    if (includeDNS) {
+      promises.push(queryDNSInfo(domain));
+      queryTypes.push('dns');
+    }
+
+    if (includeScreenshot) {
+      promises.push(queryScreenshotInfo(domain));
+      queryTypes.push('screenshot');
+    }
+
+    if (includeITDog) {
+      promises.push(queryITDogInfo(domain));
+      queryTypes.push('itdog');
+    }
+
+    const responses = await Promise.allSettled(promises);
+
+    // 处理结果
+    responses.forEach((response, index) => {
+      const queryType = queryTypes[index];
+      if (response.status === 'fulfilled') {
+        results[queryType] = response.value;
+      } else {
+        results[queryType] = {
+          error: response.reason?.message || '查询失败',
+          status: 'error'
+        };
+      }
+    });
+
+  } catch (error) {
+    throw new ApiError(500, `综合查询失败: ${error instanceof Error ? error.message : '未知错误'}`);
   }
 
-  if (includeRDAP) {
-    promises.push(
-      queryRDAPInfo(domain)
-        .then(data => { results.rdap = data; })
-        .catch(error => { errors.rdap = error.message; })
-    );
-  }
-
-  if (includeDNS) {
-    promises.push(
-      queryDNSInfo(domain)
-        .then(data => { results.dns = data; })
-        .catch(error => { errors.dns = error.message; })
-    );
-  }
-
-  if (includeScreenshot) {
-    promises.push(
-      queryScreenshotInfo(domain)
-        .then(data => { results.screenshot = data; })
-        .catch(error => { errors.screenshot = error.message; })
-    );
-  }
-
-  if (includeITDog) {
-    promises.push(
-      queryITDogInfo(domain)
-        .then(data => { results.itdog = data; })
-        .catch(error => { errors.itdog = error.message; })
-    );
-  }
-
-  await Promise.all(promises);
-
-  return {
-    domain,
-    results,
-    errors,
-    timestamp: new Date().toISOString(),
-  };
+  return results;
 }
+
+// =============================================================================
+  // CMS 博客相关 API 函数
+  // =============================================================================
+
+// 构建查询参数
+function buildQueryParams(params: BlogQueryParams = {}): string {
+  const searchParams = new URLSearchParams();
+  
+  // 语言环境 - 自动转换前端 locale 到 CMS locale
+  if (params.locale) {
+    const cmsLocale = toCMSLocale(params.locale);
+    searchParams.append('locale', cmsLocale);
+  }
+  
+  // 关联数据填充 - 支持简化格式
+  if (params.populate) {
+    if (params.populate === '*') {
+      // 简化格式：populate=* (填充所有关系)
+      searchParams.append('populate', '*');
+    } else if (Array.isArray(params.populate)) {
+      // 数组格式：populate[fieldName]=*
+      params.populate.forEach(field => {
+        searchParams.append(`populate[${field}]`, '*');
+      });
+    } else {
+      // 字符串格式：拆分并处理
+      const fields = params.populate.split(',').map(f => f.trim());
+      fields.forEach(field => {
+        searchParams.append(`populate[${field}]`, '*');
+      });
+    }
+  }
+  
+  // 排序
+  if (params.sort) {
+    if (Array.isArray(params.sort)) {
+      params.sort.forEach(sortItem => {
+        searchParams.append('sort', sortItem);
+      });
+    } else {
+      searchParams.append('sort', params.sort);
+    }
+  }
+  
+  // 过滤器 - 修复嵌套对象和数组处理
+  if (params.filters) {
+    const buildFilterParams = (filters: any, prefix = 'filters') => {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          if (Array.isArray(value)) {
+            // 处理数组，如 $or: [condition1, condition2]
+            value.forEach((item, index) => {
+              if (typeof item === 'object') {
+                buildFilterParams(item, `${prefix}[${key}][${index}]`);
+              } else {
+                searchParams.append(`${prefix}[${key}][${index}]`, String(item));
+              }
+            });
+          } else if (typeof value === 'object') {
+            // 递归处理嵌套对象
+            buildFilterParams(value, `${prefix}[${key}]`);
+          } else {
+            // 原始值直接添加
+            searchParams.append(`${prefix}[${key}]`, String(value));
+          }
+        }
+      });
+    };
+    
+    buildFilterParams(params.filters);
+  }
+  
+  // 分页
+  if (params.pagination) {
+    Object.entries(params.pagination).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        searchParams.append(`pagination[${key}]`, String(value));
+      }
+    });
+  }
+  
+  // 字段选择
+  if (params.fields) {
+    searchParams.append('fields', params.fields.join(','));
+  }
+  
+  // 发布状态
+  if (params.publicationState) {
+    searchParams.append('publicationState', params.publicationState);
+  }
+  
+  return searchParams.toString();
+}
+
+// 获取所有博客文章
+export async function getBlogPosts(params: BlogQueryParams = {}): Promise<BlogPostsResponse> {
+  const queryParams = buildQueryParams({
+    ...params,
+    populate: params.populate || '*',  // 使用简化格式，自动填充所有关系
+    sort: params.sort || ['publishedAt:desc'],
+    publicationState: params.publicationState || 'live'
+  });
+  
+  return await cmsRequest<BlogPostsResponse>(`/api/blog-posts?${queryParams}`);
+}
+
+// 根据 slug 获取单篇博客文章
+export async function getBlogPostBySlug(slug: string, locale: string = 'en'): Promise<BlogPost | null> {
+  const queryParams = buildQueryParams({
+    locale,
+    filters: { slug: { $eq: slug } },
+    populate: '*',  // 使用简化格式
+    publicationState: 'live'
+  });
+  
+  try {
+    const response = await cmsRequest<BlogPostsResponse>(`/api/blog-posts?${queryParams}`);
+    return response.data[0] || null;
+  } catch (error) {
+    if (error instanceof CMSError && error.status === 404) {
+      return null;
+    }
+    throw error;
+  }
+}
+
+// 根据 ID 获取博客文章
+export async function getBlogPostById(id: number, locale: string = 'en'): Promise<BlogPost | null> {
+  const queryParams = buildQueryParams({
+    locale,
+    populate: '*',  // 使用简化格式
+    publicationState: 'live'
+  });
+  
+  try {
+    const response = await cmsRequest<StrapiResponse<BlogPost>>(`/api/blog-posts/${id}?${queryParams}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof CMSError && error.status === 404) {
+      return null;
+    }
+    throw error;
+  }
+}
+
+// 获取推荐博客文章
+export async function getFeaturedBlogPosts(locale: string = 'en', limit: number = 6): Promise<BlogPost[]> {
+  const queryParams = buildQueryParams({
+    locale,
+    filters: { featured: { $eq: true } },
+    populate: '*',  // 使用简化格式
+    sort: ['publishedAt:desc'],
+    pagination: { limit },
+    publicationState: 'live'
+  });
+  
+  const response = await cmsRequest<BlogPostsResponse>(`/api/blog-posts?${queryParams}`);
+  return response.data;
+}
+
+// 根据分类获取博客文章
+export async function getBlogPostsByCategory(categorySlug: string, locale: string = 'en', params: BlogQueryParams = {}): Promise<BlogPostsResponse> {
+  const queryParams = buildQueryParams({
+    ...params,
+    locale,
+    filters: {
+      ...params.filters,
+      category: { slug: { $eq: categorySlug } }
+    },
+    populate: params.populate || '*',  // 使用简化格式
+    sort: params.sort || ['publishedAt:desc'],
+    publicationState: 'live'
+  });
+  
+  return await cmsRequest<BlogPostsResponse>(`/api/blog-posts?${queryParams}`);
+}
+
+// 根据标签获取博客文章
+export async function getBlogPostsByTag(tagSlug: string, locale: string = 'en', params: BlogQueryParams = {}): Promise<BlogPostsResponse> {
+  const queryParams = buildQueryParams({
+    ...params,
+    locale,
+    filters: {
+      ...params.filters,
+      tags: { slug: { $eq: tagSlug } }
+    },
+    populate: params.populate || '*',  // 使用简化格式
+    sort: params.sort || ['publishedAt:desc'],
+    publicationState: 'live'
+  });
+  
+  return await cmsRequest<BlogPostsResponse>(`/api/blog-posts?${queryParams}`);
+}
+
+// 搜索博客文章
+export async function searchBlogPosts(searchTerm: string, locale: string = 'en', params: BlogQueryParams = {}): Promise<BlogPostsResponse> {
+  const queryParams = buildQueryParams({
+    ...params,
+    locale,
+    filters: {
+      ...params.filters,
+      $or: [
+        { title: { $containsi: searchTerm } },
+        { excerpt: { $containsi: searchTerm } },
+        { content: { $containsi: searchTerm } }
+      ]
+    },
+    populate: params.populate || '*',  // 使用简化格式
+    sort: params.sort || ['publishedAt:desc'],
+    publicationState: 'live'
+  });
+  
+  return await cmsRequest<BlogPostsResponse>(`/api/blog-posts?${queryParams}`);
+}
+
+// 获取相关博客文章
+export async function getRelatedBlogPosts(postId: number, locale: string = 'en', limit: number = 4): Promise<BlogPost[]> {
+  // 首先获取当前文章的分类和标签
+  const currentPost = await getBlogPostById(postId, locale);
+  if (!currentPost) return [];
+  
+  const categoryId = currentPost.category?.id;
+  const tagIds = currentPost.tags?.map(tag => tag.id) || [];
+  
+  // 构建查询条件：同分类或有相同标签的文章，排除当前文章
+  const filters: any = {
+    id: { $ne: postId }
+  };
+  
+  if (categoryId || tagIds.length > 0) {
+    const orConditions = [];
+    
+    if (categoryId) {
+      orConditions.push({ category: { id: { $eq: categoryId } } });
+    }
+    
+    if (tagIds.length > 0) {
+      orConditions.push({ tags: { id: { $in: tagIds } } });
+    }
+    
+    filters.$or = orConditions;
+  }
+  
+  const queryParams = buildQueryParams({
+    locale,
+    filters,
+    populate: '*',  // 使用简化格式
+    sort: ['publishedAt:desc'],
+    pagination: { limit },
+    publicationState: 'live'
+  });
+  
+  const response = await cmsRequest<BlogPostsResponse>(`/api/blog-posts?${queryParams}`);
+  return response.data;
+}
+
+// 获取所有博客分类
+export async function getBlogCategories(locale: string = 'en'): Promise<BlogCategoriesResponse> {
+  const queryParams = buildQueryParams({
+    locale,
+    populate: '*',  // 使用简化格式
+    sort: ['name:asc']
+  });
+  
+  return await cmsRequest<BlogCategoriesResponse>(`/api/categories?${queryParams}`);
+}
+
+// 根据 slug 获取博客分类
+export async function getBlogCategoryBySlug(slug: string, locale: string = 'en'): Promise<BlogCategory | null> {
+  const queryParams = buildQueryParams({
+    locale,
+    filters: { slug: { $eq: slug } },
+    populate: '*'  // 使用简化格式
+  });
+  
+  try {
+    const response = await cmsRequest<BlogCategoriesResponse>(`/api/categories?${queryParams}`);
+    return response.data[0] || null;
+  } catch (error) {
+    if (error instanceof CMSError && error.status === 404) {
+      return null;
+    }
+    throw error;
+  }
+}
+
+// 获取所有博客标签
+export async function getBlogTags(locale: string = 'en'): Promise<BlogTag[]> {
+  const queryParams = buildQueryParams({
+    locale,
+    sort: ['name:asc']
+  });
+  
+  const response = await cmsRequest<BlogTagsResponse>(`/api/tags?${queryParams}`);
+  return response.data;
+}
+
+// 根据 slug 获取博客标签
+export async function getBlogTagBySlug(slug: string, locale: string = 'en'): Promise<BlogTag | null> {
+  const queryParams = buildQueryParams({
+    locale,
+    filters: { slug: { $eq: slug } }
+  });
+  
+  try {
+    const response = await cmsRequest<BlogTagsResponse>(`/api/tags?${queryParams}`);
+    return response.data[0] || null;
+  } catch (error) {
+    if (error instanceof CMSError && error.status === 404) {
+      return null;
+    }
+    throw error;
+  }
+}
+
+// 获取博客文章的所有静态路径（用于静态生成）
+export async function getBlogPostPaths(locales: string[] = ['en', 'zh']): Promise<Array<{ params: { slug: string }; locale: string }>> {
+  const paths: Array<{ params: { slug: string }; locale: string }> = [];
+  
+  for (const frontendLocale of locales) {
+    try {
+      const queryParams = buildQueryParams({
+        locale: frontendLocale, // buildQueryParams 会自动转换为 CMS locale
+        fields: ['slug'],
+        pagination: { limit: 100 }, // 根据实际需要调整
+        publicationState: 'live'
+      });
+      
+      const response = await cmsRequest<BlogPostsResponse>(`/api/blog-posts?${queryParams}`);
+      
+      response.data.forEach(post => {
+        paths.push({
+          params: { slug: post.slug },
+          locale: frontendLocale // 返回前端使用的 locale
+        });
+      });
+    } catch (error) {
+      console.error(`获取 ${frontendLocale} 语言的博客路径失败:`, error);
+    }
+  }
+  
+  return paths;
+}
+
+// 增加文章浏览次数
+export async function incrementBlogPostViews(id: number): Promise<void> {
+  try {
+    // 首先获取当前浏览次数
+    const currentPost = await getBlogPostById(id);
+    if (!currentPost) return;
+    
+    const currentViews = currentPost.views || 0;
+    
+    // 更新浏览次数
+    await cmsRequest(`/api/blog-posts/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        data: {
+          views: currentViews + 1
+        }
+      })
+    });
+  } catch (error) {
+    // 浏览次数更新失败不应该影响页面渲染，所以静默处理
+    console.error('更新文章浏览次数失败:', error);
+  }
+}
+
+// 获取博客文章的本地化版本信息
+export async function getBlogPostLocalizations(id: number): Promise<Array<{ id: number; locale: string; slug?: string }>> {
+  try {
+    const queryParams = buildQueryParams({
+      populate: '*',  // 使用简化格式
+      publicationState: 'live'
+    });
+    
+    const response = await cmsRequest<StrapiResponse<BlogPost>>(`/api/blog-posts/${id}?${queryParams}`);
+    
+    // 返回本地化版本的基本信息
+    const localizations = response.data.localizations || [];
+    const currentPost = {
+      id: response.data.id,
+      locale: response.data.locale || 'en',
+      slug: response.data.slug
+    };
+    
+    const localizationInfos = localizations.map((loc: any) => ({
+      id: loc.id,
+      locale: loc.locale,
+      slug: loc.slug
+    }));
+    
+    return [currentPost, ...localizationInfos];
+  } catch (error) {
+    console.error('获取文章本地化版本失败:', error);
+    return [];
+  }
+}
+
+// 导出所有 CMS API 函数的对象
+export const cmsApi = {
+  // 博客文章
+  getBlogPosts,
+  getBlogPostBySlug,
+  getBlogPostById,
+  getFeaturedBlogPosts,
+  getBlogPostsByCategory,
+  getBlogPostsByTag,
+  searchBlogPosts,
+  getRelatedBlogPosts,
+  getBlogPostLocalizations,
+  incrementBlogPostViews,
+  
+  // 分类和标签
+  getBlogCategories,
+  getBlogCategoryBySlug,
+  getBlogTags,
+  getBlogTagBySlug,
+  
+  // 工具函数
+  getBlogPostPaths,
+};
 
 // 导出错误类
 export { ApiError };

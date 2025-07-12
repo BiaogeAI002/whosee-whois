@@ -6,6 +6,7 @@
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Strapi](https://img.shields.io/badge/Strapi-5-2F2E8B?style=for-the-badge&logo=strapi&logoColor=white)
 
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 ![GitHub Stars](https://img.shields.io/github/stars/AsisYu/whosee-whois?style=for-the-badge&logo=github)
@@ -18,10 +19,11 @@
 
 </div>
 
-一个现代化的域名信息查询平台，提供 WHOIS 信息查询、DNS 记录查询、网站截图等功能。
+一个现代化的域名信息查询平台，提供 WHOIS 信息查询、DNS 记录查询、网站截图等功能，集成 Strapi 5 CMS 支持多语言博客内容管理。
 
 ## 项目仓库
 - **⚡ 后端项目**: [whosee-server](https://github.com/AsisYu/whosee-server) - Go 高性能后端服务
+- **📝 内容管理**: 集成 Strapi 5 CMS - 多语言博客内容管理系统
 - **🌐 在线演示**: [whosee.me](https://whosee.me) - 在线体验完整功能
 
 ## 项目预览
@@ -79,6 +81,18 @@
 - 🚨 **告警提示** - 异常状态智能告警提醒
 - 🔧 **服务详情** - 各个服务组件详细状态信息
 
+### 内容管理系统 📝
+- 📚 **博客系统** - 基于 Strapi 5 CMS 的强大博客功能
+- 🌍 **多语言内容** - 中英文博客内容独立管理
+- 📝 **富文本编辑** - 强大的可视化内容编辑器
+- 🏷️ **分类标签** - 灵活的文章分类和标签系统
+- 📅 **发布管理** - 定时发布和草稿管理功能
+- 🖼️ **媒体管理** - 图片和文件的统一媒体库
+- 🔍 **内容搜索** - 全文搜索和智能推荐
+- 📊 **SEO 优化** - 内置 SEO 字段和元数据管理
+- 📱 **响应式展示** - 博客内容完美适配各种设备
+- 🔄 **RSS 订阅** - 自动生成 RSS 源支持订阅
+
 ### 用户体验优化 🎨
 - 🌙 **主题切换** - 明暗主题无缝切换，护眼模式
 - 🌍 **国际化** - 中英文界面完整支持
@@ -121,6 +135,16 @@
 - **🎛️ CVA** - class-variance-authority 组件变体管理
 - **🔧 clsx & tailwind-merge** - 智能样式类名合并工具
 
+### 内容管理系统 📝
+- **🏗️ Strapi 5** - 现代化无头 CMS，强大的内容管理
+  
+  ![Strapi](https://img.shields.io/badge/Strapi-5-2F2E8B?style=flat-square&logo=strapi&logoColor=white)
+  
+- **📝 博客系统** - 完整的多语言博客解决方案
+- **🖼️ 媒体管理** - 统一的图片和文件管理系统
+- **🔧 API 集成** - REST API 和 GraphQL 双重支持
+- **🛡️ 权限控制** - 细粒度的角色和权限管理
+
 ### 国际化和主题 🌍
 - **🗣️ next-intl** - 完整的国际化解决方案
 - **🌙 next-themes** - 主题切换和持久化存储
@@ -150,6 +174,30 @@
 - **📦 Node.js** 18.17 或更高版本
 - **🔧 包管理器** npm 或 yarn
 - **💻 操作系统** Windows、macOS、Linux 均支持
+
+### 🔧 环境变量配置（重要）
+
+⚠️ **首次运行请先配置环境变量**
+
+1. **📋 查看配置文档**：
+   - [环境变量配置指南](./docs/ENVIRONMENT_CONFIG.md) - 详细配置说明
+   - [配置示例](./docs/ENV_EXAMPLE.md) - 完整配置模板
+
+2. **🔑 创建环境配置文件**：
+   ```bash
+   # 在项目根目录创建 .env.local 文件
+   touch .env.local
+   ```
+
+3. **📝 基本配置**（最少需要这些）：
+   ```env
+   # Strapi CMS 配置
+   NEXT_PUBLIC_STRAPI_URL=http://localhost:1337
+   NEXT_PUBLIC_STRAPI_API_TOKEN=your_strapi_api_token_here
+   ```
+
+4. **✅ 配置验证**：
+   启动开发服务器后，访问 `http://localhost:3000/debug` 检查配置状态
 
 ### 安装依赖 ⬇️
 ```bash
@@ -199,20 +247,38 @@ npm run lint -- --fix
 
 ```
 📁 whosee-whois/
+├── 📂 cms/                       # 📝 Strapi 5 CMS 系统
+│   ├── 📂 config/               # ⚙️ CMS 配置文件
+│   ├── 📂 src/                  # 📂 CMS 源代码
+│   │   ├── 📂 api/              # 🔌 内容类型和 API
+│   │   │   ├── 📂 blog-post/   # 📝 博客文章
+│   │   │   ├── 📂 category/    # 🏷️ 分类管理
+│   │   │   └── 📂 tag/         # 🔖 标签管理
+│   │   ├── 📂 components/       # 🧩 CMS 组件
+│   │   └── 📂 extensions/       # 🔧 CMS 扩展
+│   ├── 📄 package.json         # 📦 CMS 依赖
+│   └── 📄 README.md            # 📖 CMS 说明
 ├── 📂 src/
 │   ├── 📂 app/                    # 🅰️ Next.js App Router 页面
+│   │   ├── 📂 [locale]/          # 🌍 国际化路由
+│   │   │   └── 📂 blog/         # 📚 博客页面
+│   │   │       ├── 📂 [slug]/   # 📝 博客文章详情
+│   │   │       └── 📄 page.tsx  # 📋 博客列表
 │   │   ├── 📂 domain/            # 🌐 域名查询页面
 │   │   ├── 📂 dns/               # 🔍 DNS 查询页面
 │   │   ├── 📂 screenshot/        # 📸 截图页面
 │   │   ├── 📂 health/            # 📊 健康监控页面
+│   │   ├── 📂 debug/             # 🔧 调试页面
 │   │   ├── 📄 layout.tsx         # 🎨 根布局
 │   │   └── 📄 page.tsx           # 🏠 首页
 │   ├── 📂 components/            # ⚛️ React 组件
 │   │   ├── 📂 ui/                # 🎨 通用 UI 组件
+│   │   ├── 📂 blog/              # 📝 博客相关组件
+│   │   ├── 📂 seo/               # 🔍 SEO 组件
 │   │   ├── 📂 providers/         # 🔧 上下文提供者
 │   │   └── 📂 examples/          # 📋 示例组件
 │   ├── 📂 lib/                   # 🛠️ 工具库
-│   │   ├── 📄 api.ts             # 🔌 API 调用服务
+│   │   ├── 📄 api.ts             # 🔌 API 调用服务（含 CMS）
 │   │   ├── 📄 secure-api.ts      # 🔒 安全 API 服务
 │   │   └── 📄 utils.ts           # 🧰 通用工具函数
 │   ├── 📂 messages/              # 🌍 国际化翻译文件
@@ -222,12 +288,14 @@ npm run lint -- --fix
 │   └── 📂 i18n/                  # 🗣️ 国际化配置
 ├── 📂 public/                    # 📁 静态资源
 ├── 📂 docs/                      # 📚 项目文档
+│   ├── 📂 Strapi 5 CMS/         # 📝 CMS 文档
 │   └── 📂 images/                # 🖼️ 文档图片
 ├── 📄 tailwind.config.ts         # 🎨 TailwindCSS 配置
 ├── 📄 next.config.ts             # ⚙️ Next.js 配置
 ├── 📄 tsconfig.json              # 🛡️ TypeScript 配置
 ├── 📄 package.json               # 📦 项目依赖
 ├── 📄 .env.local                 # 🔐 环境变量（需创建）
+├── 📄 .env.example               # 📝 环境变量示例
 └── 📄 README.md                  # 📖 项目说明
 ```
 
@@ -263,10 +331,12 @@ npm run lint -- --fix
 - **网站截图**: 支持普通截图和Base64编码截图
 - **ITDog测速**: 网站性能测试和多地ping检测
 - **健康监控**: 全面的后端服务状态监控
+- **博客系统**: 基于 Strapi 5 的完整博客和内容管理
+- **内容管理**: 多语言文章、分类、标签管理
 
 #### 🚀 使用示例
 ```typescript
-import { queryRDAPInfo, queryDNSInfo, ApiError } from '@/lib/api';
+import { queryRDAPInfo, queryDNSInfo, getBlogPosts, ApiError } from '@/lib/api';
 
 // RDAP查询（推荐）
 try {
@@ -277,15 +347,33 @@ try {
     console.error('查询失败:', error.message);
   }
 }
+
+// 博客内容查询
+try {
+  const posts = await getBlogPosts({
+    locale: 'zh',
+    pagination: { page: 1, pageSize: 10 }
+  });
+  console.log('博客文章:', posts);
+} catch (error) {
+  console.error('获取博客失败:', error);
+}
 ```
 
 #### 📋 环境配置
-在 `next.config.ts` 中配置后端API地址：
-```bash
+配置后端 API 和 Strapi CMS 地址：
+```env
+# 后端 API 配置
 NEXT_PUBLIC_API_URL=http://localhost:8080
+
+# Strapi CMS 配置（必需）
+NEXT_PUBLIC_STRAPI_URL=http://localhost:1337
+NEXT_PUBLIC_STRAPI_API_TOKEN=your_strapi_api_token
 ```
 
-详细设置请参考 [API_SETUP.md](./API_SETUP.md)。
+详细配置请参考：
+- [环境变量配置指南](./docs/ENVIRONMENT_CONFIG.md)
+- [Strapi 5 集成指南](./docs/Strapi%205%20CMS/STRAPI5_GUIDE.md)
 
 ## 部署
 
@@ -300,6 +388,8 @@ NEXT_PUBLIC_API_URL=http://localhost:8080
    ```bash
    🔑 NEXT_PUBLIC_API_KEY=your_api_key_here
    🛡️ NEXT_PUBLIC_API_SECRET=your_api_secret_here
+   📝 NEXT_PUBLIC_STRAPI_URL=your_strapi_url
+   🔐 NEXT_PUBLIC_STRAPI_API_TOKEN=your_strapi_token
    ```
 4. **✅ 部署完成** - Vercel 会自动构建并部署
 

@@ -3,7 +3,8 @@
     "domain": "Domain",
     "dns": "DNS",
     "screenshot": "Screenshot",
-    "health": "Health"
+    "health": "Health",
+    "blog": "Blog"
   },
   "common": {
     "search": "Search",
@@ -20,7 +21,24 @@
     "networkErrorMessage": "Unable to connect to the server. Please check your internet connection and try again.",
     "notFound": "Not Found",
     "notFoundMessage": "The requested resource could not be found.",
-    "resourceNotFound": "{resource} not found"
+    "resourceNotFound": "{resource} not found",
+    "readMore": "Read More",
+    "viewAll": "View All",
+    "backToTop": "Back to Top",
+    "share": "Share",
+    "categories": "Categories",
+    "tags": "Tags",
+    "author": "Author",
+    "publishedAt": "Published",
+    "updatedAt": "Updated",
+    "minute": "minute",
+    "minutes": "minutes",
+    "minRead": "min read",
+    "relatedPosts": "Related Posts",
+    "noResults": "No results found",
+    "searchResults": "Search Results",
+    "home": "Home",
+    "blog": "Blog"
   },
   "home": {
     "title": "Whosee - Professional Domain Lookup Tool",
@@ -50,7 +68,16 @@
       "health": {
         "title": "Health Check",
         "description": "Monitor website availability and response time"
+      },
+      "blog": {
+        "title": "Technical Blog",
+        "description": "Domain technology insights, tutorials, and industry trends"
       }
+    },
+    "latestPosts": {
+      "title": "Latest Blog Posts",
+      "subtitle": "Stay updated with the latest domain technology insights and tutorials",
+      "viewAllPosts": "View All Posts"
     }
   },
   "domain": {
@@ -358,10 +385,184 @@
       "unhealthy": "Unhealthy"
     }
   },
+  "blog": {
+    "title": "Technical Blog",
+    "description": "Domain technology insights, tutorials, and industry trends",
+    "meta": {
+      "title": "Blog - Whosee Technical Insights",
+      "description": "Domain technology insights, tutorials, and industry trends. Learn about DNS, WHOIS, web technology and more."
+    },
+    "search": {
+      "placeholder": "Search articles...",
+      "button": "Search",
+      "resultsFor": "Search results for \"{query}\"",
+      "noResults": "No articles found matching your search.",
+      "tryDifferent": "Try searching with different keywords."
+    },
+    "filters": {
+      "all": "All Posts",
+      "featured": "Featured",
+      "recent": "Recent",
+      "category": "Category",
+      "tag": "Tag",
+      "clearFilters": "Clear Filters"
+    },
+    "categories": {
+      "title": "All Categories",
+      "description": "Browse all our article categories to find topics that interest you",
+      "meta": {
+        "title": "Blog Categories - Whosee",
+        "description": "Browse all Whosee blog categories including domain tools, DNS analysis, security tips, and tutorials"
+      },
+      "empty": {
+        "title": "No Categories",
+        "description": "No categories have been created yet."
+      },
+      "postCount": {
+        "none": "No articles",
+        "single": "1 article",
+        "multiple": "{count} articles"
+      },
+      "backToBlog": "Back to Blog",
+      "error": {
+        "title": "Failed to Load Categories",
+        "description": "Sorry, we couldn't load the category list. Please try again later or return to the blog homepage."
+      },
+      "allCategories": "All Categories",
+      "postsInCategory": "{count} posts in {category}",
+      "noPostsInCategory": "No posts in this category yet."
+    },
+    "tags": {
+      "title": "Tags",
+      "allTags": "All Tags",
+      "postsWithTag": "{count} posts tagged with {tag}",
+      "noPostsWithTag": "No posts with this tag yet."
+    },
+    "post": {
+      "meta": {
+        "author": "By {author}",
+        "publishedOn": "Published on {date}",
+        "updatedOn": "Updated on {date}",
+        "readingTime": "{time} min read",
+        "views": "{count} views",
+        "category": "in {category}",
+        "tags": "Tagged with: {tags}"
+      },
+      "actions": {
+        "share": "Share Article",
+        "shareOn": "Share on {platform}",
+        "copyLink": "Copy Link",
+        "linkCopied": "Link copied to clipboard!",
+        "print": "Print Article",
+        "bookmark": "Bookmark"
+      },
+      "navigation": {
+        "previous": "Previous Article",
+        "next": "Next Article",
+        "backToBlog": "Back to Blog",
+        "tableOfContents": "Table of Contents"
+      },
+      "engagement": {
+        "wasHelpful": "Was this article helpful?",
+        "yes": "Yes",
+        "no": "No",
+        "thankYou": "Thank you for your feedback!",
+        "improve": "How can we improve this article?"
+      }
+    },
+    "sidebar": {
+      "recentPosts": "Recent Posts",
+      "popularPosts": "Popular Posts",
+      "categories": "Categories",
+      "tags": "Popular Tags",
+      "allCategories": "All Categories",
+      "newsletter": "Newsletter",
+      "newsletterDescription": "Subscribe to get the latest articles and insights delivered to your inbox.",
+      "emailPlaceholder": "Enter your email",
+      "subscribe": "Subscribe",
+      "subscribeSuccess": "Successfully subscribed!",
+      "subscribeError": "Subscription failed. Please try again."
+    },
+    "featured": {
+      "title": "Featured Articles",
+      "subtitle": "Handpicked articles covering the most important topics in domain technology"
+    },
+    "relatedPosts": {
+      "title": "Related Articles",
+      "subtitle": "More articles you might find interesting",
+      "basedOnCategory": "More articles in {category}",
+      "basedOnTags": "More articles about {tags}"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {current} of {total}",
+      "goToPage": "Go to page {page}",
+      "firstPage": "First page",
+      "lastPage": "Last page",
+      "showingResults": "Showing {start}-{end} of {total} results"
+    },
+    "errors": {
+      "postNotFound": "Article not found",
+      "postNotFoundDescription": "The article you're looking for doesn't exist or has been moved.",
+      "categoryNotFound": "Category not found",
+      "categoryNotFoundDescription": "The category you're looking for doesn't exist.",
+      "tagNotFound": "Tag not found", 
+      "tagNotFoundDescription": "The tag you're looking for doesn't exist.",
+      "loadingError": "Failed to load content",
+      "loadingErrorDescription": "There was an error loading the content. Please try again.",
+      "networkError": "Network error",
+      "networkErrorDescription": "Unable to connect to the server. Please check your connection and try again."
+    },
+    "language": {
+      "switchLanguage": "Read in {language}",
+      "availableIn": "Available in:",
+      "translateTo": "Translate to {language}",
+      "originalLanguage": "Original language: {language}",
+      "autoTranslated": "Automatically translated",
+      "translationDisclaimer": "This is an automatic translation. The original article was written in {language}."
+    },
+    "seo": {
+      "breadcrumbs": {
+        "home": "Home",
+        "blog": "Blog",
+        "category": "{category}",
+        "tag": "{tag}",
+        "search": "Search Results"
+      }
+    },
+    "stats": {
+      "totalPosts": "{count} total articles",
+      "totalCategories": "{count} categories",
+      "totalTags": "{count} tags",
+      "publishedThisMonth": "{count} articles this month",
+      "averageReadingTime": "{time} min average reading time"
+    },
+    "empty": {
+      "noPosts": "No articles yet",
+      "noPostsDescription": "We're working on creating great content. Check back soon!",
+      "noFeaturedPosts": "No featured articles",
+      "noFeaturedPostsDescription": "No articles have been featured yet.",
+      "noRecentPosts": "No recent articles",
+      "noPopularPosts": "No popular articles"
+    },
+    "archive": {
+      "title": "Article Archive",
+      "byMonth": "By Month",
+      "byYear": "By Year",
+      "monthYear": "{month} {year}",
+      "postsInMonth": "{count} articles in {month} {year}",
+      "allTime": "All Time"
+    },
+    "rss": {
+      "subscribe": "Subscribe to RSS",
+      "description": "Get the latest articles delivered to your RSS reader"
+    }
+  },
   "metadata": {
     "title": "Whosee - Professional Domain Lookup Tool",
     "description": "Fast and comprehensive domain information lookup service. Get WHOIS info, DNS records, health checks and website screenshots.",
-    "keywords": "domain,whois,dns,lookup,domain check,website health"
+    "keywords": "domain,whois,dns,lookup,domain check,website health,blog,technical insights"
   },
   "footer": {
     "projectDescription": "Professional domain lookup tool providing domain information, DNS queries, website screenshots and more.",
@@ -373,6 +574,10 @@
     "backend": "Backend: Go + Gin + Redis",
     "deployment": "Deployment: Vercel + Docker",
     "copyright": "© 2024 Whosee. All rights reserved.",
-    "madeWithLove": "Made with ❤️"
+    "madeWithLove": "Made with ❤️",
+    "quickLinks": "Quick Links",
+    "blog": "Blog",
+    "latestPosts": "Latest Posts",
+    "allCategories": "All Categories"
   }
 }

@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { ThemeToggle } from './theme-toggle';
 import { LanguageToggle } from './language-toggle';
 import { cn } from '@/lib/utils';
-import { Globe, Server, Camera, Activity } from 'lucide-react';
+import { Globe, Server, Camera, Activity, BookOpen } from 'lucide-react';
 
 export function Navbar() {
   const t = useTranslations('nav');
@@ -54,6 +54,11 @@ export function Navbar() {
       href: '/health',
       label: t('health'),
       icon: Activity,
+    },
+    {
+      href: '/blog',
+      label: t('blog'),
+      icon: BookOpen,
     },
   ];
 
