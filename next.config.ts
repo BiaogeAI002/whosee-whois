@@ -18,18 +18,50 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const nextConfig: NextConfig = {
   
-  // 📁 排除不需要编译的文件夹
-  webpack: (config, { isServer }) => {
-    // 忽略 cms 文件夹
+    // 📁 排除不需要编译的文件夹
+  webpack: (config, { webpack }) => {
+    // 1. 使用 IgnorePlugin 完全忽略 cms 文件夹
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^\.\/cms/,
+        contextRegExp: /$/,
+      }),
+      new webpack.IgnorePlugin({
+        resourceRegExp: /\/cms\//,
+      })
+    );
+
+    // 2. 添加规则忽略 cms 目录中的所有文件
+    config.module.rules.push({
+      test: /\.(ts|tsx|js|jsx|json|md)$/,
+      include: [
+        /[\/\\]cms[\/\\]/,
+        /^cms\//,
+      ],
+      use: 'ignore-loader'
+    });
+
+    // 3. 在模块解析级别排除 cms 文件夹
+    config.resolve = config.resolve || {};
     config.resolve.alias = {
       ...config.resolve.alias,
     };
     
-    // 在服务端构建时排除 cms 相关文件
-    if (isServer) {
-      config.externals = config.externals || [];
-      config.externals.push(/^cms\//);
-    }
+         // 4. 排除 cms 相关的外部模块
+    const originalExternals = config.externals || [];
+    config.externals = [
+      ...originalExternals,
+      // 排除所有 cms 开头的模块
+      /^cms/,
+      /\/cms\//,
+      function ({ context, request }: { context: any; request: any }, callback: any) {
+        // 动态排除任何包含 cms 的路径
+        if (request && (request.includes('/cms/') || request.startsWith('cms/'))) {
+          return callback(null, 'void 0');
+        }
+        callback();
+      }
+    ];
     
     return config;
   },

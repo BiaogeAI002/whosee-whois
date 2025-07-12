@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getLocale } from 'next-intl/server';
 import { ThemeProvider } from '@/components/providers/theme-provider';
@@ -8,11 +7,11 @@ import { Footer } from '@/components/ui/footer';
 import { StructuredData } from '@/components/seo/structured-data';
 import "./globals.css";
 
-const inter = Inter({ 
-  subsets: ["latin"],
-  display: 'swap',
-  variable: '--font-inter'
-});
+// 使用系统字体，避免Google Fonts网络问题
+const fontSans = {
+  variable: '--font-sans',
+  className: 'font-sans'
+};
 
 // 动态元数据生成
 export async function generateMetadata(): Promise<Metadata> {
@@ -115,7 +114,7 @@ export default async function RootLayout({
         {/* 结构化数据 */}
         <StructuredData locale={locale} />
       </head>
-      <body className={`${inter.variable} font-sans`} suppressHydrationWarning>
+      <body className={`${fontSans.variable} font-sans`} suppressHydrationWarning>
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
             <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
