@@ -23,9 +23,9 @@
 | 文档 | 描述 | 适用场景 |
 |------|------|----------|
 | [快速开始指南](./QUICK_START.md) | 5 分钟快速配置教程 | 新手入门、快速体验 |
-| [环境变量配置指南](./ENVIRONMENT_CONFIG.md) | 详细的环境变量配置说明 | 首次配置、生产部署 |
+| [简化部署指南](./SIMPLE_DEPLOYMENT.md) | 一键部署到 Vercel | 生产部署、零配置部署 |
+| [环境变量配置指南](./ENVIRONMENT_CONFIG.md) | 详细的环境变量配置说明 | 首次配置、高级配置 |
 | [环境变量示例](./ENV_EXAMPLE.md) | 完整的 .env.local 配置示例 | 快速配置、参考模板 |
-| [依赖安全管理](./DEPENDENCY_SECURITY.md) | 依赖安全问题处理指南 | 安全漏洞处理、Dependabot 问题 |
 
 ### 📡 Strapi 5 CMS 文档
 | 文档 | 描述 | 适用场景 |
@@ -48,10 +48,9 @@
 5. 使用 [API 集成文档](./Strapi%205%20CMS/API_INTEGRATION.md) 开发功能
 
 ### 🔧 问题排查
-1. 查看 [故障排除指南](./Strapi%205%20CMS/TROUBLESHOOTING.md)
+1. 查看 [故障排除指南](./Strapi%205%20CMS/TROUBLESHOOTING.md)（仅用于本地CMS开发）
 2. 检查 [环境变量配置指南](./ENVIRONMENT_CONFIG.md) 中的常见问题
 3. 参考 [快速参考手册](./Strapi%205%20CMS/QUICK_REFERENCE.md) 进行调试
-4. 处理安全问题：[依赖安全管理指南](./DEPENDENCY_SECURITY.md)
 
 ### 📈 系统升级
 1. 阅读 [迁移指南](./Strapi%205%20CMS/MIGRATION_GUIDE.md)
@@ -60,18 +59,20 @@
 
 ## 🔍 核心配置概述
 
-### 必需环境变量
+### 基本环境变量（可选）
 ```env
-NEXT_PUBLIC_STRAPI_URL=http://localhost:1337
-NEXT_PUBLIC_STRAPI_API_TOKEN=your_token_here
+# 外部 API（如需要）
+NEXT_PUBLIC_API_URL=https://api.whosee.me
+NEXT_PUBLIC_API_KEY=your_api_key
+
+# 站点配置
+NEXT_PUBLIC_SITE_URL=https://whosee.me
 ```
 
-### 可选环境变量
-```env
-NEXT_PUBLIC_API_URL=http://localhost:3900
-NEXT_PUBLIC_API_KEY=your_api_key
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-```
+### 注意事项
+- 🎉 **简化部署**：项目现在只部署前端到 Vercel
+- 🚀 **快速启动**：无需复杂的 CMS 配置
+- 🔧 **本地开发**：CMS 目录保留用于本地开发（不会部署）
 
 ### 验证配置
 访问 `http://localhost:3000/debug` 查看配置状态

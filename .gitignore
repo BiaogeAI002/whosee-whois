@@ -44,15 +44,21 @@ next-env.d.ts
 .cursor/
 *.cursor-workspace
 
-<<<<<<< HEAD
 # trae ai configuration
 .trae
 
-=======
->>>>>>> d5ec76258e1d879a0dcb80fe5ae6ed6a253f7e87
 # IDEs and editors
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+
+# 本地环境变量
+.env
+.env.local
+
+# Strapi 相关（保留用于本地开发）
+.strapi-updater.json
+.tmp/
+dist/

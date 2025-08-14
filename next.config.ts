@@ -26,67 +26,30 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // 📁 排除不需要编译的文件夹
-  webpack: (config, { webpack }) => {
-    // 1. 使用 IgnorePlugin 完全忽略 cms 文件夹
-    config.plugins.push(
-      new webpack.IgnorePlugin({
-        resourceRegExp: /^\.\/cms/,
-        contextRegExp: /$/,
-      }),
-      new webpack.IgnorePlugin({
-        resourceRegExp: /\/cms\//,
-      })
-    );
-
-    // 2. 添加规则忽略 cms 目录中的所有文件
-    config.module.rules.push({
-      test: /\.(ts|tsx|js|jsx|json|md)$/,
-      include: [
-        /[\/\\]cms[\/\\]/,
-        /^cms\//,
-      ],
-      use: 'ignore-loader'
-    });
-
-    // 3. 在模块解析级别排除 cms 文件夹
-    config.resolve = config.resolve || {};
-    config.resolve.alias = {
-      ...config.resolve.alias,
-    };
-    
-         // 4. 排除 cms 相关的外部模块
-    const originalExternals = config.externals || [];
-    config.externals = [
-      ...originalExternals,
-      // 排除所有 cms 开头的模块
-      /^cms/,
-      /\/cms\//,
-      function ({ context, request }: { context: any; request: any }, callback: any) {
-        // 动态排除任何包含 cms 的路径
-        if (request && (request.includes('/cms/') || request.startsWith('cms/'))) {
-          return callback(null, 'void 0');
-        }
-        callback();
-      }
-    ];
+  // 📁 生产环境优化
+  webpack: (config, { isServer }) => {
+    // 生产环境排除不必要的模块
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
     
     return config;
   },
 
-  // 🚀 开发环境代理配置 - 解决 CORS 问题
+  // 🚀 API 重写配置（如果有外部API）
   async rewrites() {
-    if (isDevelopment) {
-      const backendApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3900';
+    if (isDevelopment && process.env.NEXT_PUBLIC_API_URL) {
+      const backendApiUrl = process.env.NEXT_PUBLIC_API_URL;
       
       return [
         {
-          source: '/api/:path*',
+          source: '/api/external/:path*',
           destination: `${backendApiUrl}/api/:path*`,
-        },
-        {
-          source: '/static/:path*',
-          destination: `${backendApiUrl}/static/:path*`,
         },
       ];
     }
@@ -102,22 +65,16 @@ const nextConfig: NextConfig = {
         hostname: 'localhost',
         port: '3000',
       },
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '1337',  // Strapi CMS
-      },
-      // 生产环境
+      // 生产环境 API
       {
         protocol: 'https',
         hostname: 'api.whosee.me',
       },
-      // 动态添加自定义 Strapi 域名
-      ...(process.env.NEXT_PUBLIC_STRAPI_URL && !process.env.NEXT_PUBLIC_STRAPI_URL.includes('localhost') ? [{
-        protocol: new URL(process.env.NEXT_PUBLIC_STRAPI_URL).protocol.replace(':', '') as 'http' | 'https',
-        hostname: new URL(process.env.NEXT_PUBLIC_STRAPI_URL).hostname,
-        port: new URL(process.env.NEXT_PUBLIC_STRAPI_URL).port || undefined,
-      }] : []),
+      // CDN 和其他外部图片源
+      {
+        protocol: 'https',
+        hostname: '*.vercel.app',
+      },
     ],
   },
 

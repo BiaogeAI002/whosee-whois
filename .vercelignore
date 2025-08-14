@@ -1,11 +1,17 @@
-# CMS 文件夹和相关文件
+# CMS 文件夹和相关文件 (完全排除)
 cms/
 cms/**
+**/cms/**
 
 # 其他不需要部署的文件夹
 docs/
 static/screenshots/
 server/
+
+# 开发和测试相关
+*.test.*
+**/test/**
+**/__tests__/**
 
 # 开发相关文件
 *.log
