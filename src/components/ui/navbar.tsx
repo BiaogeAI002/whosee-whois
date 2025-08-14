@@ -12,15 +12,16 @@ export function Navbar() {
   const t = useTranslations('nav');
   const pathname = usePathname();
 
-  // 检测当前是否在英文路径下
+  // 检测当前语言
   const isEnglishPath = pathname.startsWith('/en');
   const currentLocale = isEnglishPath ? 'en' : 'zh';
   
-  // 生成带语言前缀的链接
+  // 生成本地化链接 - 符合 next-intl 的 as-needed 模式
   const getLocalizedHref = (href: string) => {
     if (currentLocale === 'en') {
       return `/en${href}`;
     }
+    // 中文为默认语言，不需要前缀
     return href;
   };
 

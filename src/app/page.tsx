@@ -24,8 +24,12 @@ export default function Home() {
     await new Promise(resolve => setTimeout(resolve, 1000));
     setSearchLoading(false);
     
-    // Redirect to domain page with the search result
-    window.location.href = `/domain?q=${encodeURIComponent(domain)}`;
+    // 使用 Next.js router 进行导航，支持国际化
+    const pathname = window.location.pathname;
+    const isEn = pathname.startsWith('/en');
+    const basePath = isEn ? '/en' : '';
+    
+    window.location.href = `${basePath}/domain?q=${encodeURIComponent(domain)}`;
   };
 
   const features = [
@@ -275,7 +279,12 @@ export default function Home() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
                 viewport={{ once: true }}
-                onClick={() => window.location.href = `/domain?q=${domain}`}
+                onClick={() => {
+                  const pathname = window.location.pathname;
+                  const isEn = pathname.startsWith('/en');
+                  const basePath = isEn ? '/en' : '';
+                  window.location.href = `${basePath}/domain?q=${domain}`;
+                }}
                 className="px-4 py-2 bg-white dark:bg-gray-700 rounded-full border border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
                 {domain}
@@ -349,13 +358,13 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/domain"
+                href={`${typeof window !== 'undefined' && window.location.pathname.startsWith('/en') ? '/en' : ''}/domain`}
                 className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
               >
                 {tCta('startDomainQuery')}
               </Link>
               <Link
-                href="/dns"
+                href={`${typeof window !== 'undefined' && window.location.pathname.startsWith('/en') ? '/en' : ''}/dns`}
                 className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white rounded-lg hover:bg-white hover:text-blue-600 transition-colors font-semibold"
               >
                 {tCta('checkDNS')}

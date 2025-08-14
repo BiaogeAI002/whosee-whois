@@ -35,17 +35,13 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
     // 先移除现有的语言前缀
     if (newPath.startsWith('/en')) {
       newPath = newPath.replace('/en', '') || '/';
-    } else if (newPath.startsWith('/zh')) {
-      newPath = newPath.replace('/zh', '') || '/';
     }
     
-    // 然后添加新的语言前缀
+    // 根据 next-intl 的 as-needed 模式添加语言前缀
     if (locale === 'en') {
       newPath = `/en${newPath}`;
-    } else {
-      // 中文也需要添加 /zh 前缀
-      newPath = `/zh${newPath}`;
     }
+    // 中文不需要前缀（默认语言）
     
     // 使用 window.location.href 强制刷新页面，确保重新加载翻译内容
     window.location.href = newPath;

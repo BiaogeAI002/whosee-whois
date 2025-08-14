@@ -122,6 +122,105 @@ const category = post.category?.name;
 
 ## 📖 使用说明
 
+### 🚀 CMS 配置快速指南
+
+#### 步骤 1: 安装 CMS 依赖
+```bash
+# 进入 CMS 目录
+cd cms
+
+# 安装依赖
+npm install
+```
+
+#### 步骤 2: 配置环境变量
+创建 `cms/.env` 文件：
+
+```env
+# ==============================================
+# 🔧 Strapi 5 CMS 环境变量配置
+# ==============================================
+
+# 服务器配置
+HOST=0.0.0.0
+PORT=1337
+NODE_ENV=development
+
+# 🔑 密钥配置 (必需 - 请生成随机值)
+# 使用随机字符串替换下面的占位符
+APP_KEYS=your-app-key-1,your-app-key-2,your-app-key-3,your-app-key-4
+API_TOKEN_SALT=your-api-token-salt
+ADMIN_JWT_SECRET=your-admin-jwt-secret
+TRANSFER_TOKEN_SALT=your-transfer-token-salt
+JWT_SECRET=your-jwt-secret
+
+# 📊 数据库配置 (开发环境使用 SQLite)
+DATABASE_CLIENT=sqlite
+DATABASE_FILENAME=.tmp/data.db
+
+# 🌐 CORS 配置 (前端 URL)
+FRONTEND_URL=http://localhost:3000
+
+# 📁 文件上传配置 (可选)
+# CLOUDINARY_NAME=your-cloudinary-name
+# CLOUDINARY_KEY=your-cloudinary-key
+# CLOUDINARY_SECRET=your-cloudinary-secret
+```
+
+#### 步骤 3: 生成安全密钥
+使用以下命令生成随机密钥：
+
+```bash
+# 生成 APP_KEYS (4个随机字符串)
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+# 对每个密钥重复执行 4 次，用逗号分隔
+
+# 生成其他密钥
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+#### 步骤 4: 启动 CMS
+```bash
+# 首次启动 (会自动创建数据库)
+npm run develop
+
+# 🎉 成功启动后访问：http://localhost:1337/admin
+```
+
+#### 步骤 5: 创建管理员账户
+1. 打开浏览器访问：`http://localhost:1337/admin`
+2. 填写管理员信息：
+   - **用户名**: admin (或您喜欢的用户名)
+   - **邮箱**: 您的邮箱地址
+   - **密码**: 设置强密码
+   - **确认密码**: 重复密码
+
+#### 步骤 6: 创建 API Token
+1. 登录管理后台后，进入 **Settings** > **API Tokens**
+2. 点击 **"Create new API Token"**
+3. 配置 Token：
+   - **Name**: `NextJS Frontend`
+   - **Description**: `用于前端访问的只读 Token`
+   - **Token duration**: `Unlimited`
+   - **Token type**: `Read-only`
+4. 点击 **"Save"** 并复制生成的 Token
+
+#### 步骤 7: 配置前端环境变量
+在项目根目录创建 `.env.local` 文件：
+
+```env
+# ==============================================
+# 📡 前端环境变量配置
+# ==============================================
+
+# Strapi CMS 连接配置
+NEXT_PUBLIC_STRAPI_URL=http://localhost:1337
+NEXT_PUBLIC_STRAPI_API_TOKEN=your_generated_api_token_here
+
+# 可选配置
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
 ### 开发环境启动
 
 ```bash
@@ -135,6 +234,49 @@ npm run dev
 # 3. 访问应用
 # 前端: http://localhost:3000
 # CMS 管理: http://localhost:1337/admin
+```
+
+### 🔧 配置验证
+
+#### 检查 CMS 是否正常运行
+```bash
+# 测试 CMS API 健康状态
+curl http://localhost:1337/api/blog-posts
+
+# 应该返回类似：{"data":[],"meta":{"pagination":{"total":0}}}
+```
+
+#### 检查前端集成
+1. 访问 `http://localhost:3000/debug`
+2. 查看 "环境变量配置" 部分
+3. 确认 Strapi URL 和 API Token 已正确配置
+
+### ⚠️ 常见配置问题
+
+#### 问题 1: CMS 启动失败 - "Missing APP_KEYS"
+**解决方案**: 确保 `cms/.env` 文件中的 `APP_KEYS` 已正确设置
+```env
+APP_KEYS=key1,key2,key3,key4  # 用实际生成的密钥替换
+```
+
+#### 问题 2: 前端无法连接 CMS
+**解决方案**: 
+1. 检查 CMS 是否在 1337 端口运行
+2. 验证 API Token 是否正确
+3. 确认前端 `.env.local` 配置
+
+#### 问题 3: 图片无法显示
+**解决方案**: 检查 `next.config.ts` 中的图片域名配置：
+```javascript
+images: {
+  remotePatterns: [
+    {
+      protocol: 'http',
+      hostname: 'localhost',
+      port: '1337',
+    },
+  ],
+}
 ```
 
 ### 常用 API 示例
