@@ -89,6 +89,9 @@ updates:
       # 忽略已知的有问题的版本
       - dependency-name: "eslint"
         versions: ["8.0.0"]
+      # 忽略 esbuild 安全更新直到 Strapi 兼容
+      - dependency-name: "esbuild"
+        update-types: ["version-update:semver-major"]
     
     # 限制打开的 PR 数量
     open-pull-requests-limit: 6
@@ -101,6 +104,47 @@ updates:
     # 拉取请求标签
     labels:
       - "dependencies"
+      - "dependabot"
+
+  # CMS 依赖更新配置
+  - package-ecosystem: "npm"
+    directory: "/cms"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "06:00"
+      timezone: "Asia/Shanghai"
+    
+    reviewers:
+      - "AsisYu"
+    
+    # CMS 分组
+    groups:
+      strapi-core:
+        patterns:
+          - "@strapi/*"
+        update-types:
+          - "patch"
+          - "minor"
+    
+    # 忽略 CMS 主要版本更新和有问题的依赖
+    ignore:
+      - dependency-name: "@strapi/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "esbuild"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vite"
+        update-types: ["version-update:semver-major"]
+    
+    open-pull-requests-limit: 3
+    
+    commit-message:
+      prefix: "chore(cms)"
+      include: "scope"
+    
+    labels:
+      - "dependencies"
+      - "cms"
       - "dependabot"
 
   # GitHub Actions 更新

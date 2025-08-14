@@ -25,6 +25,7 @@
 | [快速开始指南](./QUICK_START.md) | 5 分钟快速配置教程 | 新手入门、快速体验 |
 | [环境变量配置指南](./ENVIRONMENT_CONFIG.md) | 详细的环境变量配置说明 | 首次配置、生产部署 |
 | [环境变量示例](./ENV_EXAMPLE.md) | 完整的 .env.local 配置示例 | 快速配置、参考模板 |
+| [依赖安全管理](./DEPENDENCY_SECURITY.md) | 依赖安全问题处理指南 | 安全漏洞处理、Dependabot 问题 |
 
 ### 📡 Strapi 5 CMS 文档
 | 文档 | 描述 | 适用场景 |
@@ -50,6 +51,7 @@
 1. 查看 [故障排除指南](./Strapi%205%20CMS/TROUBLESHOOTING.md)
 2. 检查 [环境变量配置指南](./ENVIRONMENT_CONFIG.md) 中的常见问题
 3. 参考 [快速参考手册](./Strapi%205%20CMS/QUICK_REFERENCE.md) 进行调试
+4. 处理安全问题：[依赖安全管理指南](./DEPENDENCY_SECURITY.md)
 
 ### 📈 系统升级
 1. 阅读 [迁移指南](./Strapi%205%20CMS/MIGRATION_GUIDE.md)
