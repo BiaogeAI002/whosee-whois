@@ -506,7 +506,8 @@
       "emailPlaceholder": "输入您的邮箱",
       "subscribe": "订阅",
       "subscribeSuccess": "订阅成功！",
-      "subscribeError": "订阅失败，请重试。"
+      "subscribeError": "订阅失败，请重试。",
+      "noRecentPosts": "暂无最新文章"
     },
     "featured": {
       "title": "精选文章",

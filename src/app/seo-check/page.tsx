@@ -2,7 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { CheckCircle, XCircle, AlertCircle, Search, Globe } from 'lucide-react';
+import { getCurrentLocale, isEnglishPath } from '@/lib/locale-utils';
 
 interface SEOCheckResult {
   name: string;
@@ -13,8 +15,12 @@ interface SEOCheckResult {
 }
 
 export default function SEOCheckPage() {
-  const [results, setResults] = useState<SEOCheckResult[]>([]);
+  const t = useTranslations('seoCheck');
+  const pathname = usePathname();
+  const locale = getCurrentLocale(pathname);
+  const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState<SEOCheckResult[]>([]);
 
   const runSEOCheck = async () => {
     setLoading(true);
@@ -74,16 +80,15 @@ export default function SEOCheckPage() {
     });
 
     // 检查当前语言特定的元数据
-    const currentPath = window.location.pathname;
-    const isEnglishPage = currentPath.startsWith('/en');
-    const expectedLang = isEnglishPage ? 'en' : 'zh';
+    const isEnglishPage = isEnglishPath(pathname);
+    const expectedLang = locale;
     
     checks.push({
       name: '语言路径一致性',
       category: 'multilingual',
       status: htmlLang === expectedLang ? 'pass' : 'warning',
       message: `路径语言(${expectedLang})与HTML lang(${htmlLang})${htmlLang === expectedLang ? '一致' : '不一致'}`,
-      details: `当前路径: ${currentPath}`
+      details: `当前路径: ${pathname}`
     });
 
     // 检查canonical标签
@@ -339,4 +344,4 @@ export default function SEOCheckPage() {
       </div>
     </div>
   );
-} 
+}
