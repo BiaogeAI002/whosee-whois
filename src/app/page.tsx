@@ -2,11 +2,13 @@
 
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { SearchBox } from '@/components/ui/search-box';
 import { Globe, Server, Camera, Activity, Shield, Zap, Code } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
+import { getCurrentLocale, getLocalizedHref } from '@/lib/locale-utils';
 
 export default function Home() {
   const t = useTranslations('home');
@@ -16,6 +18,8 @@ export default function Home() {
   const tPopularDomains = useTranslations('popularDomains');
   const tTutorial = useTranslations('tutorial');
   const tCta = useTranslations('cta');
+  const pathname = usePathname();
+  const locale = getCurrentLocale(pathname);
   const [searchLoading, setSearchLoading] = useState(false);
 
   const handleSearch = async (domain: string) => {
@@ -24,12 +28,8 @@ export default function Home() {
     await new Promise(resolve => setTimeout(resolve, 1000));
     setSearchLoading(false);
     
-    // 使用 Next.js router 进行导航，支持国际化
-    const pathname = window.location.pathname;
-    const isEn = pathname.startsWith('/en');
-    const basePath = isEn ? '/en' : '';
-    
-    window.location.href = `${basePath}/domain?q=${encodeURIComponent(domain)}`;
+    // 使用 locale-utils 进行导航，支持国际化
+    window.location.href = `${getLocalizedHref('/domain', locale)}?q=${encodeURIComponent(domain)}`;
   };
 
   const features = [
@@ -280,10 +280,7 @@ export default function Home() {
                 transition={{ duration: 0.4, delay: index * 0.05 }}
                 viewport={{ once: true }}
                 onClick={() => {
-                  const pathname = window.location.pathname;
-                  const isEn = pathname.startsWith('/en');
-                  const basePath = isEn ? '/en' : '';
-                  window.location.href = `${basePath}/domain?q=${domain}`;
+                  window.location.href = `${getLocalizedHref('/domain', locale)}?q=${domain}`;
                 }}
                 className="px-4 py-2 bg-white dark:bg-gray-700 rounded-full border border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
@@ -358,13 +355,13 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href={`${typeof window !== 'undefined' && window.location.pathname.startsWith('/en') ? '/en' : ''}/domain`}
+                href={getLocalizedHref('/domain', locale)}
                 className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
               >
                 {tCta('startDomainQuery')}
               </Link>
               <Link
-                href={`${typeof window !== 'undefined' && window.location.pathname.startsWith('/en') ? '/en' : ''}/dns`}
+                href={getLocalizedHref('/dns', locale)}
                 className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white rounded-lg hover:bg-white hover:text-blue-600 transition-colors font-semibold"
               >
                 {tCta('checkDNS')}

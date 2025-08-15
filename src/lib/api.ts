@@ -782,6 +782,7 @@ function buildQueryParams(params: BlogQueryParams = {}): string {
 export async function getBlogPosts(params: BlogQueryParams = {}): Promise<BlogPostsResponse> {
   const queryParams = buildQueryParams({
     ...params,
+    locale: params.locale || 'en',  // 确保传递locale参数
     populate: params.populate || '*',  // 使用简化格式，自动填充所有关系
     sort: params.sort || ['publishedAt:desc'],
     publicationState: params.publicationState || 'live'
@@ -792,21 +793,178 @@ export async function getBlogPosts(params: BlogQueryParams = {}): Promise<BlogPo
 
 // 根据 slug 获取单篇博客文章
 export async function getBlogPostBySlug(slug: string, locale: string = 'en'): Promise<BlogPost | null> {
-  const queryParams = buildQueryParams({
-    locale,
+  const cmsLocale = toCMSLocale(locale);
+  
+  // 首先尝试获取指定语言版本
+  let queryParams = buildQueryParams({
+    locale: cmsLocale,
     filters: { slug: { $eq: slug } },
     populate: '*',  // 使用简化格式
     publicationState: 'live'
   });
   
   try {
-    const response = await cmsRequest<BlogPostsResponse>(`/api/blog-posts?${queryParams}`);
-    return response.data[0] || null;
+    let response = await cmsRequest<BlogPostsResponse>(`/api/blog-posts?${queryParams}`);
+    
+    // 如果找到了文章，直接返回
+    if (response.data && response.data.length > 0) {
+      return response.data[0];
+    }
+    
+    // 如果没有找到，尝试获取所有语言版本中匹配slug的文章
+    queryParams = buildQueryParams({
+      filters: { slug: { $eq: slug } },
+      populate: '*',
+      publicationState: 'live'
+    });
+    
+    response = await cmsRequest<BlogPostsResponse>(`/api/blog-posts?${queryParams}`);
+    
+    // 返回找到的第一个文章（任何语言版本）
+    return response.data?.[0] || null;
+    
   } catch (error) {
     if (error instanceof CMSError && error.status === 404) {
       return null;
     }
     throw error;
+  }
+}
+
+// 获取博客文章（带语言回退和重定向信息）
+export async function getBlogPostBySlugWithFallback(
+  slug: string, 
+  requestedLocale: string = 'en'
+): Promise<{
+  post: BlogPost | null;
+  foundLocale: string | null;
+  needsRedirect: boolean;
+  availableLocales: Array<{ locale: string; slug: string }>;
+}> {
+  const cmsLocale = toCMSLocale(requestedLocale);
+  
+  try {
+    // 首先尝试获取指定语言版本
+    let queryParams = buildQueryParams({
+      locale: cmsLocale,
+      filters: { slug: { $eq: slug } },
+      populate: '*',
+      publicationState: 'live'
+    });
+    
+    let response = await cmsRequest<BlogPostsResponse>(`/api/blog-posts?${queryParams}`);
+    
+    // 如果找到了指定语言版本的文章
+    if (response.data && response.data.length > 0) {
+      const post = response.data[0];
+      
+      // 验证文章ID是否有效
+      if (!post.id) {
+        console.warn('文章ID无效:', post);
+        return {
+          post: null,
+          foundLocale: null,
+          needsRedirect: false,
+          availableLocales: []
+        };
+      }
+      
+      let localizations = [];
+      try {
+        localizations = await getBlogPostLocalizations(post.id);
+      } catch (error) {
+        console.warn('获取文章本地化版本失败:', error);
+        // 如果获取本地化版本失败，仍然返回当前文章
+        localizations = [{ id: post.id, locale: requestedLocale, slug: post.slug }];
+      }
+      
+      return {
+        post,
+        foundLocale: requestedLocale,
+        needsRedirect: false,
+        availableLocales: localizations.map(loc => ({
+          locale: loc.locale,
+          slug: loc.slug || slug
+        }))
+      };
+    }
+    
+    // 如果没有找到指定语言版本，尝试查找其他语言版本
+    queryParams = buildQueryParams({
+      filters: { slug: { $eq: slug } },
+      populate: '*',
+      publicationState: 'live'
+    });
+    
+    response = await cmsRequest<BlogPostsResponse>(`/api/blog-posts?${queryParams}`);
+    
+    if (response.data && response.data.length > 0) {
+      const post = response.data[0];
+      
+      // 验证文章ID是否有效
+      if (!post.id) {
+        console.warn('文章ID无效:', post);
+        return {
+          post: null,
+          foundLocale: null,
+          needsRedirect: false,
+          availableLocales: []
+        };
+      }
+      
+      let localizations = [];
+      try {
+        localizations = await getBlogPostLocalizations(post.id);
+      } catch (error) {
+        console.warn('获取文章本地化版本失败:', error);
+        // 如果获取本地化版本失败，使用当前文章信息
+        localizations = [{ id: post.id, locale: post.locale || 'en', slug: post.slug }];
+      }
+      
+      // 检查是否有请求的语言版本
+      const targetLocalization = localizations.find(loc => loc.locale === requestedLocale);
+      
+      if (targetLocalization && targetLocalization.slug) {
+        // 找到了目标语言版本，但slug不同，需要重定向
+        return {
+          post: null,
+          foundLocale: requestedLocale,
+          needsRedirect: true,
+          availableLocales: localizations.map(loc => ({
+            locale: loc.locale,
+            slug: loc.slug || slug
+          }))
+        };
+      } else {
+        // 没有目标语言版本，返回找到的版本
+        return {
+          post,
+          foundLocale: post.locale || 'en',
+          needsRedirect: true,
+          availableLocales: localizations.map(loc => ({
+            locale: loc.locale,
+            slug: loc.slug || slug
+          }))
+        };
+      }
+    }
+    
+    // 完全没有找到文章
+    return {
+      post: null,
+      foundLocale: null,
+      needsRedirect: false,
+      availableLocales: []
+    };
+    
+  } catch (error) {
+    console.error('获取文章失败:', error);
+    return {
+      post: null,
+      foundLocale: null,
+      needsRedirect: false,
+      availableLocales: []
+    };
   }
 }
 
@@ -945,7 +1103,8 @@ export async function getBlogCategories(locale: string = 'en'): Promise<BlogCate
   const queryParams = buildQueryParams({
     locale,
     populate: '*',  // 使用简化格式
-    sort: ['name:asc']
+    sort: ['name:asc'],
+    publicationState: 'live'
   });
   
   return await cmsRequest<BlogCategoriesResponse>(`/api/categories?${queryParams}`);
@@ -1088,6 +1247,7 @@ export const cmsApi = {
   // 博客文章
   getBlogPosts,
   getBlogPostBySlug,
+  getBlogPostBySlugWithFallback,
   getBlogPostById,
   getFeaturedBlogPosts,
   getBlogPostsByCategory,
@@ -1111,4 +1271,4 @@ export const cmsApi = {
 export { ApiError };
 
 // 导出Token管理器（用于调试）
-export { TokenManager }; 
+export { TokenManager };

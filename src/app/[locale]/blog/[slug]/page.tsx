@@ -1,7 +1,18 @@
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { getBlogPostBySlug } from '@/lib/api';
-import { notFound } from 'next/navigation';
+import { getBlogPostBySlug, getBlogPostBySlugWithFallback, getBlogPostLocalizations } from '@/lib/api';
+import { toCMSLocale, toFrontendLocale } from '@/i18n/config';
+import { notFound, redirect } from 'next/navigation';
+import { BlogPost } from '@/types';
+import { BlogPostContent } from '@/components/blog/blog-post-content';
+import { BlogPostSidebar } from '@/components/blog/blog-post-sidebar';
+import { BlogPostHeader } from '@/components/blog/blog-post-header';
+import { BlogPostNavigation } from '@/components/blog/blog-post-navigation';
+import { BlogPostComments } from '@/components/blog/blog-post-comments';
+import { BlogPostRelated } from '@/components/blog/blog-post-related';
+import { BlogPostSchema } from '@/components/blog/blog-post-schema';
+import { generateBlogPostMetadata } from '@/lib/metadata';
+import { Suspense } from 'react';
 
 interface BlogPostPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -12,7 +23,23 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const { locale, slug } = await params;
   
   try {
-    const post = await getBlogPostBySlug(slug, locale);
+    // 使用智能文章获取函数
+    const result = await getBlogPostBySlugWithFallback(slug, locale);
+    
+    // 如果需要重定向，先尝试获取正确的文章
+    let post = result.post;
+    
+    if (result.needsRedirect && result.availableLocales.length > 0) {
+      const targetLocalization = result.availableLocales.find(
+        loc => loc.locale === locale
+      );
+      
+      if (targetLocalization && targetLocalization.slug !== slug) {
+        // 尝试获取正确slug的文章
+        const correctResult = await getBlogPostBySlugWithFallback(targetLocalization.slug, locale);
+        post = correctResult.post;
+      }
+    }
     
     if (!post) {
       return {
@@ -64,11 +91,43 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const t = await getTranslations({ locale, namespace: 'blog' });
 
   try {
-    const post = await getBlogPostBySlug(slug, locale);
-    
-    if (!post) {
+    // 使用智能文章获取函数
+    const result = await getBlogPostBySlugWithFallback(slug, locale);
+
+    // 处理重定向情况
+    if (result.needsRedirect && result.availableLocales.length > 0) {
+      // 查找目标语言版本的slug
+      const targetLocalization = result.availableLocales.find(
+        loc => loc.locale === locale
+      );
+      
+      if (targetLocalization && targetLocalization.slug !== slug) {
+        // 重定向到正确的slug
+        const newPath = locale === 'en' 
+          ? `/en/blog/${targetLocalization.slug}`
+          : `/blog/${targetLocalization.slug}`;
+        redirect(newPath);
+      }
+      
+      // 如果没有找到目标语言版本，但有其他语言版本
+      if (!targetLocalization && result.availableLocales.length > 0) {
+        // 重定向到默认语言版本
+        const defaultLocalization = result.availableLocales.find(loc => loc.locale === 'en') 
+          || result.availableLocales[0];
+        
+        const newPath = defaultLocalization.locale === 'en' 
+          ? `/en/blog/${defaultLocalization.slug}`
+          : `/blog/${defaultLocalization.slug}`;
+        redirect(newPath);
+      }
+    }
+
+    // 如果完全没有找到文章
+    if (!result.post) {
       notFound();
     }
+
+    const post = result.post;
 
     // 暂时注释相关文章功能，因为该函数还未适配 Strapi 5
     // const relatedPosts = await getRelatedBlogPosts(post.id, locale, 4);
@@ -206,4 +265,4 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 }
 
 // 启用 ISR，每小时重新生成
-export const revalidate = 3600; 
+export const revalidate = 3600;
