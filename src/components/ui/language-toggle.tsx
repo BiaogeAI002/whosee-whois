@@ -4,6 +4,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Globe, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getBlogPostBySlugWithFallback } from '@/lib/api';
 
 interface LanguageToggleProps {
   className?: string;
@@ -24,12 +25,58 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
     setCurrentLocale(locale);
   }, [pathname]);
   
-  const switchLanguage = (locale: 'zh' | 'en') => {
+  // 智能语言切换处理函数
+  const handleSmartLanguageSwitch = async (targetLocale: 'zh' | 'en') => {
     // 如果已经是当前语言，不需要切换
-    if (locale === currentLocale) return;
+    if (targetLocale === currentLocale) return;
     
     setSwitching(true);
     
+    // 检查是否是博客文章页面
+    const blogPostMatch = pathname.match(/^(?:\/en)?\/(blog)\/([^/]+)$/);
+    
+    if (blogPostMatch) {
+      const slug = blogPostMatch[2];
+      
+      try {
+        // 使用新的API函数获取文章信息
+        const result = await getBlogPostBySlugWithFallback(slug, targetLocale);
+        
+        if (result.needsRedirect && result.availableLocales.length > 0) {
+          // 查找目标语言版本的slug
+          const targetLocalization = result.availableLocales.find(
+            loc => loc.locale === targetLocale
+          );
+          
+          if (targetLocalization) {
+            // 构建新的URL
+            const newPath = targetLocale === 'en' 
+              ? `/en/blog/${targetLocalization.slug}`
+              : `/blog/${targetLocalization.slug}`;
+            window.location.href = newPath;
+            return;
+          }
+        } else if (result.post && !result.needsRedirect) {
+          // 文章存在且不需要重定向，使用当前slug
+          const newPath = targetLocale === 'en' 
+            ? `/en/blog/${slug}`
+            : `/blog/${slug}`;
+          window.location.href = newPath;
+          return;
+        }
+        
+        // 如果没有找到对应的文章版本，回退到博客首页
+        const fallbackPath = targetLocale === 'en' ? '/en/blog' : '/blog';
+        window.location.href = fallbackPath;
+        return;
+        
+      } catch (error) {
+        console.error('智能语言切换失败:', error);
+        // 发生错误时回退到普通语言切换
+      }
+    }
+    
+    // 非博客文章页面或发生错误时，使用普通语言切换逻辑
     let newPath = pathname;
     
     // 先移除现有的语言前缀
@@ -38,13 +85,17 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
     }
     
     // 根据 next-intl 的 as-needed 模式添加语言前缀
-    if (locale === 'en') {
+    if (targetLocale === 'en') {
       newPath = `/en${newPath}`;
     }
     // 中文不需要前缀（默认语言）
     
     // 使用 window.location.href 强制刷新页面，确保重新加载翻译内容
     window.location.href = newPath;
+  };
+  
+  const switchLanguage = (locale: 'zh' | 'en') => {
+    handleSmartLanguageSwitch(locale);
   };
 
   // 在组件挂载前显示默认状态，避免hydration不匹配
@@ -109,4 +160,4 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
       </div>
     </div>
   );
-} 
+}
