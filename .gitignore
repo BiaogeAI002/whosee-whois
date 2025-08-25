@@ -40,13 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# cursor editor configuration
-.cursor/
-*.cursor-workspace
-
-# trae ai configuration
-.trae
-
 # IDEs and editors
 .vscode/
 .idea/
